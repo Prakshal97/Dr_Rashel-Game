@@ -1,0 +1,117 @@
+.gameover-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-gradient);
+  overflow: hidden;
+}
+
+/* Ambient glow orbs – soft, light */
+.go-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.go-orb--aqua {
+  width: 500px; height: 500px;
+  top: -100px; right: -100px;
+  background: radial-gradient(circle, rgba(74,184,216,0.25) 0%, transparent 70%);
+  animation: floatSlow 8s ease-in-out infinite;
+}
+
+.go-orb--gold {
+  width: 600px; height: 600px;
+  bottom: -200px; left: -150px;
+  background: radial-gradient(circle, rgba(200,137,10,0.15) 0%, transparent 70%);
+  animation: floatSlow 10s ease-in-out infinite reverse;
+}
+
+/* Content */
+.gameover-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-lg);
+  max-width: min(560px, 90vw);
+  width: 100%;
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* Header */
+.go-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+/* New High Score Banner */
+.go-new-high {
+  padding: var(--space-sm) var(--space-xl);
+  background: rgba(200,137,10,0.12) !important;
+  animation: new-high-score 0.7s var(--ease-out) both, pulse-gold 2s ease-in-out infinite 0.7s;
+}
+
+/* Score card */
+.go-score-card {
+  width: 100%;
+  padding: var(--space-xl) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255,255,255,0.55) !important;
+  border-color: rgba(255,255,255,0.8) !important;
+}
+
+.go-score-number {
+  font-family: var(--font-serif);
+  font-size: clamp(5rem, 15vw, 9rem);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Performance text */
+.go-perf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* High score row */
+.go-highscore-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Action buttons */
+.go-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.go-actions .btn {
+  width: min(320px, 100%);
+}
+
+/* Auto-reset countdown */
+.go-countdown {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+}
