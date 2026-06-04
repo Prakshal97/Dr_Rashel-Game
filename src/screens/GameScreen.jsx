@@ -36,7 +36,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
     const u2 = GameEvents.on(EVENTS.TIMER_UPDATE, e => setTimeLeft(e.detail.timeLeft))
     const u3 = GameEvents.on(EVENTS.DROPLET_TAP,  e => {
       const { x, y, points, type } = e.detail
-      setLastPop({ id: Date.now(), x, y, points, gold: type === 'golden' })
+      setLastPop({ id: Date.now(), x, y, points, type })
     })
     const u4 = GameEvents.on(EVENTS.GAME_END, e => onGameEnd(e.detail))
     return () => { u1(); u2(); u3(); u4() }
@@ -164,12 +164,15 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
 }
 
 function FloatingPop({ pop }) {
+  const isHazard = pop.points < 0;
+  const isGold = pop.type === 'golden';
+  const prefix = isHazard ? '' : '+';
   return (
     <div
-      className={`float-pop ${pop.gold ? 'float-pop--gold' : 'float-pop--normal'}`}
+      className={`float-pop ${isHazard ? 'float-pop--hazard' : isGold ? 'float-pop--gold' : 'float-pop--normal'}`}
       style={{ left: pop.x, top: pop.y - 60 }}
     >
-      {pop.gold ? '✨ ' : ''}{'+' + pop.points}
+      {isGold ? '✨ ' : ''}{prefix}{pop.points}
     </div>
   )
 }

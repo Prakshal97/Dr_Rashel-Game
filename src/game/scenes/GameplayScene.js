@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 import { GameEvents, EVENTS } from '../events/GameEvents.js'
 
-const DROPLET_TYPES = { NORMAL: 'normal', GOLDEN: 'golden' }
+const DROPLET_TYPES = { NORMAL: 'normal', GOLDEN: 'golden', POLLUTION: 'pollution', UV_RAY: 'uv_ray' }
 
 /**
  * GameplayScene – Full premium gameplay.
@@ -25,6 +25,8 @@ export class GameplayScene extends Phaser.Scene {
       pointsNormal:   cfg.pointsNormal       ?? 10,
       pointsGolden:   cfg.pointsGolden       ?? 25,
       goldenFreq:     cfg.goldenFrequency    ?? 0.15,
+      hazardFreq:     cfg.hazardFreq         ?? 0.15,
+      penaltyPoints:  cfg.penaltyPoints      ?? 10,
       soundEnabled:   cfg.soundEnabled       ?? true,
       highScore:      cfg.highScore          ?? 0,
     }
@@ -142,8 +144,23 @@ export class GameplayScene extends Phaser.Scene {
     if (this.droplets.getLength() >= 18) return
 
     const W       = this.scale.width
-    const isGold  = Math.random() < this.cfg.goldenFreq
-    const texture = isGold ? 'gold-drop' : 'water-drop'
+    const rand = Math.random()
+    let isHazard = false
+    let isGold = false
+    let dropType = DROPLET_TYPES.NORMAL
+    
+    if (rand < this.cfg.hazardFreq) {
+      isHazard = true
+      dropType = Math.random() < 0.5 ? DROPLET_TYPES.POLLUTION : DROPLET_TYPES.UV_RAY
+    } else if (rand < this.cfg.hazardFreq + this.cfg.goldenFreq) {
+      isGold = true
+      dropType = DROPLET_TYPES.GOLDEN
+    }
+
+    let texture = 'water-drop'
+    if (isGold) texture = 'gold-drop'
+    if (dropType === DROPLET_TYPES.POLLUTION) texture = 'pollution-drop'
+    if (dropType === DROPLET_TYPES.UV_RAY) texture = 'uv-drop'
 
     // Make sure canvas texture exists (fallback to white square if BootScene missed)
     const texKey  = this.textures.exists(texture) ? texture : '__DEFAULT'
@@ -159,19 +176,33 @@ export class GameplayScene extends Phaser.Scene {
     const dispH = Math.round(dispW * 1.27)
     img.setDisplaySize(dispW, dispH)
 
-    // Two-line label: "1%" on top, "Ceramide" below
-    // Teal drop = dark purple text; Purple drop = white text
-    const textColor1 = isGold ? '#ffffff' : '#321682'   // "1%"
-    const textColor2 = isGold ? '#ffffff' : '#321682'   // "Ceramide"
-    const strokeCol  = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
+    let label1 = '1%'
+    let label2 = 'Ceramide'
+    let textColor1 = isGold ? '#ffffff' : '#321682'
+    let textColor2 = isGold ? '#ffffff' : '#321682'
+    let strokeCol  = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
+
+    if (dropType === DROPLET_TYPES.POLLUTION) {
+      label1 = 'SMOG'
+      label2 = 'Toxin'
+      textColor1 = '#ffffff'
+      textColor2 = '#5fba45'
+      strokeCol = 'rgba(10,20,10,0.8)'
+    } else if (dropType === DROPLET_TYPES.UV_RAY) {
+      label1 = 'UV'
+      label2 = 'Rays'
+      textColor1 = '#ffffff'
+      textColor2 = '#ffeb3b'
+      strokeCol = 'rgba(50,0,0,0.8)'
+    }
 
     // Image origin is at (0.5, 0.5), so Y=0 is the exact geometric center.
     // The visual center of the bulb is slightly below 0.
     const dropCY = dispH * 0.05
 
-    const pctText = this.add.text(0, dropCY - dispH * 0.03, '1%', {
+    const pctText = this.add.text(0, dropCY - dispH * 0.03, label1, {
       fontFamily:      'Inter, sans-serif',
-      fontSize:        Math.round(dispW * 0.20) + 'px',
+      fontSize:        Math.round(dispW * (isHazard ? 0.16 : 0.20)) + 'px',
       color:           textColor1,
       fontStyle:       'bold',
       stroke:          strokeCol,
@@ -179,7 +210,7 @@ export class GameplayScene extends Phaser.Scene {
       resolution:      2,
     }).setOrigin(0.5)
 
-    const cerText = this.add.text(0, dropCY + dispH * 0.12, 'Ceramide', {
+    const cerText = this.add.text(0, dropCY + dispH * 0.12, label2, {
       fontFamily:      'Inter, sans-serif',
       fontSize:        Math.round(dispW * 0.12) + 'px',
       color:           textColor2,
@@ -191,8 +222,15 @@ export class GameplayScene extends Phaser.Scene {
 
     drop.add([img, pctText, cerText])
 
-    drop.dropType  = isGold ? DROPLET_TYPES.GOLDEN : DROPLET_TYPES.NORMAL
-    drop.points    = isGold ? this.cfg.pointsGolden : this.cfg.pointsNormal
+    drop.dropType  = dropType
+    if (isHazard) {
+      drop.points = -this.cfg.penaltyPoints
+    } else if (isGold) {
+      drop.points = this.cfg.pointsGolden
+    } else {
+      drop.points = this.cfg.pointsNormal
+    }
+    
     drop.speedY    = Phaser.Math.FloatBetween(this.cfg.speedMin, this.cfg.speedMax)
     drop.driftX    = Phaser.Math.FloatBetween(-25, 25)
     drop.startX    = x
@@ -208,6 +246,15 @@ export class GameplayScene extends Phaser.Scene {
         yoyo:     true,
         repeat:   -1,
         ease:     'Sine.easeInOut',
+      })
+    } else if (isHazard) {
+      this.tweens.add({
+        targets:  drop,
+        scaleX:   { from: 0.95, to: 1.05 },
+        scaleY:   { from: 0.95, to: 1.05 },
+        duration: dropType === DROPLET_TYPES.UV_RAY ? 150 : 800,
+        yoyo:     true,
+        repeat:   -1,
       })
     }
 
@@ -256,6 +303,7 @@ export class GameplayScene extends Phaser.Scene {
   onDropletTapped(drop, tapX, tapY) {
     const { points, dropType } = drop
     const isGold = dropType === DROPLET_TYPES.GOLDEN
+    const isHazard = dropType === DROPLET_TYPES.POLLUTION || dropType === DROPLET_TYPES.UV_RAY
 
     // Remove droplet
     this.tweens.killTweensOf(drop)
@@ -263,27 +311,35 @@ export class GameplayScene extends Phaser.Scene {
 
     // ── Combo logic ────────────────────────────────────────
     const now = this.time.now
-    if (now - this.lastHitTime < 1600) {
-      this.combo = Math.min(this.combo + 1, 10)
-    } else {
-      this.combo = 1
-    }
-    this.lastHitTime = now
-
-    // Reset combo after inactivity
-    if (this.comboResetEvt) this.comboResetEvt.destroy()
-    this.comboResetEvt = this.time.delayedCall(1600, () => { this.combo = 0 })
-
-    // Bonus points for combo (flat bonus, not multiplier – clearer for visitors)
     let bonusPoints = 0
-    if (this.combo >= 5)      bonusPoints = 15
-    else if (this.combo >= 3) bonusPoints = 8
-    else if (this.combo >= 2) bonusPoints = 4
+    let totalPoints = 0
 
-    const totalPoints = points + bonusPoints
+    if (isHazard) {
+      this.combo = 0
+      totalPoints = points // negative
+    } else {
+      if (now - this.lastHitTime < 1600) {
+        this.combo = Math.min(this.combo + 1, 10)
+      } else {
+        this.combo = 1
+      }
+      this.lastHitTime = now
+
+      // Reset combo after inactivity
+      if (this.comboResetEvt) this.comboResetEvt.destroy()
+      this.comboResetEvt = this.time.delayedCall(1600, () => { this.combo = 0 })
+
+      // Bonus points for combo
+      if (this.combo >= 5)      bonusPoints = 15
+      else if (this.combo >= 3) bonusPoints = 8
+      else if (this.combo >= 2) bonusPoints = 4
+
+      totalPoints = points + bonusPoints
+    }
 
     // ── Score ──────────────────────────────────────────────
     this.score += totalPoints
+    if (this.score < 0) this.score = 0 // Floor score at 0
     const wasHigh = this.score > this.highScore
     if (wasHigh) this.highScore = this.score
 
@@ -294,11 +350,16 @@ export class GameplayScene extends Phaser.Scene {
     })
 
     // ── Visuals ────────────────────────────────────────────
-    this.playSplash(tapX, tapY, isGold)
-    this.showScorePopup(tapX, tapY, totalPoints, isGold, bonusPoints > 0)
-    if (this.combo >= 2) this.showComboText(this.combo)
-
-    this.playTapSound(isGold)
+    if (isHazard) {
+      this.playHazardSplash(tapX, tapY, dropType)
+      this.showScorePopup(tapX, tapY, totalPoints, false, false, true)
+      this.playHazardSound(dropType)
+    } else {
+      this.playSplash(tapX, tapY, isGold)
+      this.showScorePopup(tapX, tapY, totalPoints, isGold, bonusPoints > 0, false)
+      if (this.combo >= 2) this.showComboText(this.combo)
+      this.playTapSound(isGold)
+    }
 
     GameEvents.emit(EVENTS.DROPLET_TAP, { x: tapX, y: tapY, points: totalPoints, type: dropType })
   }
@@ -353,12 +414,47 @@ export class GameplayScene extends Phaser.Scene {
     })
   }
 
+  playHazardSplash(x, y, dropType) {
+    const mainColor = dropType === DROPLET_TYPES.POLLUTION ? 0x111111 : 0xff5722
+    const glowColor = dropType === DROPLET_TYPES.POLLUTION ? 0x5fba45 : 0xffeb3b
+    const count = 14
+
+    // Glow burst (expand + fade)
+    const burst = this.add.circle(x, y, 20, glowColor, 0.8).setDepth(10)
+    this.tweens.add({
+      targets: burst, scaleX: 6, scaleY: 6, alpha: 0,
+      duration: 300, ease: 'Quad.easeOut',
+      onComplete: () => burst.destroy(),
+    })
+
+    // Particles
+    for (let i = 0; i < count; i++) {
+      const angle  = (i / count) * Math.PI * 2 + Math.random() * 0.5
+      const speed  = Phaser.Math.Between(100, 220)
+      const size   = Phaser.Math.Between(6, 14)
+      const p      = this.add.circle(x, y, size, mainColor, 0.9).setDepth(10)
+      this.tweens.add({
+        targets:  p,
+        x:        x + Math.cos(angle) * speed,
+        y:        y + Math.sin(angle) * speed,
+        alpha:    0,
+        scaleX:   0.2, scaleY: 0.2,
+        duration: Phaser.Math.Between(400, 600),
+        ease:     'Cubic.easeOut',
+        onComplete: () => p.destroy(),
+      })
+    }
+    
+    this.cameras.main.shake(150, 0.005)
+  }
+
   // ── Score popup ───────────────────────────────────────────────
 
-  showScorePopup(x, y, points, isGold, isCombo) {
-    const label = (points > 0 ? '+' : '') + points
-    const color = isGold ? '#f0c040' : '#e8f4ff'
-    const size  = isGold ? '42px' : isCombo ? '36px' : '30px'
+  showScorePopup(x, y, points, isGold, isCombo, isHazard = false) {
+    const label = (points > 0 && !isHazard ? '+' : '') + points
+    let color = isGold ? '#f0c040' : '#e8f4ff'
+    if (isHazard) color = '#ff3333'
+    const size  = (isGold || isHazard) ? '42px' : isCombo ? '36px' : '30px'
 
     const text = this.add.text(x, y - 24, label, {
       fontFamily:      'Inter, sans-serif',
@@ -457,6 +553,30 @@ export class GameplayScene extends Phaser.Scene {
         gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.22)
         osc.start(); osc.stop(this.audioCtx.currentTime + 0.22)
       }
+    } catch { /* silent fail */ }
+  }
+
+  playHazardSound(dropType) {
+    if (!this.cfg.soundEnabled || !this.audioCtx) return
+    try {
+      if (this.audioCtx.state === 'suspended') this.audioCtx.resume()
+      const osc = this.audioCtx.createOscillator()
+      const gain = this.audioCtx.createGain()
+      osc.connect(gain); gain.connect(this.audioCtx.destination)
+      
+      if (dropType === DROPLET_TYPES.POLLUTION) {
+        osc.type = 'sawtooth'
+        osc.frequency.setValueAtTime(120, this.audioCtx.currentTime)
+        osc.frequency.exponentialRampToValueAtTime(60, this.audioCtx.currentTime + 0.3)
+      } else {
+        osc.type = 'square'
+        osc.frequency.setValueAtTime(200, this.audioCtx.currentTime)
+        osc.frequency.exponentialRampToValueAtTime(80, this.audioCtx.currentTime + 0.2)
+      }
+      
+      gain.gain.setValueAtTime(0.2, this.audioCtx.currentTime)
+      gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.3)
+      osc.start(); osc.stop(this.audioCtx.currentTime + 0.3)
     } catch { /* silent fail */ }
   }
 

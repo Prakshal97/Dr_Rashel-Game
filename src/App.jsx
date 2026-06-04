@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { GameProvider, useGame } from './context/GameContext.jsx'
 
+import WelcomeScreen from './screens/WelcomeScreen.jsx'
 import IdleScreen from './screens/IdleScreen.jsx'
 import GameScreen from './screens/GameScreen.jsx'
 import GameOverScreen from './screens/GameOverScreen.jsx'
@@ -10,6 +11,7 @@ import AdminPanel from './screens/AdminPanel.jsx'
 import './App.css'
 
 const SCREEN = {
+  WELCOME: 'WELCOME',
   IDLE: 'IDLE',
   GAME: 'GAME',
   NAME_ENTRY: 'NAME_ENTRY',  // new intermediate screen
@@ -34,7 +36,7 @@ function AppInner() {
     resetLeaderboard,
   } = useGame()
 
-  const [screen, setScreen] = useState(SCREEN.IDLE)
+  const [screen, setScreen] = useState(SCREEN.WELCOME)
   const [gameResult, setGameResult] = useState(null)
   const [pendingScore, setPendingScore] = useState(null)
   const [adminAuth, setAdminAuth] = useState(false)
@@ -136,7 +138,7 @@ function AppInner() {
 
   const handleAdminClose = () => {
     setAdminAuth(false)
-    setScreen(SCREEN.IDLE)
+    setScreen(SCREEN.WELCOME)
   }
 
   // ── Render ──────────────────────────────────────────────────────
@@ -146,6 +148,12 @@ function AppInner() {
       onTouchStart={handleTopLevelTouch}
       onMouseDown={handleTopLevelTouch}
     >
+      {screen === SCREEN.WELCOME && (
+        <WelcomeScreen
+          onBegin={() => setScreen(SCREEN.IDLE)}
+        />
+      )}
+
       {screen === SCREEN.IDLE && (
         <IdleScreen
           onStart={startGame}
@@ -227,7 +235,7 @@ function AppInner() {
           settings={settings}
           onPlayAgain={playAgain}
           onShowLeaderboard={showLeaderboard}
-          onIdle={goToIdle}
+          onIdle={() => setScreen(SCREEN.WELCOME)}
         />
       )}
 

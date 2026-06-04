@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'react'
-import './IdleScreen.css'
+import './WelcomeScreen.css'
 
-export default function IdleScreen({ onStart, settings }) {
+export default function WelcomeScreen({ onBegin }) {
   const canvasRef = useRef(null)
-  const logoSrc = settings?.customLogo || './assets/logo.png'
 
   // Canvas particle system for realistic water drops
   useEffect(() => {
@@ -85,7 +84,7 @@ export default function IdleScreen({ onStart, settings }) {
   }, [])
 
   return (
-    <div className="idle-screen" onClick={onStart}>
+    <div className="welcome-screen">
       <div className="idle-grid-overlay" />
       <canvas ref={canvasRef} className="idle-particles" />
 
@@ -110,74 +109,30 @@ export default function IdleScreen({ onStart, settings }) {
         </svg>
       </div>
 
-      <div className="idle-content">
-        {/* Top Badge */}
-        <div className="idle-badge">
+      <div className="welcome-content">
+        <div className="idle-badge" style={{ marginBottom: '20px', zIndex: 1 }}>
           <span className="idle-badge-dot"></span>
           <span className="idle-badge-text">PREMIUM SKINCARE - EXHIBITION</span>
           <span className="idle-badge-dot"></span>
         </div>
 
-        {/* Logo */}
-        <img src={logoSrc} alt="DR.RASHEL BEAUTY ELIXIRS" className="idle-logo" />
-
-        {/* Title */}
-        <div className="idle-title-container">
-          <span className="idle-title-hydration">Hydration</span>
-          <span className="idle-title-challenge">Challenge</span>
+        <div className="welcome-speech-bubble">
+          <p>
+            Welcome to the <strong>Dr. Rashel Hydration Challenge!</strong>
+          </p>
+          <p style={{ marginTop: '8px' }}>
+            Test your reflexes, build your glow, and discover the power of hydration.
+          </p>
         </div>
 
-        {/* Divider */}
-        <div className="idle-divider"></div>
-
-        {/* Subtitle */}
-        <p className="idle-subtitle">
-          Catch as many hydration droplets as<br />
-          possible in <span className="idle-subtitle-bold">30 seconds</span>
-        </p>
-
-        {/* Hint Cards */}
-        <div className="idle-cards">
-          <div className="idle-card idle-card--teal">
-            <div className="card-drop-wrapper">
-              <div className="card-drop card-drop--teal"></div>
-            </div>
-            <div className="card-text">
-              <span className="card-pts">+10</span>
-              <span className="card-label card-label--teal">WATER DROP</span>
-            </div>
+        <div className="welcome-character-wrap">
+          <div className="checkerboard-bg">
+            <div className="glow-effect"></div>
           </div>
-          <div className="idle-card idle-card--purple">
-            <div className="card-drop-wrapper">
-              <div className="card-drop card-drop--purple"></div>
-            </div>
-            <div className="card-text">
-              <span className="card-pts">+25</span>
-              <span className="card-label card-label--purple">GOLD SERUM</span>
-            </div>
-          </div>
-          <div className="idle-card idle-card--dark">
-            <div className="card-drop-wrapper">
-              <div className="card-drop card-drop--dark"></div>
-            </div>
-            <div className="card-text">
-              <span className="card-pts card-pts--neg">-10</span>
-              <span className="card-label card-label--dark">POLLUTION</span>
-            </div>
-          </div>
-          <div className="idle-card idle-card--orange">
-            <div className="card-drop-wrapper">
-              <div className="card-drop card-drop--orange"></div>
-            </div>
-            <div className="card-text">
-              <span className="card-pts card-pts--neg">-10</span>
-              <span className="card-label card-label--orange">UV RAYS</span>
-            </div>
-          </div>
+          <img src="./assets/character.png" alt="Character" className="character-img" onError={(e) => { e.target.style.display = 'none'; }} />
         </div>
 
-        {/* CTA */}
-        <button className="idle-cta-btn">TAP TO PLAY</button>
+        <button className="idle-cta-btn welcome-cta-btn" onClick={onBegin}>TAP TO BEGIN</button>
       </div>
     </div>
   )

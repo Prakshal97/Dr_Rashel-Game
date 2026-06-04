@@ -48,6 +48,8 @@ export class BootScene extends Phaser.Scene {
   create() {
     this._genDropTexture('water-drop', false)
     this._genDropTexture('gold-drop',  true)
+    this._genPollutionTexture('pollution-drop')
+    this._genUVTexture('uv-drop')
     this.scene.start('GameplayScene')
   }
 
@@ -161,6 +163,117 @@ export class BootScene extends Phaser.Scene {
     ctx.strokeStyle = isGolden ? 'rgba(101,59,192,0.30)' : 'rgba(26,152,120,0.22)'
     ctx.lineWidth = 1.5
     ctx.stroke()
+
+    this.textures.addCanvas(key, canvas)
+  }
+
+  _genPollutionTexture(key) {
+    if (this.textures.exists(key)) return
+    const W = 240, H = 300
+    const canvas = document.createElement('canvas')
+    canvas.width = W; canvas.height = H
+    const ctx = canvas.getContext('2d')
+
+    const cx = W / 2, cy = H / 2, r = 90
+    const path = () => {
+      ctx.beginPath()
+      for (let i = 0; i < 36; i++) {
+        const angle = (i / 36) * Math.PI * 2
+        // Make it jagged/blobby
+        const rOff = r + Math.sin(i * 4) * 12 + Math.cos(i * 7) * 8
+        const px = cx + Math.cos(angle) * rOff
+        const py = cy + Math.sin(angle) * rOff
+        if (i === 0) ctx.moveTo(px, py)
+        else ctx.lineTo(px, py)
+      }
+      ctx.closePath()
+    }
+
+    // Outer glow
+    ctx.save()
+    ctx.shadowColor = 'rgba(95, 255, 75, 0.6)'
+    ctx.shadowBlur = 25
+    path()
+    ctx.fillStyle = 'rgba(20,20,20,0.01)'
+    ctx.fill()
+    ctx.restore()
+
+    // Main gradient (dark grey/black to toxic green edge)
+    path()
+    const grad = ctx.createRadialGradient(cx - 20, cy - 20, 10, cx, cy, r + 20)
+    grad.addColorStop(0, '#555555')
+    grad.addColorStop(0.4, '#1b261b')
+    grad.addColorStop(0.8, '#0b140b')
+    grad.addColorStop(1, '#3a7d25')
+    ctx.fillStyle = grad
+    ctx.fill()
+    
+    // Acid green outline
+    path()
+    ctx.strokeStyle = '#5fba45'
+    ctx.lineWidth = 2.5
+    ctx.stroke()
+
+    // toxic spots
+    for (let i = 0; i < 6; i++) {
+      ctx.beginPath()
+      ctx.arc(cx - 35 + i*10, cy - 40 + (i%2)*30, 4 + (i%3)*4, 0, Math.PI*2)
+      ctx.fillStyle = 'rgba(110, 255, 80, 0.25)'
+      ctx.fill()
+    }
+
+    this.textures.addCanvas(key, canvas)
+  }
+
+  _genUVTexture(key) {
+    if (this.textures.exists(key)) return
+    const W = 240, H = 300
+    const canvas = document.createElement('canvas')
+    canvas.width = W; canvas.height = H
+    const ctx = canvas.getContext('2d')
+
+    const cx = W / 2, cy = H / 2, r1 = 95, r2 = 75
+    const spikes = 14
+    const path = () => {
+      ctx.beginPath()
+      for (let i = 0; i < spikes * 2; i++) {
+        const angle = (i / (spikes * 2)) * Math.PI * 2
+        const r = (i % 2 === 0) ? r1 : r2
+        const px = cx + Math.cos(angle) * r
+        const py = cy + Math.sin(angle) * r
+        if (i === 0) ctx.moveTo(px, py)
+        else ctx.lineTo(px, py)
+      }
+      ctx.closePath()
+    }
+
+    // Outer glow
+    ctx.save()
+    ctx.shadowColor = 'rgba(255, 60, 0, 0.7)'
+    ctx.shadowBlur = 30
+    path()
+    ctx.fillStyle = 'rgba(255,255,255,0.01)'
+    ctx.fill()
+    ctx.restore()
+
+    // Main gradient (yellow to intense orange/red)
+    path()
+    const grad = ctx.createRadialGradient(cx, cy, 10, cx, cy, r1)
+    grad.addColorStop(0, '#fffbe6')
+    grad.addColorStop(0.3, '#ffeb3b')
+    grad.addColorStop(0.7, '#ff5722')
+    grad.addColorStop(1, '#c2185b')
+    ctx.fillStyle = grad
+    ctx.fill()
+    
+    // Core brightness
+    ctx.beginPath()
+    ctx.arc(cx, cy, 45, 0, Math.PI*2)
+    const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 45)
+    coreGrad.addColorStop(0, 'rgba(255,255,255,0.9)')
+    coreGrad.addColorStop(1, 'rgba(255,255,255,0)')
+    ctx.fillStyle = coreGrad
+    ctx.fill()
 
     this.textures.addCanvas(key, canvas)
   }
