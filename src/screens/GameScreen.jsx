@@ -3,10 +3,6 @@ import { createPhaserGame } from '../game/PhaserGame.js'
 import { GameEvents, EVENTS } from '../game/events/GameEvents.js'
 import './GameScreen.css'
 
-/**
- * GameScreen – Hosts the Phaser canvas with dark luxury HUD overlay.
- * Features: Circular timer ring, Dr. Rashel logo badge, combo tracker.
- */
 export default function GameScreen({ settings, highScore: initialHighScore, onGameEnd }) {
   const containerRef  = useRef(null)
   const gameRef       = useRef(null)
@@ -14,8 +10,8 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
   const [score,     setScore]     = useState(0)
   const [timeLeft,  setTimeLeft]  = useState(settings.gameDuration)
   const [highScore, setHighScore] = useState(initialHighScore)
-  const [isNewHigh, setIsNewHigh] = useState(false)
-  const [lastPop,   setLastPop]   = useState(null)  // { id, text, x, y, gold }
+  const [ceramide,  setCeramide]  = useState(1) // Fake tracker just for visuals as requested
+  const [lastPop,   setLastPop]   = useState(null)
 
   // ── Launch Phaser ─────────────────────────────────────────────
   useEffect(() => {
@@ -39,10 +35,9 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
   // ── Subscribe to Phaser events ────────────────────────────────
   useEffect(() => {
     const unsubScore = GameEvents.on(EVENTS.SCORE_UPDATE, (e) => {
-      const { score: s, highScore: h, isNewHigh: inh } = e.detail
+      const { score: s, highScore: h } = e.detail
       setScore(s)
       setHighScore(h)
-      if (inh) setIsNewHigh(true)
     })
 
     const unsubTimer = GameEvents.on(EVENTS.TIMER_UPDATE, (e) => {
@@ -52,6 +47,9 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
     const unsubTap = GameEvents.on(EVENTS.DROPLET_TAP, (e) => {
       const { x, y, points, type } = e.detail
       setLastPop({ id: Date.now(), x, y, points, gold: type === 'golden' })
+      if (type === 'golden') {
+        setCeramide(c => Math.min(c + 1, 3))
+      }
     })
 
     const unsubEnd = GameEvents.on(EVENTS.GAME_END, (e) => {
@@ -66,106 +64,90 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
     }
   }, [onGameEnd])
 
-  // Timer urgency
-  const timerUrgent   = timeLeft <= 10
-  const timerCritical = timeLeft <= 5
-
-  // Circular ring math
-  const RADIUS       = 32
-  const CIRCUMFERENCE = 2 * Math.PI * RADIUS  // ≈ 201
-  const progress     = timeLeft / settings.gameDuration
-  const dashOffset   = CIRCUMFERENCE * (1 - progress)
-  const ringColor    = timerCritical
-    ? '#b02020'
-    : timerUrgent
-      ? '#d05a10'
-      : 'var(--color-teal-mid)'
-
-  // "So close!" indicator
-  const gap     = Math.max(0, highScore - score)
-  const soClose = !isNewHigh && highScore > 0 && gap > 0 && gap <= 30 && score > 0
+  // Circular ring math for the timer
+  const RADIUS = 34
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+  const progress = timeLeft / settings.gameDuration
+  const dashOffset = CIRCUMFERENCE * (1 - progress)
 
   return (
     <div className="game-screen">
-      {/* Phaser canvas container */}
       <div id="phaser-container" ref={containerRef} className="phaser-container" />
 
       {/* HUD overlay */}
       <div className="game-hud">
 
-        {/* Best score — left */}
-        <div className={`hud-card hud-card--left glass-card ${soClose ? 'hud-card--alert' : ''}`}>
-          <span className="hud-label text-upper text-muted body-sm">Best</span>
-          <span className={`hud-value heading-sm ${isNewHigh ? 'text-gold' : soClose ? 'hud-close-color' : 'text-aqua'}`}>
-            {highScore}
-          </span>
-          {isNewHigh && <span className="hud-new-high text-gold body-sm">★ NEW!</span>}
-          {soClose && <span className="hud-so-close body-sm">SO CLOSE! 🔥</span>}
-        </div>
-
-        {/* Timer — center with circular ring */}
-        <div className={`hud-card hud-card--center glass-card ${timerUrgent ? 'hud-urgent' : ''}`}>
-          <span className="hud-label text-upper text-muted body-sm">Time</span>
-          <div className="hud-ring-wrap">
-            <svg className="hud-ring-svg" viewBox="0 0 80 80" width="80" height="80">
-              {/* Track */}
-              <circle
-                cx="40" cy="40" r={RADIUS}
-                fill="none"
-                stroke="rgba(10,74,60,0.15)"
-                strokeWidth="5"
-              />
-              {/* Progress */}
-              <circle
-                cx="40" cy="40" r={RADIUS}
-                fill="none"
-                stroke={ringColor}
-                strokeWidth="5"
-                strokeLinecap="round"
-                strokeDasharray={CIRCUMFERENCE}
-                strokeDashoffset={dashOffset}
-                style={{
-                  transform: 'rotate(-90deg)',
-                  transformOrigin: 'center',
-                  transition: 'stroke-dashoffset 0.9s linear, stroke 0.3s',
-                  filter: `drop-shadow(0 0 6px ${ringColor})`,
-                }}
-              />
-              {/* Timer text */}
-              <text
-                x="40" y="44"
-                textAnchor="middle"
-                dominantBaseline="middle"
-                fill={ringColor}
-                fontFamily="Inter, sans-serif"
-                fontSize="22"
-                fontWeight="700"
-                style={{ transition: 'fill 0.3s' }}
-              >
-                {timeLeft}
-              </text>
-            </svg>
+        {/* LEFT COLUMN: Best Score & Ceramide Tracker */}
+        <div className="hud-left">
+          {/* Best Score Pill */}
+          <div className="hud-pill hud-pill-best">
+            <div className="hud-best-col">
+              <span className="hud-label-best">BEST</span>
+              <span className="hud-val-best">{highScore}</span>
+            </div>
+            <div className="hud-icon-trophy">🏆</div>
+          </div>
+          
+          {/* Ceramide Tracker Pill */}
+          <div className="hud-pill hud-pill-ceramide">
+            <div className="hud-ceramide-header">
+              <span className="hud-label-ceramide">CERAMIDE</span>
+              <span className="hud-val-ceramide">{ceramide} / 3</span>
+            </div>
+            <div className="hud-ceramide-bar-bg">
+              <div 
+                className="hud-ceramide-bar-fill" 
+                style={{ width: `${(ceramide / 3) * 100}%` }}
+              ></div>
+            </div>
           </div>
         </div>
 
-        {/* Score — right */}
-        <div className="hud-card hud-card--right glass-card">
-          <span className="hud-label text-upper text-muted body-sm">Score</span>
-          <span className="hud-value heading-sm" style={{ color: 'var(--color-text-primary)' }}>{score}</span>
+        {/* CENTER: Bronze Timer Ring */}
+        <div className="hud-center">
+          <div className="hud-timer-ring-wrapper">
+            <div className="hud-timer-inner">
+              <span className="hud-timer-label">TIME</span>
+              <span className="hud-timer-val">{timeLeft}</span>
+              <svg className="hud-timer-svg" viewBox="0 0 80 80">
+                <circle
+                  cx="40" cy="40" r={RADIUS}
+                  fill="none"
+                  stroke="#3b5eca" /* inner blue progress color */
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                  strokeDasharray={CIRCUMFERENCE}
+                  strokeDashoffset={dashOffset}
+                  style={{ transition: 'stroke-dashoffset 1s linear' }}
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT: Score Pill */}
+        <div className="hud-pill hud-pill-score">
+          <div className="hud-icon-drop-wrap">
+            <div className="hud-icon-drop"></div>
+          </div>
+          <div className="hud-score-col">
+            <span className="hud-label-score">SCORE</span>
+            <span className="hud-val-score">{score}</span>
+          </div>
         </div>
       </div>
 
-      {/* Brand badge — bottom center */}
+      {/* BOTTOM CENTER: Watermark */}
       <div className="hud-brand-badge">
-        <img
-          src="./assets/logo.png"
-          alt="DR-RASHEL"
-          className="hud-brand-logo"
-          onError={e => { e.target.style.display = 'none' }}
-        />
+        <div className="hud-brand-text-best">
+          🏆 BEAT THE BEST: <span>{highScore} pts</span>
+        </div>
+        <div className="hud-brand-text-challenge">
+          DR·RASHEL  ·  HYDRATION CHALLENGE
+        </div>
       </div>
 
-      {/* Floating score popup */}
+      {/* Floating score popups */}
       {lastPop && (
         <FloatingPop key={lastPop.id} pop={lastPop} />
       )}

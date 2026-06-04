@@ -44,33 +44,12 @@ export class GameplayScene extends Phaser.Scene {
 
     // ── Background gradient ──────────────────────────────────
     const bgGfx = this.add.graphics()
-    bgGfx.fillGradientStyle(0x040d18, 0x071422, 0x050f1c, 0x040a14, 1)
+    bgGfx.fillGradientStyle(0xcbebe1, 0xcbebe1, 0xb3dfce, 0xb3dfce, 1)
     bgGfx.fillRect(0, 0, W, H)
     bgGfx.setDepth(0)
 
-    // ── Background bokeh orbs ────────────────────────────────
-    this._createBgOrbs(W, H)
-
-    // ── Rising ambient bubbles ───────────────────────────────
-    this._createAmbientBubbles(W, H)
-
-    // ── Brand watermark (bottom) ─────────────────────────────
-    this.add.text(W / 2, H - 22, 'DR-RASHEL  ·  HYDRATION CHALLENGE', {
-      fontFamily: 'Inter, sans-serif',
-      fontSize:   '13px',
-      color:      '#00d4ff',
-    }).setOrigin(0.5).setAlpha(0.22).setDepth(5).setLetterSpacing(5)
-
-    // ── High score challenge banner ──────────────────────────
-    if (this.cfg.highScore > 0) {
-      const bannerTxt = `🏆  BEAT THE BEST:  ${this.cfg.highScore} pts`
-      this.challengeBanner = this.add.text(W / 2, H - 50, bannerTxt, {
-        fontFamily: 'Inter, sans-serif',
-        fontSize:   '15px',
-        color:      '#f0c040',
-        fontStyle:  '600',
-      }).setOrigin(0.5).setAlpha(0.60).setDepth(5)
-    }
+    // ── Background water ripples ─────────────────────────────
+    this._createRipples(W, H)
 
     // ── Droplet group ────────────────────────────────────────
     this.droplets = this.add.group()
@@ -107,61 +86,42 @@ export class GameplayScene extends Phaser.Scene {
     GameEvents.emit(EVENTS.TIMER_UPDATE, { timeLeft: this.timeLeft })
     GameEvents.emit(EVENTS.SCORE_UPDATE, { score: 0, highScore: this.highScore, isNewHigh: false })
 
-    // Fade in from light aqua
-    this.cameras.main.fadeIn(400, 184, 235, 248)
+    // Fade in from mint green
+    this.cameras.main.fadeIn(400, 203, 235, 225)
   }
 
   // ── Background helpers ────────────────────────────────────────
 
-  _createBgOrbs(W, H) {
-    const orbs = [
-      { rx: 0.12, ry: 0.22, r: 160, col: 0x004466, a: 0.35, dur: 12000 },
-      { rx: 0.82, ry: 0.40, r: 220, col: 0x003355, a: 0.28, dur: 16000 },
-      { rx: 0.40, ry: 0.75, r: 180, col: 0x002244, a: 0.32, dur: 11000 },
-      { rx: 0.68, ry: 0.15, r: 130, col: 0x005577, a: 0.25, dur: 14000 },
-      { rx: 0.55, ry: 0.88, r: 240, col: 0x003366, a: 0.20, dur: 19000 },
-      { rx: 0.25, ry: 0.60, r: 100, col: 0x665500, a: 0.15, dur: 13000 },
-    ]
-    orbs.forEach((o, i) => {
-      const c = this.add.circle(o.rx * W, o.ry * H, o.r, o.col, o.a).setDepth(1)
+  _createRipples(W, H) {
+    const cx = W / 2
+    const cy = H / 2
+    // Create 4 concentric ripple rings
+    for (let i = 0; i < 5; i++) {
+      const ring = this.add.circle(cx, cy, 50, 0, 0).setStrokeStyle(1.5, 0xffffff, 0)
+      ring.setDepth(1)
+      
       this.tweens.add({
-        targets:  c,
-        x:        o.rx * W + Phaser.Math.Between(-70, 70),
-        y:        o.ry * H + Phaser.Math.Between(-50, 50),
-        scaleX:   1.18, scaleY: 1.18,
-        alpha:    o.a * 0.65,
-        duration: o.dur,
-        delay:    i * 700,
-        yoyo:     true,
-        repeat:   -1,
-        ease:     'Sine.easeInOut',
+        targets: ring,
+        radius: Math.max(W, H) * 0.7,
+        alpha: { start: 0.25, from: 0.25, to: 0 },
+        duration: 8000,
+        delay: i * 1600,
+        repeat: -1,
+        ease: 'Sine.easeOut'
       })
-    })
-  }
-
-  _createAmbientBubbles(W, H) {
-    for (let i = 0; i < 28; i++) {
-      const x     = Phaser.Math.Between(0, W)
-      const y     = Phaser.Math.Between(0, H)
-      const r     = Phaser.Math.Between(3, 10)
-      const col   = Phaser.Math.RND.pick([0x0099cc, 0x00ccff, 0x336699, 0x004466, 0xffcc00])
-      const alpha = Phaser.Math.FloatBetween(0.04, 0.18)
-      const bub   = this.add.circle(x, y, r, col, alpha).setDepth(2)
-      bub.setStrokeStyle(0.5, col, alpha * 0.4)
-
+      
+      // An inner thicker ring for the ripple edge
+      const innerRing = this.add.circle(cx, cy, 40, 0, 0).setStrokeStyle(4, 0xffffff, 0)
+      innerRing.setDepth(1)
+      
       this.tweens.add({
-        targets:  bub,
-        y:        y - Phaser.Math.Between(300, H),
-        x:        x + Phaser.Math.Between(-80, 80),
-        alpha:    0,
-        duration: Phaser.Math.Between(7000, 18000),
-        ease:     'Sine.easeInOut',
-        delay:    Phaser.Math.Between(0, 10000),
-        repeat:   -1,
-        onRepeat: () => {
-          bub.setPosition(Phaser.Math.Between(0, W), H + 20)
-          bub.setAlpha(Phaser.Math.FloatBetween(0.06, 0.22))
-        },
+        targets: innerRing,
+        radius: Math.max(W, H) * 0.65,
+        alpha: { start: 0.1, from: 0.1, to: 0 },
+        duration: 8000,
+        delay: i * 1600,
+        repeat: -1,
+        ease: 'Sine.easeOut'
       })
     }
   }
@@ -338,8 +298,8 @@ export class GameplayScene extends Phaser.Scene {
   // ── Splash effect ─────────────────────────────────────────────
 
   playSplash(x, y, isGold) {
-    const mainColor  = isGold ? 0x653bc0 : 0x168065
-    const glowColor  = isGold ? 0xa078f0 : 0x42d8ae
+    const mainColor  = isGold ? 0x321682 : 0x168b6a
+    const glowColor  = isGold ? 0xb28bf7 : 0x7be8ce
     const count      = isGold ? 16 : 12
 
     // Glow burst (expand + fade)
@@ -523,10 +483,10 @@ export class GameplayScene extends Phaser.Scene {
 
     this.playSuccessSound()
 
-    // Flash dark, then fade
-    this.cameras.main.flash(350, 0, 180, 220, true)
+    // Flash light mint, then fade
+    this.cameras.main.flash(350, 203, 235, 225, true)
     this.time.delayedCall(750, () => {
-      this.cameras.main.fadeOut(550, 4, 13, 24)
+      this.cameras.main.fadeOut(550, 203, 235, 225)
       this.time.delayedCall(560, () => {
         GameEvents.emit(EVENTS.GAME_END, {
           score:     this.score,

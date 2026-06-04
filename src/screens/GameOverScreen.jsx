@@ -1,84 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import './GameOverScreen.css'
 
-const MESSAGES = [
-  {
-    min: 0, max: 100,
-    title: 'Good Try!',
-    sub: 'Keep hydrating and try again.',
-    product: "Boost your skin's hydration with",
-    productName: 'Dr. Rashel Vitamin C Serum',
-  },
-  {
-    min: 101, max: 250,
-    title: 'Well Done!',
-    sub: 'You\'re getting the hang of it.',
-    product: 'Level up your glow with',
-    productName: 'Dr. Rashel Hyaluronic Acid Serum',
-  },
-  {
-    min: 251, max: 500,
-    title: 'Great Performance!',
-    sub: 'You have excellent reflexes.',
-    product: 'You deserve the best — try',
-    productName: 'Dr. Rashel Collagen Face Cream',
-  },
-  {
-    min: 501, max: Infinity,
-    title: 'Hydration Champion!',
-    sub: 'An extraordinary result!',
-    product: 'Champions choose',
-    productName: 'Dr. Rashel Gold Collagen Mask',
-  },
-]
-
-function getPerformanceMessage(score) {
-  return MESSAGES.find(m => score >= m.min && score <= m.max) || MESSAGES[MESSAGES.length - 1]
-}
-
-// ── Confetti piece component ──────────────────────────────────
-function ConfettiSystem({ active }) {
-  const pieces = useRef([])
-
-  if (active && pieces.current.length === 0) {
-    const colors = ['#f0c040', '#40d8f8', '#ff7eb3', '#7ed8f8', '#f8d860', '#00d4ff', '#ffe066']
-    pieces.current = Array.from({ length: 72 }, (_, i) => ({
-      id: i,
-      color: colors[i % colors.length],
-      left: `${Math.random() * 100}%`,
-      delay: `${Math.random() * 2.5}s`,
-      duration: `${2.5 + Math.random() * 2}s`,
-      size: `${8 + Math.random() * 10}px`,
-      rotate: `${Math.random() * 360}deg`,
-      shape: Math.random() > 0.5 ? 'circle' : 'square',
-    }))
-  }
-
-  if (!active) return null
-  return (
-    <div className="confetti-container" aria-hidden="true">
-      {pieces.current.map(p => (
-        <div
-          key={p.id}
-          className="confetti-piece"
-          style={{
-            left: p.left,
-            top: '-20px',
-            width: p.size,
-            height: p.size,
-            background: p.color,
-            borderRadius: p.shape === 'circle' ? '50%' : '2px',
-            animationDuration: p.duration,
-            animationDelay: p.delay,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-// ── Animated score counter ────────────────────────────────────
-function AnimatedScore({ target, isNewHigh }) {
+function AnimatedScore({ target }) {
   const [display, setDisplay] = useState(0)
 
   useEffect(() => {
@@ -95,109 +18,152 @@ function AnimatedScore({ target, isNewHigh }) {
     return () => cancelAnimationFrame(raf)
   }, [target])
 
-  return (
-    <div className={`go-score-number ${isNewHigh && target > 0 ? 'text-gold anim-pulse-gold' : ''}`} style={isNewHigh && target > 0 ? {} : { color: 'var(--color-teal-mid)' }}>
-      {display}
-    </div>
-  )
+  return <>{display}</>
 }
 
 export default function GameOverScreen({ result, onPlayAgain, onShowLeaderboard, onIdle }) {
-  const { score = 0, highScore = 0, isNewHigh = false } = result || {}
-  const perf = getPerformanceMessage(score)
+  const { score = 0, highScore = 0 } = result || {}
+  
+  // Re-use particle logic for glass/water droplets
+  const canvasRef = useRef(null)
+  
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext('2d')
+    let raf
+
+    const resize = () => {
+      canvas.width = window.innerWidth
+      canvas.height = window.innerHeight
+    }
+    resize()
+    window.addEventListener('resize', resize)
+
+    const drops = Array.from({ length: 20 }, () => createDrop(canvas))
+
+    function createDrop(c) {
+      return {
+        x: Math.random() * c.width,
+        y: Math.random() * c.height,
+        r: 8 + Math.random() * 12,
+        vy: 0.2 + Math.random() * 0.4,
+        wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.005 + Math.random() * 0.01,
+      }
+    }
+
+    function drawDrop(ctx, x, y, r) {
+      ctx.save()
+      
+      // Shadow
+      ctx.beginPath()
+      ctx.arc(x + r*0.3, y + r*0.3, r, 0, Math.PI * 2)
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
+      ctx.fill()
+
+      // Glass body
+      ctx.beginPath()
+      ctx.arc(x, y, r, 0, Math.PI * 2)
+      const grad = ctx.createRadialGradient(x - r*0.2, y - r*0.2, 0, x, y, r)
+      grad.addColorStop(0, 'rgba(255,255,255,0.85)')
+      grad.addColorStop(0.3, 'rgba(255,255,255,0.15)')
+      grad.addColorStop(0.8, 'rgba(150,220,200,0.25)')
+      grad.addColorStop(1, 'rgba(255,255,255,0.55)')
+      ctx.fillStyle = grad
+      ctx.fill()
+      
+      // Highlight
+      ctx.beginPath()
+      ctx.arc(x - r*0.4, y - r*0.4, r*0.15, 0, Math.PI * 2)
+      ctx.fillStyle = 'rgba(255,255,255,0.9)'
+      ctx.fill()
+
+      ctx.restore()
+    }
+
+    function tick() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      drops.forEach(d => {
+        d.wobble += d.wobbleSpeed
+        d.y += d.vy
+        const x = d.x + Math.sin(d.wobble) * 1.5
+        if (d.y - d.r > canvas.height) {
+          d.y = -d.r
+          d.x = Math.random() * canvas.width
+        }
+        drawDrop(ctx, x, d.y, d.r)
+      })
+      raf = requestAnimationFrame(tick)
+    }
+    tick()
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', resize)
+    }
+  }, [])
+
+  // Messages based on score
+  let title = "Good Try!"
+  let sub = "Keep hydrating and try again."
+  if (score > 100) { title = "Well Done!"; sub = "You're getting the hang of it." }
+  if (score > 250) { title = "Great Performance!"; sub = "You have excellent reflexes." }
+  if (score > 500) { title = "Hydration Champion!"; sub = "An extraordinary result!" }
 
   return (
     <div className="gameover-screen">
-      {/* Confetti — only on new high */}
-      <ConfettiSystem active={isNewHigh && score > 0} />
+      <div className="go-grid-overlay" />
+      <canvas ref={canvasRef} className="go-particles" />
 
-      {/* Ambient glow orbs */}
-      <div className="go-orb go-orb--aqua" />
-      <div className="go-orb go-orb--gold" />
+      {/* Wave Background */}
+      <div className="go-wave-bottom">
+        <svg viewBox="0 0 1440 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          {/* Subtle glowing swooshes */}
+          <path d="M0,150 C300,500 1140,500 1440,150" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
+          <path d="M0,120 C350,550 1090,550 1440,120" fill="none" stroke="rgba(220,180,255,0.5)" strokeWidth="2" />
+          <path d="M0,90 C400,600 1040,600 1440,90" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
+          
+          {/* Main Wave */}
+          <path d="M0,200 C400,600 1040,600 1440,200 L1440,450 L0,450 Z" fill="#321682" />
+          <path d="M0,230 C400,620 1040,620 1440,230 L1440,450 L0,450 Z" fill="#280f6e" />
+          
+          {/* Stars */}
+          <circle cx="200" cy="350" r="2.5" fill="#fff" opacity="0.8" />
+          <circle cx="350" cy="400" r="1.5" fill="#fff" opacity="0.4" />
+          <circle cx="1100" cy="360" r="3" fill="#fff" opacity="0.6" />
+          <circle cx="1250" cy="280" r="2" fill="#fff" opacity="0.9" />
+          <circle cx="800" cy="420" r="1.5" fill="#fff" opacity="0.5" />
+        </svg>
+      </div>
 
-      {/* Scrollable content wrapper */}
-      <div className="gameover-content">
+      <div className="go-content">
+        <div className="go-header-text">DR.RASHEL · HYDRATION CHALLENGE</div>
+        <h1 className="go-title">Time&apos;s Up</h1>
 
-        {/* Logo + header */}
-        <div className="go-header anim-fade-in-down">
-          <span className="text-upper body-sm" style={{ letterSpacing: '0.3em', color: 'var(--color-text-muted)' }}>
-            DR-RASHEL · HYDRATION CHALLENGE
-          </span>
-          <h1 className="heading-display heading-xl text-center go-title">
-            Time&apos;s Up
-          </h1>
-        </div>
-
-        {/* New High Score Banner */}
-        {isNewHigh && score > 0 && (
-          <div className="go-new-high glass-card glass-card--gold anim-scale-in delay-100">
-            <span className="go-new-high-stars">★ ★ ★</span>
-            <span className="text-upper body-sm text-gold" style={{ letterSpacing: '0.25em', fontWeight: 700 }}>
-              New High Score!
-            </span>
-            <span className="go-new-high-stars">★ ★ ★</span>
+        {/* Score Card */}
+        <div className="go-card-wrapper">
+          <div className="go-score-card">
+            <span className="go-card-label">YOUR SCORE</span>
+            <div className="go-score-value">
+              <AnimatedScore target={score} />
+            </div>
+            <span className="go-card-sub">hydration points</span>
           </div>
-        )}
-
-        {/* Score card with count-up animation */}
-        <div className="go-score-card glass-card anim-scale-in delay-200">
-          <span className="text-upper body-sm" style={{ letterSpacing: '0.2em', color: 'var(--color-text-muted)' }}>
-            Your Score
-          </span>
-          <AnimatedScore target={score} isNewHigh={isNewHigh} />
-          <span className="body-sm" style={{ color: 'var(--color-text-muted)' }}>hydration points</span>
         </div>
 
-        {/* Performance message */}
-        <div className="go-perf anim-fade-in-up delay-300">
-          <span className="go-perf-emoji">{perf.productEmoji}</span>
-          <h2 className="heading-display heading-md text-gold" style={{ marginTop: '4px' }}>
-            {perf.title}
-          </h2>
-          <p className="body-md" style={{ color: 'var(--color-text-secondary)', marginTop: '6px' }}>
-            {perf.sub}
-          </p>
+        <h2 className="go-message-title">{title}</h2>
+        <p className="go-message-sub">{sub}</p>
+
+        <div className="go-best-score">
+          BEST · <span className="go-best-score-value">{highScore} pts</span>
         </div>
 
-
-
-        {/* High score display */}
-        <div className="go-highscore-row anim-fade-in delay-500">
-          <span className="body-sm text-upper" style={{ letterSpacing: '0.15em', color: 'var(--color-text-muted)' }}>
-            Best &nbsp;·&nbsp;
-          </span>
-          <span className={`body-lg ${isNewHigh ? 'text-gold' : ''}`} style={{ fontWeight: 600, color: isNewHigh ? undefined : 'var(--color-teal-mid)' }}>
-            {highScore} pts
-          </span>
+        <div className="go-buttons">
+          <button className="go-btn go-btn-primary" onClick={onPlayAgain}>PLAY AGAIN</button>
+          <button className="go-btn go-btn-secondary" onClick={onShowLeaderboard}>LEADERBOARD</button>
+          <button className="go-btn go-btn-secondary" onClick={onIdle}>EXIT TO HOME</button>
         </div>
-
-        <div className="divider-gold anim-fade-in delay-500" style={{ width: '180px', margin: '0 auto' }} />
-
-        {/* Action buttons */}
-        <div className="go-actions anim-fade-in-up delay-600">
-          <button
-            id="go-play-again-btn"
-            className="btn btn-primary btn-lg"
-            onClick={onPlayAgain}
-          >
-            Play Again
-          </button>
-          <button
-            id="go-leaderboard-btn"
-            className="btn btn-ghost"
-            onClick={onShowLeaderboard}
-          >
-            Leaderboard
-          </button>
-          <button
-            id="go-home-btn"
-            className="btn btn-ghost"
-            onClick={onIdle}
-          >
-            Exit to Home
-          </button>
-        </div>
-
       </div>
     </div>
   )
