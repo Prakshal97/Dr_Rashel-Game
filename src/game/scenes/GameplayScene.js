@@ -197,14 +197,31 @@ export class GameplayScene extends Phaser.Scene {
 
     const margin  = 100
     const x       = Phaser.Math.Between(margin, W - margin)
-    const drop    = this.add.image(x, -120, texKey).setDepth(3)
 
-    // Large, touchscreen-friendly sizes: 140-180px normal, 165-205px golden
+    const drop = this.add.container(x, -120).setDepth(3)
+    const img  = this.add.image(0, 0, texKey)
+
+    // Smaller sizes: 95-125px normal, 115-145px golden
     const dispW = isGold
-      ? Phaser.Math.Between(165, 205)
-      : Phaser.Math.Between(140, 182)
-    const dispH = Math.round(dispW * 1.27)   // matches canvas aspect 240:305
-    drop.setDisplaySize(dispW, dispH)
+      ? Phaser.Math.Between(115, 145)
+      : Phaser.Math.Between(95, 125)
+    const dispH = Math.round(dispW * 1.27)
+    img.setDisplaySize(dispW, dispH)
+
+    const lblSize = isGold ? '14px' : '11px'
+    const lblColor = isGold ? '#0a0600' : '#ffffff'
+    const lblStroke = isGold ? '#f0c040' : '#00aadd'
+    
+    const text = this.add.text(0, dispH * 0.15, '1% Ceramide', {
+      fontFamily: 'Inter, sans-serif',
+      fontSize: lblSize,
+      color: lblColor,
+      fontWeight: '800',
+      stroke: lblStroke,
+      strokeThickness: 2
+    }).setOrigin(0.5)
+
+    drop.add([img, text])
 
     drop.dropType  = isGold ? DROPLET_TYPES.GOLDEN : DROPLET_TYPES.NORMAL
     drop.points    = isGold ? this.cfg.pointsGolden : this.cfg.pointsNormal
@@ -212,6 +229,7 @@ export class GameplayScene extends Phaser.Scene {
     drop.driftX    = Phaser.Math.FloatBetween(-25, 25)
     drop.startX    = x
     drop.startTime = this.time.now
+    drop.hitRadius = dispW * 0.55
 
     // Golden pulse glow
     if (isGold) {
@@ -259,7 +277,7 @@ export class GameplayScene extends Phaser.Scene {
     const children = [...this.droplets.getChildren()]
     for (const drop of children) {
       const dist   = Phaser.Math.Distance.Between(pointer.x, pointer.y, drop.x, drop.y)
-      const radius = drop.displayWidth * 0.55
+      const radius = drop.hitRadius
       if (dist < radius) {
         this.onDropletTapped(drop, pointer.x, pointer.y)
         break

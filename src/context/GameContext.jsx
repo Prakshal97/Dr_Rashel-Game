@@ -1,12 +1,12 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 
 // Bump this any time you need to wipe stored data (e.g. schema change)
-const SCHEMA_VERSION = '2'
+const SCHEMA_VERSION = '3'
 
 const DEFAULT_SETTINGS = {
-  gameDuration:       30,      // seconds
-  dropletSpeed:       { min: 150, max: 350 },
-  spawnFrequency:     1200,    // ms between spawns
+  gameDuration:       20,      // seconds
+  dropletSpeed:       { min: 250, max: 550 },
+  spawnFrequency:     800,     // ms between spawns
   pointsNormal:       10,
   pointsGolden:       25,
   goldenFrequency:    0.15,    // 15% chance
@@ -34,6 +34,7 @@ function migrateData() {
     if (storedVersion !== SCHEMA_VERSION) {
       localStorage.removeItem('drRashel_leaderboard')
       localStorage.removeItem('drRashel_highScore')
+      localStorage.removeItem('drRashel_settings')
       localStorage.setItem('drRashel_schemaVersion', SCHEMA_VERSION)
     }
   } catch { /* ignore */ }
