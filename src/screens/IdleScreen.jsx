@@ -13,36 +13,7 @@ export default function IdleScreen({ onStart, settings }) {
   const logoSrc = settings?.customLogo || './assets/logo.png'
   const bgSrc = settings?.customBackground || null
 
-  // Auto-attract countdown (starts 15 s after idle)
-  const [attractCountdown, setAttractCountdown] = useState(null)
-  const attractRef = useRef(null)
-
-  useEffect(() => {
-    // Restart attract timer whenever IdleScreen mounts
-    if (attractRef.current) clearInterval(attractRef.current)
-    let count = 15
-    const start = setTimeout(() => {
-      setAttractCountdown(count)
-      attractRef.current = setInterval(() => {
-        count -= 1
-        setAttractCountdown(count)
-        if (count <= 0) {
-          clearInterval(attractRef.current)
-          onStart()
-        }
-      }, 1000)
-    }, 15000)
-
-    return () => {
-      clearTimeout(start)
-      clearInterval(attractRef.current)
-    }
-  }, [onStart])
-
-  // Reset attract timer on any touch
   const handleStart = () => {
-    clearInterval(attractRef.current)
-    setAttractCountdown(null)
     onStart()
   }
 
@@ -205,13 +176,7 @@ export default function IdleScreen({ onStart, settings }) {
           TAP TO PLAY
         </button>
 
-        {/* Auto-attract countdown */}
-        {attractCountdown !== null && (
-          <p className="idle-attract body-sm text-muted anim-fade-in">
-            Starting automatically in{' '}
-            <span className="text-gold" style={{ fontWeight: 700 }}>{attractCountdown}s</span>
-          </p>
-        )}
+
 
       </div>
 
