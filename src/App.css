@@ -6,7 +6,7 @@
   background: var(--color-bg-gradient);
 }
 
-/* ── Password Modal ─────────────────────────────────────────── */
+/* ── Password Modal ─────────────────────────────────────── */
 .pw-overlay {
   position: fixed;
   inset: 0;
@@ -14,7 +14,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(4,13,24,0.80);
+  background: rgba(180, 230, 210, 0.55);
   backdrop-filter: blur(16px);
   animation: fadeIn 0.2s ease both;
 }
@@ -25,14 +25,14 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
-  background: rgba(8,25,45,0.92) !important;
-  border-color: rgba(0,212,255,0.2) !important;
-  box-shadow: 0 8px 60px rgba(0,0,0,0.5), var(--shadow-card);
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(74,47,160,0.22) !important;
+  box-shadow: 0 8px 60px rgba(74,47,160,0.18), var(--shadow-card);
 }
 
 .pw-input {
-  background: rgba(0,212,255,0.05);
-  border: 1px solid rgba(0,212,255,0.2);
+  background: rgba(19,138,106,0.05);
+  border: 1px solid rgba(19,138,106,0.25);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -47,12 +47,12 @@
 
 .pw-input:focus {
   border-color: var(--color-teal-light);
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.12);
+  box-shadow: 0 0 0 2px rgba(19,138,106,0.14);
 }
 
 .pw-input--error {
-  border-color: #e05555 !important;
-  box-shadow: 0 0 0 2px rgba(224,85,85,0.15) !important;
+  border-color: #c0392b !important;
+  box-shadow: 0 0 0 2px rgba(192,57,43,0.15) !important;
   animation: shake 0.4s ease;
 }
 
@@ -64,7 +64,7 @@
   80%       { transform: translateX(5px); }
 }
 
-/* ── Name Entry Modal ───────────────────────────────────────── */
+/* ── Name Entry Modal ───────────────────────────────────── */
 .name-entry-overlay {
   position: fixed;
   inset: 0;
@@ -72,7 +72,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(4,13,24,0.88);
+  background: rgba(160, 220, 200, 0.60);
   backdrop-filter: blur(20px);
   animation: fadeIn 0.3s ease both;
 }
@@ -84,9 +84,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
-  background: rgba(8,25,45,0.95) !important;
-  border: 1px solid rgba(240,192,64,0.25) !important;
-  box-shadow: 0 0 80px rgba(240,192,64,0.12), var(--shadow-card-deep);
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(74,47,160,0.22) !important;
+  box-shadow: 0 0 80px rgba(74,47,160,0.14), var(--shadow-card-deep);
   overflow: hidden;
 }
 
@@ -100,12 +100,12 @@
 .ne-orb--gold {
   width: 250px; height: 250px;
   top: -100px; right: -80px;
-  background: radial-gradient(circle, rgba(240,192,64,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(74,47,160,0.12) 0%, transparent 70%);
 }
 .ne-orb--teal {
   width: 200px; height: 200px;
   bottom: -80px; left: -60px;
-  background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(19,138,106,0.10) 0%, transparent 70%);
 }
 
 .ne-content {
@@ -130,12 +130,13 @@
   font-weight: 300;
   line-height: 1;
   animation: countUp 0.4s var(--ease-out) both;
+  color: var(--color-gold);
 }
 
 .ne-input {
   width: 100%;
-  background: rgba(0,212,255,0.04);
-  border: 1px solid rgba(0,212,255,0.2);
+  background: rgba(19,138,106,0.04);
+  border: 1px solid rgba(19,138,106,0.25);
   border-radius: var(--radius-md);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -151,11 +152,12 @@
 .ne-input::placeholder {
   color: var(--color-text-muted);
   font-style: italic;
+  opacity: 0.7;
 }
 
 .ne-input:focus {
   border-color: var(--color-gold);
-  box-shadow: 0 0 0 2px rgba(240,192,64,0.12), 0 0 20px rgba(240,192,64,0.1);
+  box-shadow: 0 0 0 2px rgba(74,47,160,0.12), 0 0 20px rgba(74,47,160,0.08);
 }
 
 .ne-actions {

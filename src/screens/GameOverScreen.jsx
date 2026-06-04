@@ -96,7 +96,7 @@ function AnimatedScore({ target, isNewHigh }) {
   }, [target])
 
   return (
-    <div className={`go-score-number ${isNewHigh && target > 0 ? 'text-gold anim-pulse-gold' : 'text-aqua'}`}>
+    <div className={`go-score-number ${isNewHigh && target > 0 ? 'text-gold anim-pulse-gold' : ''}`} style={isNewHigh && target > 0 ? {} : { color: 'var(--color-teal-mid)' }}>
       {display}
     </div>
   )
@@ -120,7 +120,7 @@ export default function GameOverScreen({ result, onPlayAgain, onShowLeaderboard,
 
         {/* Logo + header */}
         <div className="go-header anim-fade-in-down">
-          <span className="text-upper text-muted body-sm" style={{ letterSpacing: '0.3em' }}>
+          <span className="text-upper body-sm" style={{ letterSpacing: '0.3em', color: 'var(--color-text-muted)' }}>
             DR-RASHEL · HYDRATION CHALLENGE
           </span>
           <h1 className="heading-display heading-xl text-center go-title">
@@ -141,11 +141,11 @@ export default function GameOverScreen({ result, onPlayAgain, onShowLeaderboard,
 
         {/* Score card with count-up animation */}
         <div className="go-score-card glass-card anim-scale-in delay-200">
-          <span className="text-upper text-muted body-sm" style={{ letterSpacing: '0.2em' }}>
+          <span className="text-upper body-sm" style={{ letterSpacing: '0.2em', color: 'var(--color-text-muted)' }}>
             Your Score
           </span>
           <AnimatedScore target={score} isNewHigh={isNewHigh} />
-          <span className="text-muted body-sm">hydration points</span>
+          <span className="body-sm" style={{ color: 'var(--color-text-muted)' }}>hydration points</span>
         </div>
 
         {/* Performance message */}
@@ -163,10 +163,10 @@ export default function GameOverScreen({ result, onPlayAgain, onShowLeaderboard,
 
         {/* High score display */}
         <div className="go-highscore-row anim-fade-in delay-500">
-          <span className="text-muted body-sm text-upper" style={{ letterSpacing: '0.15em' }}>
+          <span className="body-sm text-upper" style={{ letterSpacing: '0.15em', color: 'var(--color-text-muted)' }}>
             Best &nbsp;·&nbsp;
           </span>
-          <span className={`body-lg ${isNewHigh ? 'text-gold' : 'text-aqua'}`} style={{ fontWeight: 600 }}>
+          <span className={`body-lg ${isNewHigh ? 'text-gold' : ''}`} style={{ fontWeight: 600, color: isNewHigh ? undefined : 'var(--color-teal-mid)' }}>
             {highScore} pts
           </span>
         </div>

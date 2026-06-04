@@ -61,17 +61,17 @@ function AppInner() {
   }, [])
 
   const onGameEnd = useCallback((result) => {
-    // Don't submit yet — show name entry first if score > 0
-    if (result.score > 0) {
+    // Only ask for name if player beats the current high score
+    if (result.score > 0 && result.score > highScore) {
       setPendingScore(result)
       setScreen(SCREEN.NAME_ENTRY)
     } else {
-      // Zero score — skip name entry
+      // Did not beat high score — submit anonymously and go to game over
       const { newHighScore } = submitScore(result.score, 'Anonymous')
       setGameResult({ ...result, highScore: newHighScore, isNewHigh: false })
       setScreen(SCREEN.GAME_OVER)
     }
-  }, [submitScore])
+  }, [submitScore, highScore])
 
   const handleNameSubmit = useCallback(() => {
     if (!pendingScore) return

@@ -1,4 +1,4 @@
-/* ── GameScreen — Dark Luxury HUD ───────────────────────────── */
+/* ── GameScreen — Mint + Purple HUD ─────────────────────── */
 
 .game-screen {
   position: absolute;
@@ -13,7 +13,7 @@
   z-index: 1;
 }
 
-/* ── HUD overlay ─────────────────────────────────────────────── */
+/* ── HUD overlay ─────────────────────────────────────────── */
 .game-hud {
   position: absolute;
   top: 0;
@@ -37,28 +37,28 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: var(--radius-md);
-  background: rgba(4, 14, 28, 0.70);
-  border: 1px solid rgba(0,212,255,0.18);
-  box-shadow: 0 2px 20px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(19, 138, 106, 0.22);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.10), inset 0 1px 0 rgba(255,255,255,0.60);
   transition: all 0.3s var(--ease-out);
 }
 
 .hud-card--center {
   min-width: 0;
   padding: 6px 10px;
-  background: rgba(4, 14, 28, 0.82);
-  border-color: rgba(0,212,255,0.22);
+  background: rgba(255, 255, 255, 0.60);
+  border-color: rgba(19,138,106,0.28);
 }
 
 .hud-urgent {
-  border-color: rgba(224,112,48,0.55) !important;
-  background: rgba(30,12,4,0.82) !important;
+  border-color: rgba(180, 60, 20, 0.55) !important;
+  background: rgba(255, 235, 220, 0.85) !important;
   animation: countdown-tick 1s ease-in-out infinite;
 }
 
 .hud-card--alert {
-  border-color: rgba(240,192,64,0.55) !important;
-  background: rgba(25,18,4,0.80) !important;
+  border-color: rgba(74,47,160,0.45) !important;
+  background: rgba(240, 235, 255, 0.85) !important;
   animation: pulse-glow 1.2s ease-in-out infinite;
 }
 
@@ -84,6 +84,7 @@
   font-weight: 700;
   line-height: 1;
   font-variant-numeric: tabular-nums;
+  color: var(--color-text-primary);
 }
 
 .hud-new-high {
@@ -95,7 +96,7 @@
   animation: pulse-gold 1s ease-in-out infinite;
 }
 
-/* ── Circular Timer Ring ─────────────────────────────────────── */
+/* ── Circular Timer Ring ─────────────────────────────────── */
 .hud-ring-wrap {
   display: flex;
   align-items: center;
@@ -104,7 +105,7 @@
 }
 .hud-ring-svg { display: block; overflow: visible; }
 
-/* ── Brand badge — bottom center ─────────────────────────────── */
+/* ── Brand badge — bottom center ─────────────────────────── */
 .hud-brand-badge {
   position: absolute;
   bottom: 16px;
@@ -112,15 +113,14 @@
   transform: translateX(-50%);
   z-index: 10;
   pointer-events: none;
-  opacity: 0.35;
+  opacity: 0.30;
 }
 .hud-brand-logo {
   height: 28px;
   object-fit: contain;
-  filter: brightness(0) invert(1);
 }
 
-/* ── Floating score popup ─────────────────────────────────────── */
+/* ── Floating score popup ─────────────────────────────────── */
 .float-pop {
   position: absolute;
   z-index: 20;
@@ -133,13 +133,13 @@
   letter-spacing: 0.03em;
 }
 .float-pop--normal {
-  color: #e8f4ff;
-  text-shadow: 0 0 12px rgba(0,212,255,0.6), 0 2px 4px rgba(0,0,0,0.5);
+  color: var(--color-teal-deep);
+  text-shadow: 0 0 12px rgba(19,138,106,0.5), 0 2px 4px rgba(0,0,0,0.15);
 }
 .float-pop--gold {
-  color: var(--color-gold-light);
+  color: var(--color-gold);
   font-size: 2.4rem;
-  text-shadow: 0 0 16px rgba(240,192,64,0.8), 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 0 16px rgba(74,47,160,0.6), 0 2px 4px rgba(0,0,0,0.15);
 }
 
 @keyframes floatPopAnim {

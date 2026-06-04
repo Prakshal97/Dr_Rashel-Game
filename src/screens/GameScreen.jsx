@@ -76,10 +76,10 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
   const progress     = timeLeft / settings.gameDuration
   const dashOffset   = CIRCUMFERENCE * (1 - progress)
   const ringColor    = timerCritical
-    ? '#f0c040'
+    ? '#b02020'
     : timerUrgent
-      ? '#e07030'
-      : 'var(--color-teal-light)'
+      ? '#d05a10'
+      : 'var(--color-teal-mid)'
 
   // "So close!" indicator
   const gap     = Math.max(0, highScore - score)
@@ -112,7 +112,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
               <circle
                 cx="40" cy="40" r={RADIUS}
                 fill="none"
-                stroke="rgba(255,255,255,0.08)"
+                stroke="rgba(10,74,60,0.15)"
                 strokeWidth="5"
               />
               {/* Progress */}
@@ -151,7 +151,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
         {/* Score — right */}
         <div className="hud-card hud-card--right glass-card">
           <span className="hud-label text-upper text-muted body-sm">Score</span>
-          <span className="hud-value heading-sm text-white">{score}</span>
+          <span className="hud-value heading-sm" style={{ color: 'var(--color-text-primary)' }}>{score}</span>
         </div>
       </div>
 

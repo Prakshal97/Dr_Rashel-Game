@@ -1,4 +1,4 @@
-/* ── AdminPanel — Dark Luxury ──────────────────────────────── */
+/* ── AdminPanel — Elegant Mint + Purple ──────────────────── */
 
 .admin-screen {
   position: absolute;
@@ -6,7 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(4,13,24,0.88);
+  background: rgba(160, 220, 200, 0.60);
   backdrop-filter: blur(20px);
   z-index: 100;
   padding: var(--space-md);
@@ -18,9 +18,9 @@
   max-height: 92vh;
   overflow-y: auto;
   padding: var(--space-xl);
-  background: rgba(8,25,45,0.95) !important;
-  border-color: rgba(0,212,255,0.18) !important;
-  box-shadow: 0 8px 60px rgba(0,0,0,0.5), 0 2px 20px rgba(0,0,0,0.3);
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(74,47,160,0.20) !important;
+  box-shadow: 0 8px 60px rgba(74,47,160,0.18), 0 2px 20px rgba(0,0,0,0.10);
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -47,7 +47,7 @@
 .admin-section-title {
   letter-spacing: 0.25em;
   margin-bottom: var(--space-xs);
-  color: var(--color-teal-light);
+  color: var(--color-teal-mid);
 }
 
 .admin-grid {
@@ -68,8 +68,8 @@
 }
 
 .admin-input {
-  background: rgba(0,212,255,0.05);
-  border: 1px solid rgba(0,212,255,0.18);
+  background: rgba(19,138,106,0.05);
+  border: 1px solid rgba(19,138,106,0.22);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -83,7 +83,7 @@
 .admin-input::-webkit-inner-spin-button { -webkit-appearance: none; }
 .admin-input:focus {
   border-color: var(--color-teal-light);
-  box-shadow: 0 0 0 2px rgba(0,212,255,0.12);
+  box-shadow: 0 0 0 2px rgba(19,138,106,0.14);
 }
 
 .admin-toggle {
@@ -96,15 +96,15 @@
 .admin-toggle input { display: none; }
 .admin-toggle-track {
   width: 52px; height: 28px;
-  background: rgba(0,212,255,0.08);
-  border: 1px solid rgba(0,212,255,0.18);
+  background: rgba(19,138,106,0.08);
+  border: 1px solid rgba(19,138,106,0.22);
   border-radius: 14px;
   position: relative;
   transition: background 0.25s;
   flex-shrink: 0;
 }
 .admin-toggle input:checked + .admin-toggle-track {
-  background: rgba(0,212,255,0.3);
+  background: rgba(19,138,106,0.28);
   border-color: var(--color-teal-light);
 }
 .admin-toggle-thumb {
@@ -114,7 +114,7 @@
   border-radius: 50%;
   top: 3px; left: 4px;
   transition: transform 0.25s var(--ease-out);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
 }
 .admin-toggle input:checked ~ .admin-toggle-track .admin-toggle-thumb {
   transform: translateX(24px);
@@ -127,12 +127,12 @@
   align-items: center;
 }
 .admin-danger-btn {
-  color: #e05555 !important;
-  border-color: rgba(224,85,85,0.3) !important;
+  color: #c0392b !important;
+  border-color: rgba(192,57,43,0.28) !important;
   font-size: 0.875rem;
   padding: 8px 20px;
 }
-.admin-danger-btn:hover { background: rgba(224,85,85,0.08) !important; }
+.admin-danger-btn:hover { background: rgba(192,57,43,0.06) !important; }
 
 .admin-confirm {
   display: flex;
@@ -153,5 +153,5 @@
   display: flex;
   justify-content: center;
   padding-top: var(--space-sm);
-  border-top: 1px solid rgba(0,212,255,0.10);
+  border-top: 1px solid rgba(19,138,106,0.14);
 }

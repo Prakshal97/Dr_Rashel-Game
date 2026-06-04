@@ -1,6 +1,6 @@
 /* ============================================================
-   DR-RASHEL HYDRATION CHALLENGE – DARK LUXURY DESIGN SYSTEM
-   Deep Navy / Jewel Teal / Rich Gold — Premium Skincare Brand
+   DR-RASHEL HYDRATION CHALLENGE – ELEGANT MINT & PURPLE
+   Mint Green Background / Deep Indigo Purple Accents
    ============================================================ */
 
 /* ── RESET ─────────────────────────────────────────────────── */
@@ -12,45 +12,55 @@
 
 /* ── DESIGN TOKENS ──────────────────────────────────────────── */
 :root {
-  --color-bg-primary:    #040d18;
-  --color-bg-secondary:  #071422;
-  --color-bg-gradient:   linear-gradient(160deg, #040d18 0%, #071e2e 40%, #050f1c 100%);
-  --color-bg-card:       rgba(8, 28, 48, 0.72);
+  /* Background — soft mint like the image */
+  --color-bg-primary:    #c2ede0;
+  --color-bg-secondary:  #aee4d4;
+  --color-bg-gradient:   linear-gradient(160deg, #cef4e8 0%, #a8dece 55%, #96d4c2 100%);
 
-  --color-teal-deep:     #00d4ff;
-  --color-teal:          #00b8e0;
-  --color-teal-mid:      #0099c4;
-  --color-teal-light:    #40d8f8;
-  --color-teal-pale:     #80e8ff;
-  --color-teal-ultra:    #b0f0ff;
+  /* Cards / Glass */
+  --color-bg-card:       rgba(255, 255, 255, 0.38);
 
-  --color-gold:          #f0c040;
-  --color-gold-light:    #f8d860;
-  --color-gold-pale:     #fde89a;
-  --color-gold-btn:      #d4a017;
-  --color-gold-btn-dark: #b88a0a;
-  --color-gold-deep:     #a07010;
+  /* Teal / Mint tones */
+  --color-teal-deep:     #0a4a3c;
+  --color-teal:          #0d6b54;
+  --color-teal-mid:      #138a6a;
+  --color-teal-light:    #1bab84;
+  --color-teal-pale:     #30c99e;
+  --color-teal-ultra:    #6ddbb8;
 
+  /* Purple / Indigo — buttons & accents like the image */
+  --color-gold:          #4a2fa0;
+  --color-gold-light:    #6244c0;
+  --color-gold-pale:     #7e5edc;
+  --color-gold-btn:      #3d2494;
+  --color-gold-btn-dark: #2c1875;
+  --color-gold-deep:     #1e0f58;
+
+  /* Pure white helpers */
   --color-white:         #ffffff;
-  --color-white-80:      rgba(255,255,255,0.82);
-  --color-white-60:      rgba(255,255,255,0.62);
-  --color-white-20:      rgba(255,255,255,0.18);
-  --color-white-10:      rgba(255,255,255,0.09);
+  --color-white-80:      rgba(255,255,255,0.85);
+  --color-white-60:      rgba(255,255,255,0.65);
+  --color-white-20:      rgba(255,255,255,0.20);
+  --color-white-10:      rgba(255,255,255,0.10);
 
-  --color-text-primary:  #e8f4ff;
-  --color-text-secondary:#9dd4ee;
-  --color-text-muted:    #5a90ac;
+  /* Text — deep purple on mint for elegance */
+  --color-text-primary:  #2c1875;
+  --color-text-secondary:#3d2494;
+  --color-text-muted:    #1a6352;
 
-  --glass-bg:            rgba(8, 25, 45, 0.60);
-  --glass-bg-strong:     rgba(8, 25, 45, 0.82);
-  --glass-border:        rgba(0, 212, 255, 0.18);
-  --glass-border-gold:   rgba(240, 192, 64, 0.40);
+  /* Glass system */
+  --glass-bg:            rgba(255, 255, 255, 0.38);
+  --glass-bg-strong:     rgba(255, 255, 255, 0.62);
+  --glass-border:        rgba(19, 138, 106, 0.22);
+  --glass-border-gold:   rgba(74, 47, 160, 0.28);
   --glass-blur:          24px;
   --glass-blur-sm:       12px;
 
+  /* Fonts */
   --font-serif:   'Cormorant Garamond', 'Georgia', serif;
   --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
+  /* Spacing */
   --space-xs:  4px;
   --space-sm:  8px;
   --space-md:  16px;
@@ -59,17 +69,20 @@
   --space-2xl: 64px;
   --space-3xl: 96px;
 
+  /* Radius */
   --radius-sm:   8px;
   --radius-md:   16px;
   --radius-lg:   24px;
   --radius-xl:   40px;
   --radius-pill: 999px;
 
-  --shadow-glow-teal: 0 0 40px rgba(0,212,255,0.25), 0 0 80px rgba(0,212,255,0.10);
-  --shadow-glow-gold: 0 0 40px rgba(240,192,64,0.40), 0 0 80px rgba(240,192,64,0.15);
-  --shadow-card:      0 4px 32px rgba(0,0,0,0.40), 0 2px 8px rgba(0,0,0,0.25);
-  --shadow-card-deep: 0 8px 60px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.3);
+  /* Shadows */
+  --shadow-glow-teal: 0 0 30px rgba(19,138,106,0.18), 0 0 60px rgba(19,138,106,0.09);
+  --shadow-glow-gold: 0 0 30px rgba(74,47,160,0.22),  0 0 60px rgba(74,47,160,0.11);
+  --shadow-card:      0 4px 24px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-card-deep: 0 8px 40px rgba(0,0,0,0.13), 0 2px 16px rgba(0,0,0,0.07);
 
+  /* Easing */
   --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in:    cubic-bezier(0.4, 0, 1, 1);
   --ease-inout: cubic-bezier(0.4, 0, 0.2, 1);
@@ -111,13 +124,13 @@ html, body {
   box-shadow: var(--shadow-card);
 }
 .glass-card--gold {
-  background: rgba(240,192,64,0.08);
+  background: rgba(74,47,160,0.07);
   border-color: var(--glass-border-gold);
   box-shadow: var(--shadow-glow-gold);
 }
 .glass-card--aqua {
-  background: rgba(0,212,255,0.07);
-  border-color: rgba(0,212,255,0.22);
+  background: rgba(19,138,106,0.06);
+  border-color: rgba(19,138,106,0.20);
   box-shadow: var(--shadow-glow-teal);
 }
 
@@ -143,10 +156,10 @@ html, body {
 .text-mint     { color: var(--color-teal-pale); }
 .text-muted    { color: var(--color-text-muted); }
 .text-white    { color: var(--color-text-primary); }
-.text-white-80 { color: var(--color-white-80); }
+.text-white-80 { color: var(--color-text-secondary); }
 .text-center   { text-align: center; }
 .text-upper    { text-transform: uppercase; letter-spacing: 0.2em; font-size: 0.75em; }
-.text-highlight { color: var(--color-teal-pale); font-weight: 500; }
+.text-highlight { color: var(--color-gold); font-weight: 600; }
 
 .text-shimmer {
   background: linear-gradient(90deg, var(--color-gold) 0%, var(--color-gold-pale) 40%, var(--color-gold) 60%, var(--color-gold-light) 100%);
@@ -183,30 +196,30 @@ html, body {
 
 .btn-primary {
   background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-btn));
-  color: #0a0600;
-  box-shadow: 0 4px 24px rgba(240,192,64,0.45), 0 2px 8px rgba(0,0,0,0.3);
+  color: #ffffff;
+  box-shadow: 0 4px 24px rgba(74,47,160,0.40), 0 2px 8px rgba(0,0,0,0.12);
   font-weight: 700;
 }
 .btn-primary:hover {
-  box-shadow: 0 8px 48px rgba(240,192,64,0.65), 0 4px 16px rgba(0,0,0,0.3);
+  box-shadow: 0 8px 48px rgba(74,47,160,0.58), 0 4px 16px rgba(0,0,0,0.18);
   transform: translateY(-2px);
 }
 .btn-gold {
   background: linear-gradient(135deg, var(--color-gold-light), var(--color-gold-btn));
-  color: #0a0600;
-  box-shadow: 0 4px 24px rgba(240,192,64,0.45);
+  color: #ffffff;
+  box-shadow: 0 4px 24px rgba(74,47,160,0.40);
   font-weight: 700;
 }
 .btn-ghost {
-  background: rgba(0,212,255,0.06);
-  border: 1px solid rgba(0,212,255,0.22);
-  color: var(--color-teal-light);
+  background: rgba(19,138,106,0.08);
+  border: 1px solid rgba(19,138,106,0.28);
+  color: var(--color-teal);
   backdrop-filter: blur(var(--glass-blur-sm));
 }
 .btn-ghost:hover {
-  background: rgba(0,212,255,0.12);
-  border-color: rgba(0,212,255,0.38);
-  color: var(--color-teal-pale);
+  background: rgba(19,138,106,0.15);
+  border-color: rgba(19,138,106,0.45);
+  color: var(--color-teal-deep);
 }
 .btn-lg {
   padding: var(--space-lg) var(--space-2xl);
@@ -230,10 +243,10 @@ html, body {
 
 /* ── DIVIDERS ───────────────────────────────────────────────── */
 .divider-gold {
-  height: 1px;
+  height: 2px;
   background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
   margin: var(--space-lg) 0;
-  opacity: 0.5;
+  opacity: 0.45;
 }
 
 /* ── KEYFRAME ANIMATIONS ────────────────────────────────────── */
@@ -243,21 +256,23 @@ html, body {
 @keyframes scaleIn      { from { opacity: 0; transform: scale(0.82); }      to { opacity: 1; transform: scale(1); } }
 @keyframes float        { 0%, 100% { transform: translateY(0px); }    50% { transform: translateY(-12px); } }
 @keyframes floatSlow    { 0%, 100% { transform: translateY(0px) rotate(0deg); } 50% { transform: translateY(-20px) rotate(3deg); } }
-@keyframes pulse-glow   { 0%, 100% { box-shadow: 0 4px 24px rgba(240,192,64,0.35); } 50% { box-shadow: 0 8px 60px rgba(240,192,64,0.70), 0 4px 24px rgba(240,192,64,0.35); } }
-@keyframes pulse-gold   { 0%, 100% { box-shadow: 0 0 20px rgba(240,192,64,0.25); } 50% { box-shadow: 0 0 70px rgba(240,192,64,0.65), 0 0 120px rgba(240,192,64,0.25); } }
+@keyframes pulse-glow   { 0%, 100% { box-shadow: 0 4px 24px rgba(74,47,160,0.30); } 50% { box-shadow: 0 8px 60px rgba(74,47,160,0.60), 0 4px 24px rgba(74,47,160,0.30); } }
+@keyframes pulse-gold   { 0%, 100% { box-shadow: 0 0 20px rgba(74,47,160,0.20); } 50% { box-shadow: 0 0 70px rgba(74,47,160,0.55), 0 0 120px rgba(74,47,160,0.20); } }
 @keyframes shimmer      { 0% { background-position: -200% center; } 100% { background-position: 200% center; } }
 @keyframes spin         { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 @keyframes countdown-tick { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
 @keyframes new-high-score { 0% { transform: scale(0.5) rotate(-5deg); opacity: 0; } 60% { transform: scale(1.18) rotate(2deg); } 80% { transform: scale(0.95) rotate(-1deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
 @keyframes waterRipple  { 0% { transform: scale(0); opacity: 0.4; } 100% { transform: scale(4); opacity: 0; } }
 @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-@keyframes logoGlow     { 0%, 100% { filter: drop-shadow(0 0 12px rgba(240,192,64,0.5)) drop-shadow(0 0 30px rgba(240,192,64,0.2)); } 50% { filter: drop-shadow(0 0 22px rgba(240,192,64,0.8)) drop-shadow(0 0 60px rgba(240,192,64,0.35)); } }
+@keyframes logoGlow     { 0%, 100% { filter: drop-shadow(0 0 12px rgba(74,47,160,0.30)) drop-shadow(0 0 30px rgba(74,47,160,0.12)); } 50% { filter: drop-shadow(0 0 22px rgba(74,47,160,0.55)) drop-shadow(0 0 60px rgba(74,47,160,0.25)); } }
 @keyframes orb-drift    { 0% { transform: translate(0,0) scale(1); } 33% { transform: translate(40px,-30px) scale(1.08); } 66% { transform: translate(-20px,20px) scale(0.95); } 100% { transform: translate(0,0) scale(1); } }
 @keyframes countUp      { from { opacity: 0; transform: scale(0.7) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 @keyframes confetti-fall { 0% { transform: translateY(-20px) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
 @keyframes podium-rise  { from { transform: scaleY(0); transform-origin: bottom; opacity: 0; } to { transform: scaleY(1); transform-origin: bottom; opacity: 1; } }
 @keyframes crown-bounce { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
 @keyframes starPop      { 0% { transform: scale(0) rotate(-20deg); opacity: 0; } 60% { transform: scale(1.3) rotate(5deg); opacity: 1; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+@keyframes waveRise     { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
+@keyframes dropletBounce { 0%, 100% { transform: translateY(0) scale(1); } 45% { transform: translateY(-14px) scale(1.05); } 65% { transform: translateY(0) scale(0.98); } }
 
 /* ── UTILITY CLASSES ────────────────────────────────────────── */
 .anim-fade-in      { animation: fadeIn var(--dur-slow) var(--ease-out) both; }

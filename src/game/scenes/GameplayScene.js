@@ -209,10 +209,10 @@ export class GameplayScene extends Phaser.Scene {
     img.setDisplaySize(dispW, dispH)
 
     const lblSize = isGold ? '14px' : '11px'
-    const lblColor = isGold ? '#0a0600' : '#ffffff'
-    const lblStroke = isGold ? '#f0c040' : '#00aadd'
+    const lblColor = isGold ? '#ffffff' : '#ffffff'
+    const lblStroke = isGold ? '#351c6a' : '#0c5545'
     
-    const text = this.add.text(0, dispH * 0.15, '1% Ceramide', {
+    const text = this.add.text(0, dispH * 0.15, isGold ? '1% Ceramide' : 'Water', {
       fontFamily: 'Inter, sans-serif',
       fontSize: lblSize,
       color: lblColor,
@@ -338,8 +338,8 @@ export class GameplayScene extends Phaser.Scene {
   // ── Splash effect ─────────────────────────────────────────────
 
   playSplash(x, y, isGold) {
-    const mainColor  = isGold ? 0xd4a017 : 0x00aadd
-    const glowColor  = isGold ? 0xf8e060 : 0x40d8f8
+    const mainColor  = isGold ? 0x653bc0 : 0x168065
+    const glowColor  = isGold ? 0xa078f0 : 0x42d8ae
     const count      = isGold ? 16 : 12
 
     // Glow burst (expand + fade)

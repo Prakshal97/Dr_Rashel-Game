@@ -1,4 +1,4 @@
-/* ── GameOverScreen — Dark Luxury + Brand Payoff ──────────── */
+/* ── GameOverScreen — Elegant Mint + Purple ──────────────── */
 
 .gameover-screen {
   position: absolute;
@@ -28,13 +28,13 @@
 .go-orb--aqua {
   width: 500px; height: 500px;
   top: -120px; right: -100px;
-  background: radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(27,171,132,0.18) 0%, transparent 70%);
   animation: floatSlow 8s ease-in-out infinite;
 }
 .go-orb--gold {
   width: 600px; height: 600px;
   bottom: -200px; left: -150px;
-  background: radial-gradient(circle, rgba(240,192,64,0.14) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(74,47,160,0.14) 0%, transparent 70%);
   animation: floatSlow 10s ease-in-out infinite reverse;
 }
 
@@ -69,7 +69,8 @@
   align-items: center;
   gap: 12px;
   padding: var(--space-sm) var(--space-xl);
-  background: rgba(240,192,64,0.10) !important;
+  background: rgba(74,47,160,0.10) !important;
+  border-color: rgba(74,47,160,0.30) !important;
   animation: new-high-score 0.7s var(--ease-out) both, pulse-gold 2.5s ease-in-out infinite 0.7s;
 }
 .go-new-high-stars {
@@ -85,8 +86,8 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  background: rgba(8,25,45,0.75) !important;
-  border-color: rgba(0,212,255,0.2) !important;
+  background: rgba(255,255,255,0.45) !important;
+  border-color: rgba(19,138,106,0.22) !important;
 }
 .go-score-number {
   font-family: var(--font-serif);

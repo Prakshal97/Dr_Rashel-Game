@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import './IdleScreen.css'
 
 const MARQUEE_TEXT = 'NOURISH · HYDRATE · GLOW · REPAIR · RESTORE · BRIGHTEN · REVIVE · PROTECT · '
 
 /**
- * IdleScreen – Cinematic attract mode for Dr. Rashel brand.
- * Dark luxury aesthetic, animated orbs, teardrop particles,
- * product marquee, logo glow, and auto-attract countdown.
+ * IdleScreen – Elegant mint + purple attract mode (matches Dr. Rashel reference).
+ * Features animated water droplet particles, purple wave SVG, glass drop cards.
  */
 export default function IdleScreen({ onStart, settings }) {
   const canvasRef = useRef(null)
@@ -31,24 +30,24 @@ export default function IdleScreen({ onStart, settings }) {
     resize()
     window.addEventListener('resize', resize)
 
-    const NUM = 55
+    const NUM = 48
     const particles = Array.from({ length: NUM }, () => createParticle(canvas))
 
     function createParticle(c) {
-      const isGold = Math.random() > 0.88
-      const isTeal = !isGold && Math.random() > 0.4
+      const isPurple = Math.random() > 0.78
+      const isTeal   = !isPurple && Math.random() > 0.35
       return {
         x: Math.random() * c.width,
         y: Math.random() * c.height + c.height,
-        r: 2 + Math.random() * 6,
-        vy: -(0.3 + Math.random() * 0.8),
-        vx: (Math.random() - 0.5) * 0.4,
-        alpha: 0.1 + Math.random() * 0.35,
-        color: isGold ? [240, 192, 64]
-          : isTeal ? [0, 200, 240]
-            : [180, 220, 255],
+        r: 3 + Math.random() * 7,
+        vy: -(0.35 + Math.random() * 0.7),
+        vx: (Math.random() - 0.5) * 0.35,
+        alpha: 0.12 + Math.random() * 0.32,
+        color: isPurple ? [98, 68, 192]   // Indigo purple
+          : isTeal  ? [19, 138, 106]      // Teal/Mint
+            : [180, 235, 210],            // Light Mint
         wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.01 + Math.random() * 0.02,
+        wobbleSpeed: 0.01 + Math.random() * 0.018,
       }
     }
 
@@ -56,15 +55,14 @@ export default function IdleScreen({ onStart, settings }) {
       ctx.save()
       ctx.globalAlpha = alpha
       ctx.beginPath()
-      // Teardrop path: circle top + pointed bottom
       ctx.arc(x, y - r * 0.4, r, 0, Math.PI)
       ctx.bezierCurveTo(x - r, y - r * 0.4 + r, x, y + r * 1.6, x, y + r * 1.6)
       ctx.bezierCurveTo(x, y + r * 1.6, x + r, y - r * 0.4 + r, x + r, y - r * 0.4)
       ctx.closePath()
       const grad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.6, 0, x, y, r * 1.5)
-      grad.addColorStop(0, `rgba(255,255,255,0.9)`)
-      grad.addColorStop(0.4, `rgba(${color[0]},${color[1]},${color[2]},0.8)`)
-      grad.addColorStop(1, `rgba(${color[0]},${color[1]},${color[2]},0.1)`)
+      grad.addColorStop(0, `rgba(255,255,255,0.92)`)
+      grad.addColorStop(0.38, `rgba(${color[0]},${color[1]},${color[2]},0.75)`)
+      grad.addColorStop(1, `rgba(${color[0]},${color[1]},${color[2]},0.08)`)
       ctx.fillStyle = grad
       ctx.fill()
       ctx.restore()
@@ -98,7 +96,7 @@ export default function IdleScreen({ onStart, settings }) {
       style={bgSrc ? { backgroundImage: `url("${bgSrc}")` } : undefined}
       onClick={handleStart}
     >
-      {/* Animated mesh gradient orbs */}
+      {/* Subtle ambient orbs */}
       <div className="idle-orb idle-orb--1" />
       <div className="idle-orb idle-orb--2" />
       <div className="idle-orb idle-orb--3" />
@@ -110,19 +108,44 @@ export default function IdleScreen({ onStart, settings }) {
       {/* Subtle grid overlay */}
       <div className="idle-grid-overlay" />
 
+      {/* Purple wave at the bottom — matches reference image */}
+      <div className="idle-wave-bottom">
+        <svg viewBox="0 0 800 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <path
+            d="M0,80 C120,20 260,140 400,80 C540,20 680,120 800,60 L800,220 L0,220 Z"
+            fill="rgba(74,47,160,0.85)"
+          />
+          <path
+            d="M0,110 C150,50 300,160 450,90 C600,25 720,140 800,90 L800,220 L0,220 Z"
+            fill="rgba(58,34,140,0.92)"
+          />
+          <path
+            d="M0,140 C200,80 350,180 500,120 C650,60 750,160 800,120 L800,220 L0,220 Z"
+            fill="rgba(44,24,117,0.97)"
+          />
+          {/* Stars in purple section */}
+          <circle cx="60" cy="180" r="1.5" fill="rgba(255,255,255,0.5)" />
+          <circle cx="140" cy="195" r="1" fill="rgba(255,255,255,0.4)" />
+          <circle cx="220" cy="175" r="2" fill="rgba(255,255,255,0.35)" />
+          <circle cx="680" cy="185" r="1.5" fill="rgba(255,255,255,0.5)" />
+          <circle cx="750" cy="200" r="1" fill="rgba(255,255,255,0.4)" />
+          <circle cx="420" cy="200" r="2" fill="rgba(255,255,255,0.3)" />
+        </svg>
+      </div>
+
       {/* Content */}
       <div className="idle-content">
 
         {/* Top badge */}
         <div className="idle-badge anim-fade-in-down">
           <span className="idle-badge-dot" />
-          <span className="text-upper body-sm" style={{ letterSpacing: '0.3em', color: 'var(--color-gold)' }}>
+          <span className="text-upper body-sm" style={{ letterSpacing: '0.28em', color: 'var(--color-gold)' }}>
             Premium Skincare · Exhibition
           </span>
           <span className="idle-badge-dot" />
         </div>
 
-        {/* Logo with glow */}
+        {/* Logo */}
         <div className="idle-logo-wrap anim-scale-in delay-100">
           <div className="idle-logo-halo" />
           <img
@@ -133,13 +156,13 @@ export default function IdleScreen({ onStart, settings }) {
           />
         </div>
 
-        {/* Title */}
-        <h1 className="idle-title heading-display heading-xl text-center anim-fade-in-up delay-200">
-          <span className="title-normal">Hydration </span>
-          <span className="title-italic text-shimmer">Challenge</span>
+        {/* Title — "Hydration" normal, "Challenge" italic teal */}
+        <h1 className="idle-title heading-display text-center anim-fade-in-up delay-200">
+          <span className="title-normal">Hydration</span>
+          <span className="title-italic">Challenge</span>
         </h1>
 
-        <div className="divider-gold anim-fade-in delay-300" style={{ width: '220px', margin: '4px auto' }} />
+        <div className="divider-gold anim-fade-in delay-300" style={{ width: '200px', margin: '0 auto' }} />
 
         {/* Tagline */}
         <p className="idle-subtitle body-lg text-center anim-fade-in-up delay-400">
@@ -152,15 +175,14 @@ export default function IdleScreen({ onStart, settings }) {
           <div className="drop-card drop-card--normal anim-float">
             <div className="drop-card-drop" />
             <div className="drop-card-info">
-              <span className="drop-card-pts text-aqua">+10</span>
+              <span className="drop-card-pts">+10</span>
               <span className="drop-card-label">Water Drop</span>
             </div>
           </div>
-          <div className="drop-card-divider" />
           <div className="drop-card drop-card--golden anim-float delay-300">
             <div className="drop-card-drop drop-card-drop--gold" />
             <div className="drop-card-info">
-              <span className="drop-card-pts text-gold">+25</span>
+              <span className="drop-card-pts" style={{ color: 'var(--color-gold)' }}>+25</span>
               <span className="drop-card-label">Gold Serum</span>
             </div>
           </div>
@@ -172,11 +194,8 @@ export default function IdleScreen({ onStart, settings }) {
           className="btn btn-primary btn-lg idle-cta anim-scale-in delay-600 anim-pulse-glow"
           onClick={handleStart}
         >
-          <span className="idle-cta-icon"></span>
           TAP TO PLAY
         </button>
-
-
 
       </div>
 

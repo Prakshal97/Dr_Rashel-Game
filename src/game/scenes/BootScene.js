@@ -18,23 +18,23 @@ export class BootScene extends Phaser.Scene {
     bg.fillRect(0, 0, W, H);
 
     // Soft background orbs
-    [[0.15, 0.3, 200, 0x4ab8d8, 0.08], [0.82, 0.6, 240, 0x9de0f0, 0.06]].forEach(([rx, ry, r, c, a]) => {
+    [[0.15, 0.3, 200, 0x168065, 0.08], [0.82, 0.6, 240, 0x4b2a8e, 0.06]].forEach(([rx, ry, r, c, a]) => {
       const g = this.add.graphics()
       g.fillStyle(c, a)
       g.fillCircle(rx * W, ry * H, r)
     })
 
-    this.add.text(W / 2, H * 0.40, 'DR-RASHEL', {
+    this.add.text(W / 2, H * 0.40, 'DR.RASHEL', {
       fontFamily: 'Cormorant Garamond, Georgia, serif',
       fontSize:   Math.min(W * 0.09, 80) + 'px',
-      color:      '#0d4a5c',
+      color:      '#351c6a',
       fontStyle:  'italic',
     }).setOrigin(0.5)
 
     this.add.text(W / 2, H * 0.50, 'HYDRATION CHALLENGE', {
       fontFamily: 'Inter, sans-serif',
       fontSize:   Math.min(W * 0.022, 18) + 'px',
-      color:      '#1a7090',
+      color:      '#168065',
     }).setOrigin(0.5).setLetterSpacing(7)
 
     const barW = W * 0.45
@@ -71,44 +71,50 @@ export class BootScene extends Phaser.Scene {
 
     const path = () => {
       ctx.beginPath()
-      ctx.moveTo(cx, tipY)
-      ctx.bezierCurveTo(
-        cx + rx * 1.10, tipY + (midY - tipY) * 0.42,
-        cx + rx,        midY,
-        cx,             botY
-      )
-      ctx.bezierCurveTo(
-        cx - rx,        midY,
-        cx - rx * 1.10, tipY + (midY - tipY) * 0.42,
-        cx,             tipY
-      )
+      if (isGolden) {
+        // Draw a circle for the 1% Ceramide Sphere
+        ctx.arc(cx, (tipY + botY) / 2, rx, 0, Math.PI * 2)
+      } else {
+        // Draw teardrop for the water drop
+        ctx.moveTo(cx, tipY)
+        ctx.bezierCurveTo(
+          cx + rx * 1.10, tipY + (midY - tipY) * 0.42,
+          cx + rx,        midY,
+          cx,             botY
+        )
+        ctx.bezierCurveTo(
+          cx - rx,        midY,
+          cx - rx * 1.10, tipY + (midY - tipY) * 0.42,
+          cx,             tipY
+        )
+      }
       ctx.closePath()
     }
 
     // ① Outer glow (shadow trick)
     ctx.save()
-    ctx.shadowColor = isGolden ? 'rgba(210,148,8,0.65)' : 'rgba(26,155,210,0.55)'
+    ctx.shadowColor = isGolden ? 'rgba(101,59,192,0.55)' : 'rgba(22,128,101,0.55)'
     ctx.shadowBlur  = 26
     path()
-    ctx.fillStyle = isGolden ? 'rgba(210,148,8,0.01)' : 'rgba(26,155,210,0.01)'
+    ctx.fillStyle = isGolden ? 'rgba(101,59,192,0.01)' : 'rgba(22,128,101,0.01)'
     ctx.fill()
     ctx.restore()
 
     // ② Main body gradient
     path()
     const grad = ctx.createLinearGradient(cx - rx * 0.5, tipY, cx + rx * 0.35, botY)
-    if (isGolden) {
-      grad.addColorStop(0,    'rgba(255,252,205,0.97)')
-      grad.addColorStop(0.20, 'rgba(252,202,55,0.96)')
-      grad.addColorStop(0.55, 'rgba(218,148,12,0.94)')
-      grad.addColorStop(0.85, 'rgba(188,108,5,0.92)')
-      grad.addColorStop(1,    'rgba(162,78,0,0.88)')
-    } else {
-      grad.addColorStop(0,    'rgba(220,248,255,0.96)')
-      grad.addColorStop(0.18, 'rgba(152,222,252,0.93)')
-      grad.addColorStop(0.45, 'rgba(55,165,235,0.90)')
-      grad.addColorStop(0.75, 'rgba(15,105,200,0.88)')
-      grad.addColorStop(1,    'rgba(5,62,158,0.84)')
+    if (isGolden) { // Purple Sphere
+      grad.addColorStop(0,    'rgba(180,150,240,0.97)')
+      grad.addColorStop(0.20, 'rgba(130,88,220,0.96)')
+      grad.addColorStop(0.55, 'rgba(101,59,192,0.94)')
+      grad.addColorStop(0.85, 'rgba(75,42,142,0.92)')
+      grad.addColorStop(1,    'rgba(43,21,90,0.88)')
+    } else { // Mint/Emerald Water Drop
+      grad.addColorStop(0,    'rgba(160,240,210,0.96)')
+      grad.addColorStop(0.18, 'rgba(90,210,165,0.93)')
+      grad.addColorStop(0.45, 'rgba(26,152,120,0.90)')
+      grad.addColorStop(0.75, 'rgba(16,105,80,0.88)')
+      grad.addColorStop(1,    'rgba(8,60,45,0.84)')
     }
     ctx.fillStyle = grad
     ctx.fill()
@@ -148,7 +154,7 @@ export class BootScene extends Phaser.Scene {
     const bx = cx
     const by = botY - (botY - midY) * 0.24
     const botGrad = ctx.createRadialGradient(bx, by, 0, bx, by, rx * 0.40)
-    botGrad.addColorStop(0, isGolden ? 'rgba(255,222,115,0.24)' : 'rgba(182,232,255,0.24)')
+    botGrad.addColorStop(0, isGolden ? 'rgba(180,150,240,0.24)' : 'rgba(160,240,210,0.24)')
     botGrad.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = botGrad
     ctx.fillRect(0, 0, W, H)
@@ -157,7 +163,7 @@ export class BootScene extends Phaser.Scene {
 
     // ④ Subtle border outline
     path()
-    ctx.strokeStyle = isGolden ? 'rgba(172,104,4,0.30)' : 'rgba(8,82,176,0.22)'
+    ctx.strokeStyle = isGolden ? 'rgba(101,59,192,0.30)' : 'rgba(26,152,120,0.22)'
     ctx.lineWidth = 1.5
     ctx.stroke()
 
