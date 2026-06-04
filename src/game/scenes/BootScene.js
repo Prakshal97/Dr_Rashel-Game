@@ -71,23 +71,18 @@ export class BootScene extends Phaser.Scene {
 
     const path = () => {
       ctx.beginPath()
-      if (isGolden) {
-        // Draw a circle for the 1% Ceramide Sphere
-        ctx.arc(cx, (tipY + botY) / 2, rx, 0, Math.PI * 2)
-      } else {
-        // Draw teardrop for the water drop
-        ctx.moveTo(cx, tipY)
-        ctx.bezierCurveTo(
-          cx + rx * 1.10, tipY + (midY - tipY) * 0.42,
-          cx + rx,        midY,
-          cx,             botY
-        )
-        ctx.bezierCurveTo(
-          cx - rx,        midY,
-          cx - rx * 1.10, tipY + (midY - tipY) * 0.42,
-          cx,             tipY
-        )
-      }
+      // Always draw the teardrop shape (no spheres)
+      ctx.moveTo(cx, tipY)
+      ctx.bezierCurveTo(
+        cx + rx * 1.10, tipY + (midY - tipY) * 0.42,
+        cx + rx,        midY,
+        cx,             botY
+      )
+      ctx.bezierCurveTo(
+        cx - rx,        midY,
+        cx - rx * 1.10, tipY + (midY - tipY) * 0.42,
+        cx,             tipY
+      )
       ctx.closePath()
     }
 

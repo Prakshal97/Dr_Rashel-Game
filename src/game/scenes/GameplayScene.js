@@ -48,8 +48,8 @@ export class GameplayScene extends Phaser.Scene {
     bgGfx.fillRect(0, 0, W, H)
     bgGfx.setDepth(0)
 
-    // ── Background water ripples ─────────────────────────────
-    this._createRipples(W, H)
+    // ── Background overlapping circles (depth 1) ────────────
+    this._createBgCircles(W, H)
 
     // ── Droplet group ────────────────────────────────────────
     this.droplets = this.add.group()
@@ -92,38 +92,31 @@ export class GameplayScene extends Phaser.Scene {
 
   // ── Background helpers ────────────────────────────────────────
 
-  _createRipples(W, H) {
-    const cx = W / 2
-    const cy = H / 2
-    // Create 4 concentric ripple rings
-    for (let i = 0; i < 5; i++) {
-      const ring = this.add.circle(cx, cy, 50, 0, 0).setStrokeStyle(1.5, 0xffffff, 0)
-      ring.setDepth(1)
-      
+  _createBgCircles(W, H) {
+    // Large overlapping translucent circles — exactly like the reference screenshot
+    const circles = [
+      { x: W * -0.08, y: H * 0.42, r: W * 0.58 },   // left-center big
+      { x: W * 1.10,  y: H * 0.35, r: W * 0.68 },   // right-center big
+      { x: W * 0.28,  y: H * 0.75, r: W * 0.50 },   // bottom-left
+      { x: W * 0.82,  y: H * 0.72, r: W * 0.38 },   // bottom-right
+      { x: W * 0.50,  y: H * 0.26, r: W * 0.28 },   // top-mid-left
+    ]
+    circles.forEach((c, i) => {
+      const g = this.add.graphics().setDepth(1)
+      g.lineStyle(1.5, 0xffffff, 0.50)
+      g.strokeCircle(c.x, c.y, c.r)
+      g.fillStyle(0xffffff, 0.05)
+      g.fillCircle(c.x, c.y, c.r)
+      // Very subtle slow pulse
       this.tweens.add({
-        targets: ring,
-        radius: Math.max(W, H) * 0.7,
-        alpha: { start: 0.25, from: 0.25, to: 0 },
-        duration: 8000,
-        delay: i * 1600,
-        repeat: -1,
-        ease: 'Sine.easeOut'
+        targets:  g,
+        alpha:    { from: 0.85, to: 1 },
+        duration: 5000 + i * 800,
+        yoyo:     true,
+        repeat:   -1,
+        ease:     'Sine.easeInOut',
       })
-      
-      // An inner thicker ring for the ripple edge
-      const innerRing = this.add.circle(cx, cy, 40, 0, 0).setStrokeStyle(4, 0xffffff, 0)
-      innerRing.setDepth(1)
-      
-      this.tweens.add({
-        targets: innerRing,
-        radius: Math.max(W, H) * 0.65,
-        alpha: { start: 0.1, from: 0.1, to: 0 },
-        duration: 8000,
-        delay: i * 1600,
-        repeat: -1,
-        ease: 'Sine.easeOut'
-      })
-    }
+    })
   }
 
   // ── Timer tick ────────────────────────────────────────────────
@@ -168,20 +161,36 @@ export class GameplayScene extends Phaser.Scene {
     const dispH = Math.round(dispW * 1.27)
     img.setDisplaySize(dispW, dispH)
 
-    const lblSize = isGold ? '14px' : '11px'
-    const lblColor = isGold ? '#ffffff' : '#ffffff'
-    const lblStroke = isGold ? '#351c6a' : '#0c5545'
-    
-    const text = this.add.text(0, dispH * 0.15, isGold ? '1% Ceramide' : 'Water', {
-      fontFamily: 'Inter, sans-serif',
-      fontSize: lblSize,
-      color: lblColor,
-      fontWeight: '800',
-      stroke: lblStroke,
-      strokeThickness: 2
+    // Two-line label: "1%" on top, "Ceramide" below
+    // Teal drop = dark purple text; Purple drop = white text
+    const textColor1 = isGold ? '#ffffff' : '#321682'   // "1%"
+    const textColor2 = isGold ? '#ffffff' : '#321682'   // "Ceramide"
+    const strokeCol  = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
+
+    // Centre of the drop body (midY of the teardrop)
+    const dropCY = dispH * 0.38
+
+    const pctText = this.add.text(0, dropCY - dispH * 0.08, '1%', {
+      fontFamily:      'Inter, sans-serif',
+      fontSize:        Math.round(dispW * 0.22) + 'px',
+      color:           textColor1,
+      fontStyle:       'bold',
+      stroke:          strokeCol,
+      strokeThickness: 1.5,
+      resolution:      2,
     }).setOrigin(0.5)
 
-    drop.add([img, text])
+    const cerText = this.add.text(0, dropCY + dispH * 0.10, 'Ceramide', {
+      fontFamily:      'Inter, sans-serif',
+      fontSize:        Math.round(dispW * 0.13) + 'px',
+      color:           textColor2,
+      fontStyle:       '600',
+      stroke:          strokeCol,
+      strokeThickness: 1,
+      resolution:      2,
+    }).setOrigin(0.5)
+
+    drop.add([img, pctText, cerText])
 
     drop.dropType  = isGold ? DROPLET_TYPES.GOLDEN : DROPLET_TYPES.NORMAL
     drop.points    = isGold ? this.cfg.pointsGolden : this.cfg.pointsNormal

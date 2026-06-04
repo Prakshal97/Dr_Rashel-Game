@@ -1,267 +1,251 @@
-/* ── GameScreen — New HUD ─────────────────────── */
+/* ═══════════════════════════════════════════════════════════
+   GameScreen.css  —  Exact match to reference screenshot
+   ═══════════════════════════════════════════════════════════ */
 
+/* ── Root container ──────────────────────────────────────── */
 .game-screen {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: transparent;
-  pointer-events: none;
+  pointer-events: none;         /* HUD never intercepts taps  */
+  font-family: 'Inter', sans-serif;
 }
-.game-screen > * {
-  pointer-events: none;
-}
+.game-screen > * { pointer-events: none; }
+
+/* Phaser sits below all React overlays */
 .phaser-container {
   position: absolute;
   inset: 0;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: auto;         /* clicks reach Phaser         */
 }
 
-/* ── HUD overlay ─────────────────────────────────────────── */
-.game-hud {
+/* ── Top HUD row (3 cols) ────────────────────────────────── */
+.gs-hud-top {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
-  display: flex;
-  justify-content: space-between;
+  top: 0; left: 0; right: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: flex-start;
-  padding: 20px 24px;
-}
-
-.hud-left {
-  display: flex;
-  flex-direction: column;
+  padding: 20px 20px 0;
   gap: 12px;
 }
 
-/* Glass Pill Base */
-.hud-pill {
-  background: linear-gradient(135deg, rgba(255,255,255,0.85), rgba(240,245,250,0.6));
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.9);
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.08), inset 0 2px 5px rgba(255,255,255,1);
-  padding: 8px 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-/* Best Pill */
-.hud-pill-best {
-  min-width: 130px;
-}
-.hud-best-col {
+/* Frosted pill (BEST + SCORE corners) */
+.gs-pill {
+  background: rgba(255, 255, 255, 0.52);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 14px;
+  padding: 10px 18px 12px;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06), inset 0 2px 6px rgba(255,255,255,0.9);
+  min-width: 80px;
+  width: max-content;
 }
-.hud-label-best {
-  font-size: 0.65rem;
-  color: #667;
-  letter-spacing: 0.1em;
+.gs-pill-label {
+  font-size: 0.62rem;
   font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #321682;
+  text-transform: uppercase;
+  margin-bottom: 2px;
 }
-.hud-val-best {
-  font-size: 1.8rem;
+.gs-pill-value {
+  font-size: 2rem;
+  font-weight: 700;
   color: #1a1540;
-  font-weight: 700;
-  line-height: 1.1;
+  line-height: 1;
   font-family: 'Inter', sans-serif;
-}
-.hud-icon-trophy {
-  font-size: 1.8rem;
-  color: #c0c5d0;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  letter-spacing: -0.01em;
 }
 
-/* Ceramide Pill */
-.hud-pill-ceramide {
-  flex-direction: column;
-  align-items: stretch;
-  gap: 6px;
-  padding: 10px 14px;
-  min-width: 150px;
-}
-.hud-ceramide-header {
+/* Right pill aligns itself to the right */
+.gs-pill--right { justify-self: flex-end; }
+
+/* ── Center logo block ───────────────────────────────────── */
+.gs-logo-block {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+  padding-top: 16px;
+  justify-self: center;
 }
-.hud-label-ceramide {
-  font-size: 0.75rem;
+.gs-logo-brand {
+  font-size: 1.4rem;
+  font-weight: 800;
   color: #1a1540;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+.gs-logo-brand sup {
+  font-size: 0.55rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  vertical-align: super;
 }
-.hud-val-ceramide {
-  font-size: 0.8rem;
-  color: #1a1540;
-  font-weight: 700;
-}
-.hud-ceramide-bar-bg {
-  width: 100%;
-  height: 10px;
-  background: rgba(0,0,0,0.15);
-  border-radius: 5px;
-  overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
-}
-.hud-ceramide-bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #5b7de6, #324bb5);
-  border-radius: 5px;
-  transition: width 0.3s ease-out;
+.gs-logo-tagline {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: #321682;
+  margin-top: 3px;
 }
 
-/* Score Pill */
-.hud-pill-score {
-  min-width: 130px;
-}
-.hud-icon-drop-wrap {
-  width: 32px;
-  height: 38px;
-  position: relative;
-  margin-right: 12px;
-}
-.hud-icon-drop {
-  width: 24px;
-  height: 24px;
+/* ── Timer (below logo, centered) ───────────────────────── */
+.gs-timer-wrap {
   position: absolute;
-  bottom: 0;
+  top: 100px;   /* just below the HUD row */
   left: 50%;
-  border-radius: 0 50% 50% 50%;
-  transform: translateX(-50%) rotate(45deg);
-  background: linear-gradient(135deg, #cbebe1 0%, #7be8ce 100%);
-  box-shadow: inset 4px 4px 6px rgba(255,255,255,0.9), inset -4px -4px 6px rgba(0,0,0,0.2), 0 3px 6px rgba(0,0,0,0.15);
-}
-.hud-score-col {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-}
-.hud-label-score {
-  font-size: 0.65rem;
-  color: #667;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-.hud-val-score {
-  font-size: 1.8rem;
-  color: #1a1540;
-  font-weight: 700;
-  line-height: 1.1;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Timer Center */
-.hud-center {
+  transform: translateX(-50%);
+  z-index: 20;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 2px;
 }
-.hud-timer-ring-wrapper {
+.gs-timer-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #321682;
+  text-transform: uppercase;
+}
+.gs-timer-circle {
   position: relative;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f0d0b0, #c89570);
-  box-shadow: inset 0 6px 12px rgba(255,255,255,0.7), inset 0 -4px 8px rgba(0,0,0,0.3), 0 10px 20px rgba(0,0,0,0.2);
+  width: 76px;
+  height: 76px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.hud-timer-inner {
-  width: 82px;
-  height: 82px;
-  border-radius: 50%;
-  background: linear-gradient(180deg, #d8f5eb 0%, #b8e6d3 100%);
-  box-shadow: inset 0 6px 12px rgba(0,0,0,0.15);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-}
-.hud-timer-svg {
+.gs-timer-svg {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  transform: rotate(-90deg);
+  overflow: visible;
 }
-.hud-timer-label {
-  font-size: 0.6rem;
-  font-weight: 800;
-  color: #8c5a35;
-  letter-spacing: 0.1em;
-  z-index: 2;
-  margin-top: 4px;
-}
-.hud-timer-val {
-  font-size: 2.2rem;
+.gs-timer-val {
+  font-size: 2rem;
   font-weight: 600;
   color: #1a1540;
-  z-index: 2;
   line-height: 1;
-  margin-top: 2px;
+  z-index: 2;
 }
 
-/* Float Pop */
+/* ── Bottom purple wave + text ───────────────────────────── */
+.gs-wave-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 42vh;          /* 42% of viewport height = purple section   */
+  min-height: 240px;
+  z-index: 15;
+  pointer-events: none;
+}
+.gs-wave-svg {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+}
+.gs-bottom-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 28px;
+  gap: 6px;
+  z-index: 16;
+}
+.gs-best-row {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.06em;
+  margin-bottom: 2px;
+}
+.gs-best-row span {
+  color: #7be8ce;
+  font-weight: 800;
+}
+.gs-challenge-title {
+  line-height: 1.05;
+  margin-bottom: 4px;
+  white-space: nowrap;
+}
+.gs-title-hyd {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 600;
+  color: #7059a6;
+}
+.gs-title-cha {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: 600;
+  color: #7be8ce;
+}
+.gs-subtitle {
+  font-size: clamp(0.75rem, 2vw, 1rem);
+  color: rgba(255,255,255,0.80);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.gs-subtitle span {
+  color: #5f4a9b;
+  font-weight: 700;
+  margin-left: 4px;
+  margin-right: 4px;
+}
+.gs-brand-foot {
+  font-size: 0.65rem;
+  letter-spacing: 0.28em;
+  color: rgba(255,255,255,0.38);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.gs-glow-line {
+  width: 50%;
+  max-width: 250px;
+  height: 1px;
+  background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 80%);
+  margin: 8px 0 12px;
+  box-shadow: 0 0 12px 2px rgba(255,255,255,0.4);
+}
+
+/* ── Floating score popups ───────────────────────────────── */
 .float-pop {
   position: absolute;
-  z-index: 20;
-  font-family: var(--font-sans);
+  z-index: 50;
+  font-family: 'Inter', sans-serif;
   font-weight: 800;
   font-size: 2rem;
+  pointer-events: none;
   transform: translateX(-50%);
-  animation: floatPopAnim 0.9s var(--ease-out) forwards;
-  letter-spacing: 0.03em;
+  animation: floatPopAnim 0.9s ease-out forwards;
 }
 .float-pop--normal {
   color: #168b6a;
-  text-shadow: 0 0 12px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.15);
+  text-shadow: 0 0 12px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.15);
 }
 .float-pop--gold {
   color: #5e2bcc;
   font-size: 2.4rem;
-  text-shadow: 0 0 16px rgba(255,255,255,0.8), 0 2px 4px rgba(0,0,0,0.15);
+  text-shadow: 0 0 16px rgba(255,255,255,0.9), 0 2px 4px rgba(0,0,0,0.15);
 }
-
 @keyframes floatPopAnim {
-  0%   { transform: translateX(-50%) translateY(0) scale(0.8); opacity: 0; }
+  0%   { opacity: 0; transform: translateX(-50%) translateY(0) scale(0.8); }
   20%  { opacity: 1; transform: translateX(-50%) translateY(-10px) scale(1.15); }
-  100% { transform: translateX(-50%) translateY(-90px) scale(0.9); opacity: 0; }
-}
-
-/* Watermark */
-.hud-brand-badge {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-}
-.hud-brand-text-challenge {
-  font-size: 0.75rem;
-  letter-spacing: 0.25em;
-  color: #321682;
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.hud-brand-text-best {
-  font-size: 0.8rem;
-  color: #321682;
-  font-weight: 600;
-}
-.hud-brand-text-best span {
-  color: #168b6a;
-  font-weight: 700;
+  100% { opacity: 0; transform: translateX(-50%) translateY(-90px) scale(0.9); }
 }
