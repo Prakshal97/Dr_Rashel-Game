@@ -4,17 +4,18 @@ import { GameEvents, EVENTS } from '../game/events/GameEvents.js'
 import './GameScreen.css'
 
 /**
- * GameScreen – Hosts the Phaser canvas and overlays the HUD.
+ * GameScreen – Hosts the Phaser canvas with dark luxury HUD overlay.
+ * Features: Circular timer ring, Dr. Rashel logo badge, combo tracker.
  */
 export default function GameScreen({ settings, highScore: initialHighScore, onGameEnd }) {
   const containerRef  = useRef(null)
   const gameRef       = useRef(null)
 
-  const [score,      setScore]      = useState(0)
-  const [timeLeft,   setTimeLeft]   = useState(settings.gameDuration)
-  const [highScore,  setHighScore]  = useState(initialHighScore)
-  const [isNewHigh,  setIsNewHigh]  = useState(false)
-  const [lastPop,    setLastPop]    = useState(null)  // { id, text, x, y, gold }
+  const [score,     setScore]     = useState(0)
+  const [timeLeft,  setTimeLeft]  = useState(settings.gameDuration)
+  const [highScore, setHighScore] = useState(initialHighScore)
+  const [isNewHigh, setIsNewHigh] = useState(false)
+  const [lastPop,   setLastPop]   = useState(null)  // { id, text, x, y, gold }
 
   // ── Launch Phaser ─────────────────────────────────────────────
   useEffect(() => {
@@ -65,17 +66,24 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
     }
   }, [onGameEnd])
 
-  // Timer urgency color
-  const timerUrgent = timeLeft <= 10
-  const timerColor  = timeLeft <= 5
-    ? 'var(--color-gold)'
-    : timeLeft <= 10
-      ? '#d4691a'
-      : 'var(--color-teal-mid)'
+  // Timer urgency
+  const timerUrgent   = timeLeft <= 10
+  const timerCritical = timeLeft <= 5
+
+  // Circular ring math
+  const RADIUS       = 32
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS  // ≈ 201
+  const progress     = timeLeft / settings.gameDuration
+  const dashOffset   = CIRCUMFERENCE * (1 - progress)
+  const ringColor    = timerCritical
+    ? '#f0c040'
+    : timerUrgent
+      ? '#e07030'
+      : 'var(--color-teal-light)'
 
   // "So close!" indicator
-  const gap      = Math.max(0, highScore - score)
-  const soClose  = !isNewHigh && highScore > 0 && gap > 0 && gap <= 30 && score > 0
+  const gap     = Math.max(0, highScore - score)
+  const soClose = !isNewHigh && highScore > 0 && gap > 0 && gap <= 30 && score > 0
 
   return (
     <div className="game-screen">
@@ -84,7 +92,8 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
 
       {/* HUD overlay */}
       <div className="game-hud">
-        {/* High score */}
+
+        {/* Best score — left */}
         <div className={`hud-card hud-card--left glass-card ${soClose ? 'hud-card--alert' : ''}`}>
           <span className="hud-label text-upper text-muted body-sm">Best</span>
           <span className={`hud-value heading-sm ${isNewHigh ? 'text-gold' : soClose ? 'hud-close-color' : 'text-aqua'}`}>
@@ -94,25 +103,69 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           {soClose && <span className="hud-so-close body-sm">SO CLOSE! 🔥</span>}
         </div>
 
-        {/* Timer */}
+        {/* Timer — center with circular ring */}
         <div className={`hud-card hud-card--center glass-card ${timerUrgent ? 'hud-urgent' : ''}`}>
           <span className="hud-label text-upper text-muted body-sm">Time</span>
-          <span
-            className="hud-timer heading-md"
-            style={{ color: timerColor, transition: 'color 0.3s' }}
-          >
-            {timeLeft}
-          </span>
+          <div className="hud-ring-wrap">
+            <svg className="hud-ring-svg" viewBox="0 0 80 80" width="80" height="80">
+              {/* Track */}
+              <circle
+                cx="40" cy="40" r={RADIUS}
+                fill="none"
+                stroke="rgba(255,255,255,0.08)"
+                strokeWidth="5"
+              />
+              {/* Progress */}
+              <circle
+                cx="40" cy="40" r={RADIUS}
+                fill="none"
+                stroke={ringColor}
+                strokeWidth="5"
+                strokeLinecap="round"
+                strokeDasharray={CIRCUMFERENCE}
+                strokeDashoffset={dashOffset}
+                style={{
+                  transform: 'rotate(-90deg)',
+                  transformOrigin: 'center',
+                  transition: 'stroke-dashoffset 0.9s linear, stroke 0.3s',
+                  filter: `drop-shadow(0 0 6px ${ringColor})`,
+                }}
+              />
+              {/* Timer text */}
+              <text
+                x="40" y="44"
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fill={ringColor}
+                fontFamily="Inter, sans-serif"
+                fontSize="22"
+                fontWeight="700"
+                style={{ transition: 'fill 0.3s' }}
+              >
+                {timeLeft}
+              </text>
+            </svg>
+          </div>
         </div>
 
-        {/* Score */}
+        {/* Score — right */}
         <div className="hud-card hud-card--right glass-card">
           <span className="hud-label text-upper text-muted body-sm">Score</span>
           <span className="hud-value heading-sm text-white">{score}</span>
         </div>
       </div>
 
-      {/* Floating score popup (React overlay) */}
+      {/* Brand badge — bottom center */}
+      <div className="hud-brand-badge">
+        <img
+          src="./assets/logo.png"
+          alt="DR-RASHEL"
+          className="hud-brand-logo"
+          onError={e => { e.target.style.display = 'none' }}
+        />
+      </div>
+
+      {/* Floating score popup */}
       {lastPop && (
         <FloatingPop key={lastPop.id} pop={lastPop} />
       )}
@@ -126,7 +179,7 @@ function FloatingPop({ pop }) {
       className={`float-pop ${pop.gold ? 'float-pop--gold' : 'float-pop--normal'}`}
       style={{ left: pop.x, top: pop.y - 60 }}
     >
-      +{pop.points}
+      {pop.gold ? '✨ ' : ''}{'+' + pop.points}
     </div>
   )
 }

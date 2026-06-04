@@ -44,7 +44,7 @@ export class GameplayScene extends Phaser.Scene {
 
     // ── Background gradient ──────────────────────────────────
     const bgGfx = this.add.graphics()
-    bgGfx.fillGradientStyle(0xb4eaf6, 0xcaf2fa, 0xd8f8f2, 0xe4fbf7, 1)
+    bgGfx.fillGradientStyle(0x040d18, 0x071422, 0x050f1c, 0x040a14, 1)
     bgGfx.fillRect(0, 0, W, H)
     bgGfx.setDepth(0)
 
@@ -58,8 +58,8 @@ export class GameplayScene extends Phaser.Scene {
     this.add.text(W / 2, H - 22, 'DR-RASHEL  ·  HYDRATION CHALLENGE', {
       fontFamily: 'Inter, sans-serif',
       fontSize:   '13px',
-      color:      '#0d4a5c',
-    }).setOrigin(0.5).setAlpha(0.28).setDepth(5).setLetterSpacing(5)
+      color:      '#00d4ff',
+    }).setOrigin(0.5).setAlpha(0.22).setDepth(5).setLetterSpacing(5)
 
     // ── High score challenge banner ──────────────────────────
     if (this.cfg.highScore > 0) {
@@ -67,9 +67,9 @@ export class GameplayScene extends Phaser.Scene {
       this.challengeBanner = this.add.text(W / 2, H - 50, bannerTxt, {
         fontFamily: 'Inter, sans-serif',
         fontSize:   '15px',
-        color:      '#c8890a',
+        color:      '#f0c040',
         fontStyle:  '600',
-      }).setOrigin(0.5).setAlpha(0.55).setDepth(5)
+      }).setOrigin(0.5).setAlpha(0.60).setDepth(5)
     }
 
     // ── Droplet group ────────────────────────────────────────
@@ -115,11 +115,12 @@ export class GameplayScene extends Phaser.Scene {
 
   _createBgOrbs(W, H) {
     const orbs = [
-      { rx: 0.12, ry: 0.22, r: 160, col: 0x4ab8d8, a: 0.09, dur: 12000 },
-      { rx: 0.82, ry: 0.40, r: 220, col: 0x74d4f0, a: 0.06, dur: 16000 },
-      { rx: 0.40, ry: 0.75, r: 180, col: 0x9de0f0, a: 0.07, dur: 11000 },
-      { rx: 0.68, ry: 0.15, r: 130, col: 0xc0e8f8, a: 0.10, dur: 14000 },
-      { rx: 0.55, ry: 0.88, r: 240, col: 0x4ab8d8, a: 0.05, dur: 19000 },
+      { rx: 0.12, ry: 0.22, r: 160, col: 0x004466, a: 0.35, dur: 12000 },
+      { rx: 0.82, ry: 0.40, r: 220, col: 0x003355, a: 0.28, dur: 16000 },
+      { rx: 0.40, ry: 0.75, r: 180, col: 0x002244, a: 0.32, dur: 11000 },
+      { rx: 0.68, ry: 0.15, r: 130, col: 0x005577, a: 0.25, dur: 14000 },
+      { rx: 0.55, ry: 0.88, r: 240, col: 0x003366, a: 0.20, dur: 19000 },
+      { rx: 0.25, ry: 0.60, r: 100, col: 0x665500, a: 0.15, dur: 13000 },
     ]
     orbs.forEach((o, i) => {
       const c = this.add.circle(o.rx * W, o.ry * H, o.r, o.col, o.a).setDepth(1)
@@ -142,11 +143,11 @@ export class GameplayScene extends Phaser.Scene {
     for (let i = 0; i < 28; i++) {
       const x     = Phaser.Math.Between(0, W)
       const y     = Phaser.Math.Between(0, H)
-      const r     = Phaser.Math.Between(4, 14)
-      const col   = Phaser.Math.RND.pick([0x4ab8d8, 0x80d8f0, 0xffffff, 0xc8e8f8])
-      const alpha = Phaser.Math.FloatBetween(0.06, 0.22)
+      const r     = Phaser.Math.Between(3, 10)
+      const col   = Phaser.Math.RND.pick([0x0099cc, 0x00ccff, 0x336699, 0x004466, 0xffcc00])
+      const alpha = Phaser.Math.FloatBetween(0.04, 0.18)
       const bub   = this.add.circle(x, y, r, col, alpha).setDepth(2)
-      bub.setStrokeStyle(0.6, col, alpha * 0.5)
+      bub.setStrokeStyle(0.5, col, alpha * 0.4)
 
       this.tweens.add({
         targets:  bub,
@@ -319,8 +320,8 @@ export class GameplayScene extends Phaser.Scene {
   // ── Splash effect ─────────────────────────────────────────────
 
   playSplash(x, y, isGold) {
-    const mainColor  = isGold ? 0xc8890a : 0x1a9abd
-    const glowColor  = isGold ? 0xf0c040 : 0x60d8f8
+    const mainColor  = isGold ? 0xd4a017 : 0x00aadd
+    const glowColor  = isGold ? 0xf8e060 : 0x40d8f8
     const count      = isGold ? 16 : 12
 
     // Glow burst (expand + fade)
@@ -370,7 +371,7 @@ export class GameplayScene extends Phaser.Scene {
 
   showScorePopup(x, y, points, isGold, isCombo) {
     const label = (points > 0 ? '+' : '') + points
-    const color = isGold ? '#c8890a' : '#0d4a5c'
+    const color = isGold ? '#f0c040' : '#e8f4ff'
     const size  = isGold ? '42px' : isCombo ? '36px' : '30px'
 
     const text = this.add.text(x, y - 24, label, {
@@ -413,10 +414,10 @@ export class GameplayScene extends Phaser.Scene {
     const t  = this.add.text(tx, ty, label, {
       fontFamily:      'Inter, sans-serif',
       fontSize:        isBig ? '56px' : '44px',
-      color:           isBig ? '#c8890a' : '#0d4a5c',
+      color:           isBig ? '#f0c040' : '#e8f4ff',
       fontStyle:       'bold',
-      stroke:          '#ffffff',
-      strokeThickness: isBig ? 6 : 5,
+      stroke:          '#040d18',
+      strokeThickness: isBig ? 7 : 5,
     }).setOrigin(0.5).setDepth(50).setAlpha(0).setScale(0.7)
 
     this._comboText = t
@@ -504,10 +505,10 @@ export class GameplayScene extends Phaser.Scene {
 
     this.playSuccessSound()
 
-    // Flash light aqua, then fade to light
-    this.cameras.main.flash(350, 74, 184, 216, true)
+    // Flash dark, then fade
+    this.cameras.main.flash(350, 0, 180, 220, true)
     this.time.delayedCall(750, () => {
-      this.cameras.main.fadeOut(550, 184, 235, 248)
+      this.cameras.main.fadeOut(550, 4, 13, 24)
       this.time.delayedCall(560, () => {
         GameEvents.emit(EVENTS.GAME_END, {
           score:     this.score,

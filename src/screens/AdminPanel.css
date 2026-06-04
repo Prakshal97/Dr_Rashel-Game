@@ -1,11 +1,13 @@
+/* ── AdminPanel — Dark Luxury ──────────────────────────────── */
+
 .admin-screen {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(180,230,248,0.85);
-  backdrop-filter: blur(12px);
+  background: rgba(4,13,24,0.88);
+  backdrop-filter: blur(20px);
   z-index: 100;
   padding: var(--space-md);
   overflow-y: auto;
@@ -16,9 +18,9 @@
   max-height: 92vh;
   overflow-y: auto;
   padding: var(--space-xl);
-  background: rgba(255,255,255,0.88) !important;
-  border-color: rgba(255,255,255,0.95) !important;
-  box-shadow: 0 8px 60px rgba(13,61,82,0.18), 0 2px 20px rgba(13,61,82,0.1);
+  background: rgba(8,25,45,0.95) !important;
+  border-color: rgba(0,212,255,0.18) !important;
+  box-shadow: 0 8px 60px rgba(0,0,0,0.5), 0 2px 20px rgba(0,0,0,0.3);
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -45,7 +47,7 @@
 .admin-section-title {
   letter-spacing: 0.25em;
   margin-bottom: var(--space-xs);
-  color: var(--color-teal-mid);
+  color: var(--color-teal-light);
 }
 
 .admin-grid {
@@ -66,8 +68,8 @@
 }
 
 .admin-input {
-  background: rgba(26,112,144,0.06);
-  border: 1px solid rgba(26,112,144,0.2);
+  background: rgba(0,212,255,0.05);
+  border: 1px solid rgba(0,212,255,0.18);
   border-radius: var(--radius-sm);
   color: var(--color-text-primary);
   font-family: var(--font-sans);
@@ -77,16 +79,13 @@
   transition: border-color 0.2s;
   -moz-appearance: textfield;
 }
-
 .admin-input::-webkit-outer-spin-button,
 .admin-input::-webkit-inner-spin-button { -webkit-appearance: none; }
-
 .admin-input:focus {
-  border-color: var(--color-teal-mid);
-  box-shadow: 0 0 0 2px rgba(26,112,144,0.12);
+  border-color: var(--color-teal-light);
+  box-shadow: 0 0 0 2px rgba(0,212,255,0.12);
 }
 
-/* Toggle */
 .admin-toggle {
   display: flex;
   align-items: center;
@@ -94,24 +93,20 @@
   cursor: pointer;
   padding: var(--space-sm) 0;
 }
-
 .admin-toggle input { display: none; }
-
 .admin-toggle-track {
   width: 52px; height: 28px;
-  background: rgba(26,112,144,0.12);
-  border: 1px solid rgba(26,112,144,0.2);
+  background: rgba(0,212,255,0.08);
+  border: 1px solid rgba(0,212,255,0.18);
   border-radius: 14px;
   position: relative;
   transition: background 0.25s;
   flex-shrink: 0;
 }
-
 .admin-toggle input:checked + .admin-toggle-track {
-  background: rgba(26,112,144,0.4);
-  border-color: var(--color-teal-mid);
+  background: rgba(0,212,255,0.3);
+  border-color: var(--color-teal-light);
 }
-
 .admin-toggle-thumb {
   position: absolute;
   width: 20px; height: 20px;
@@ -119,31 +114,25 @@
   border-radius: 50%;
   top: 3px; left: 4px;
   transition: transform 0.25s var(--ease-out);
-  box-shadow: 0 2px 6px rgba(13,61,82,0.2);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
 }
-
 .admin-toggle input:checked ~ .admin-toggle-track .admin-toggle-thumb {
   transform: translateX(24px);
 }
 
-/* Danger zone */
 .admin-danger-row {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-md);
   align-items: center;
 }
-
 .admin-danger-btn {
-  color: #c0392b !important;
-  border-color: rgba(192,57,43,0.3) !important;
+  color: #e05555 !important;
+  border-color: rgba(224,85,85,0.3) !important;
   font-size: 0.875rem;
   padding: 8px 20px;
 }
-
-.admin-danger-btn:hover {
-  background: rgba(192,57,43,0.08) !important;
-}
+.admin-danger-btn:hover { background: rgba(224,85,85,0.08) !important; }
 
 .admin-confirm {
   display: flex;
@@ -151,7 +140,6 @@
   gap: var(--space-sm);
   flex-wrap: wrap;
 }
-
 .admin-clear-btn {
   background: none;
   border: none;
@@ -161,10 +149,9 @@
   color: var(--color-text-muted);
 }
 
-/* Footer */
 .admin-footer {
   display: flex;
   justify-content: center;
   padding-top: var(--space-sm);
-  border-top: 1px solid rgba(26,112,144,0.1);
+  border-top: 1px solid rgba(0,212,255,0.10);
 }

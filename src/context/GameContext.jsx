@@ -1,5 +1,8 @@
 import { createContext, useContext, useState, useCallback } from 'react'
 
+// Bump this any time you need to wipe stored data (e.g. schema change)
+const SCHEMA_VERSION = '2'
+
 const DEFAULT_SETTINGS = {
   gameDuration:       30,      // seconds
   dropletSpeed:       { min: 150, max: 350 },
@@ -23,6 +26,19 @@ function loadSettings() {
   } catch { /* ignore */ }
   return { ...DEFAULT_SETTINGS }
 }
+
+// ── Wipe data if schema version changed ──────────────────────
+function migrateData() {
+  try {
+    const storedVersion = localStorage.getItem('drRashel_schemaVersion')
+    if (storedVersion !== SCHEMA_VERSION) {
+      localStorage.removeItem('drRashel_leaderboard')
+      localStorage.removeItem('drRashel_highScore')
+      localStorage.setItem('drRashel_schemaVersion', SCHEMA_VERSION)
+    }
+  } catch { /* ignore */ }
+}
+migrateData()
 
 function loadLeaderboard() {
   try {
@@ -61,8 +77,11 @@ export function GameProvider({ children }) {
     })
   }, [])
 
-  // Submit a score (updates high score + leaderboard)
-  const submitScore = useCallback((score) => {
+  /**
+   * Submit a score with optional player name.
+   * Returns { newHighScore, rank } — rank is 1-indexed position, or null if not in top N.
+   */
+  const submitScore = useCallback((score, playerName = '') => {
     let newHighScore = highScore
     if (score > highScore) {
       newHighScore = score
@@ -70,10 +89,21 @@ export function GameProvider({ children }) {
       localStorage.setItem('drRashel_highScore', String(score))
     }
 
+    let rank = null
     setLeaderboardState(prev => {
-      const updated = [...prev, { score, date: new Date().toISOString() }]
+      const entry = {
+        score,
+        name: (playerName || '').trim() || 'Anonymous',
+        date: new Date().toISOString(),
+      }
+      const updated = [...prev, entry]
         .sort((a, b) => b.score - a.score)
         .slice(0, settings.leaderboardSize)
+
+      // Find rank of this submission
+      rank = updated.findIndex(e => e.score === score && e.date === entry.date) + 1
+      if (rank === 0) rank = null
+
       localStorage.setItem('drRashel_leaderboard', JSON.stringify({
         date: new Date().toDateString(),
         scores: updated,
@@ -81,7 +111,7 @@ export function GameProvider({ children }) {
       return updated
     })
 
-    return newHighScore
+    return { newHighScore, rank }
   }, [highScore, settings.leaderboardSize])
 
   // Reset high score

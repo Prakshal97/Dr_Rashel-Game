@@ -1,17 +1,52 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './IdleScreen.css'
 
+const MARQUEE_TEXT = 'NOURISH · HYDRATE · GLOW · REPAIR · RESTORE · BRIGHTEN · REVIVE · PROTECT · '
+
 /**
- * IdleScreen – Attract mode shown between players.
- * Animated water particle background, brand identity, Start button.
+ * IdleScreen – Cinematic attract mode for Dr. Rashel brand.
+ * Dark luxury aesthetic, animated orbs, teardrop particles,
+ * product marquee, logo glow, and auto-attract countdown.
  */
 export default function IdleScreen({ onStart, settings }) {
-  const canvasRef  = useRef(null)
-  const animRef    = useRef(null)
-  const logoSrc    = settings?.customLogo    || './assets/logo.png'
-  const bgSrc      = settings?.customBackground || './assets/background.png'
+  const canvasRef = useRef(null)
+  const logoSrc = settings?.customLogo || './assets/logo.png'
+  const bgSrc = settings?.customBackground || null
 
-  // ── Ambient particle canvas ───────────────────────────────────
+  // Auto-attract countdown (starts 15 s after idle)
+  const [attractCountdown, setAttractCountdown] = useState(null)
+  const attractRef = useRef(null)
+
+  useEffect(() => {
+    // Restart attract timer whenever IdleScreen mounts
+    if (attractRef.current) clearInterval(attractRef.current)
+    let count = 15
+    const start = setTimeout(() => {
+      setAttractCountdown(count)
+      attractRef.current = setInterval(() => {
+        count -= 1
+        setAttractCountdown(count)
+        if (count <= 0) {
+          clearInterval(attractRef.current)
+          onStart()
+        }
+      }, 1000)
+    }, 15000)
+
+    return () => {
+      clearTimeout(start)
+      clearInterval(attractRef.current)
+    }
+  }, [onStart])
+
+  // Reset attract timer on any touch
+  const handleStart = () => {
+    clearInterval(attractRef.current)
+    setAttractCountdown(null)
+    onStart()
+  }
+
+  // ── Teardrop particle canvas ─────────────────────────────────
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
@@ -19,54 +54,66 @@ export default function IdleScreen({ onStart, settings }) {
     let raf
 
     const resize = () => {
-      canvas.width  = window.innerWidth
+      canvas.width = window.innerWidth
       canvas.height = window.innerHeight
     }
     resize()
     window.addEventListener('resize', resize)
 
-    // Particle pool
-    const NUM = 40
+    const NUM = 55
     const particles = Array.from({ length: NUM }, () => createParticle(canvas))
 
     function createParticle(c) {
+      const isGold = Math.random() > 0.88
+      const isTeal = !isGold && Math.random() > 0.4
       return {
-        x:    Math.random() * c.width,
-        y:    Math.random() * c.height + c.height,
-        r:    3 + Math.random() * 7,
-        vy:   -(0.2 + Math.random() * 0.6),
-        vx:   (Math.random() - 0.5) * 0.3,
-        alpha: 0.08 + Math.random() * 0.22,
-        color: Math.random() > 0.85
-          ? `rgba(200,137,10,`
-          : Math.random() > 0.5
-            ? `rgba(74,184,216,`
-            : `rgba(255,255,255,`,
+        x: Math.random() * c.width,
+        y: Math.random() * c.height + c.height,
+        r: 2 + Math.random() * 6,
+        vy: -(0.3 + Math.random() * 0.8),
+        vx: (Math.random() - 0.5) * 0.4,
+        alpha: 0.1 + Math.random() * 0.35,
+        color: isGold ? [240, 192, 64]
+          : isTeal ? [0, 200, 240]
+            : [180, 220, 255],
+        wobble: Math.random() * Math.PI * 2,
+        wobbleSpeed: 0.01 + Math.random() * 0.02,
       }
+    }
+
+    function drawTeardrop(ctx, x, y, r, alpha, color) {
+      ctx.save()
+      ctx.globalAlpha = alpha
+      ctx.beginPath()
+      // Teardrop path: circle top + pointed bottom
+      ctx.arc(x, y - r * 0.4, r, 0, Math.PI)
+      ctx.bezierCurveTo(x - r, y - r * 0.4 + r, x, y + r * 1.6, x, y + r * 1.6)
+      ctx.bezierCurveTo(x, y + r * 1.6, x + r, y - r * 0.4 + r, x + r, y - r * 0.4)
+      ctx.closePath()
+      const grad = ctx.createRadialGradient(x - r * 0.3, y - r * 0.6, 0, x, y, r * 1.5)
+      grad.addColorStop(0, `rgba(255,255,255,0.9)`)
+      grad.addColorStop(0.4, `rgba(${color[0]},${color[1]},${color[2]},0.8)`)
+      grad.addColorStop(1, `rgba(${color[0]},${color[1]},${color[2]},0.1)`)
+      ctx.fillStyle = grad
+      ctx.fill()
+      ctx.restore()
     }
 
     function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       particles.forEach(p => {
-        p.x += p.vx + Math.sin(Date.now() * 0.001 + p.y * 0.01) * 0.3
+        p.wobble += p.wobbleSpeed
+        p.x += p.vx + Math.sin(p.wobble) * 0.4
         p.y += p.vy
-        if (p.y < -20) {
+        if (p.y < -30) {
           Object.assign(p, createParticle(canvas))
-          p.y = canvas.height + 20
+          p.y = canvas.height + 30
         }
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = p.color + p.alpha + ')'
-        ctx.fill()
-        // Draw a subtle stroke for bubble feel
-        ctx.strokeStyle = p.color + (p.alpha * 0.5) + ')'
-        ctx.lineWidth = 0.5
-        ctx.stroke()
+        drawTeardrop(ctx, p.x, p.y, p.r, p.alpha, p.color)
       })
       raf = requestAnimationFrame(tick)
     }
     tick()
-    animRef.current = raf
 
     return () => {
       cancelAnimationFrame(raf)
@@ -77,19 +124,36 @@ export default function IdleScreen({ onStart, settings }) {
   return (
     <div
       className="idle-screen"
-      style={{ backgroundImage: `url("${bgSrc}")` }}
+      style={bgSrc ? { backgroundImage: `url("${bgSrc}")` } : undefined}
+      onClick={handleStart}
     >
+      {/* Animated mesh gradient orbs */}
+      <div className="idle-orb idle-orb--1" />
+      <div className="idle-orb idle-orb--2" />
+      <div className="idle-orb idle-orb--3" />
+      <div className="idle-orb idle-orb--4" />
+
       {/* Particle canvas */}
       <canvas ref={canvasRef} className="idle-particles" />
 
-      {/* Dark overlay */}
-      <div className="idle-overlay" />
+      {/* Subtle grid overlay */}
+      <div className="idle-grid-overlay" />
 
       {/* Content */}
-      <div className="idle-content anim-fade-in">
+      <div className="idle-content">
 
-        {/* Logo */}
-        <div className="idle-logo-wrap anim-float">
+        {/* Top badge */}
+        <div className="idle-badge anim-fade-in-down">
+          <span className="idle-badge-dot" />
+          <span className="text-upper body-sm" style={{ letterSpacing: '0.3em', color: 'var(--color-gold)' }}>
+            Premium Skincare · Exhibition
+          </span>
+          <span className="idle-badge-dot" />
+        </div>
+
+        {/* Logo with glow */}
+        <div className="idle-logo-wrap anim-scale-in delay-100">
+          <div className="idle-logo-halo" />
           <img
             src={logoSrc}
             alt="DR-RASHEL"
@@ -98,48 +162,70 @@ export default function IdleScreen({ onStart, settings }) {
           />
         </div>
 
-        {/* Brand */}
-        <div className="idle-brand anim-fade-in-up delay-200">
-          <span className="text-upper text-muted body-sm">P R E M I U M · S K I N C A R E</span>
-        </div>
-
         {/* Title */}
-        <h1 className="idle-title heading-display heading-xl text-center anim-fade-in-up delay-300">
+        <h1 className="idle-title heading-display heading-xl text-center anim-fade-in-up delay-200">
           <span className="title-normal">Hydration </span>
-          <span className="title-italic">Challenge</span>
+          <span className="title-italic text-shimmer">Challenge</span>
         </h1>
 
-        <div className="divider-gold anim-fade-in delay-400" style={{ width: '200px', margin: '24px auto' }} />
+        <div className="divider-gold anim-fade-in delay-300" style={{ width: '220px', margin: '4px auto' }} />
 
-        {/* Subtitle */}
-        <p className="idle-subtitle body-lg text-center anim-fade-in-up delay-500">
+        {/* Tagline */}
+        <p className="idle-subtitle body-lg text-center anim-fade-in-up delay-400">
           Catch as many hydration droplets as possible in{' '}
           <span className="text-highlight">30 seconds</span>
         </p>
 
-        {/* Droplet hint icons */}
-        <div className="idle-drops anim-fade-in delay-600">
-          <div className="drop-hint drop-hint--normal anim-float">
-            <span className="drop-hint-pts text-aqua">+10</span>
+        {/* Drop hint cards */}
+        <div className="idle-drops anim-fade-in delay-500">
+          <div className="drop-card drop-card--normal anim-float">
+            <div className="drop-card-drop" />
+            <div className="drop-card-info">
+              <span className="drop-card-pts text-aqua">+10</span>
+              <span className="drop-card-label">Water Drop</span>
+            </div>
           </div>
-          <div className="drop-hint drop-hint--golden anim-float delay-300">
-            <span className="drop-hint-pts text-gold">+25</span>
+          <div className="drop-card-divider" />
+          <div className="drop-card drop-card--golden anim-float delay-300">
+            <div className="drop-card-drop drop-card-drop--gold" />
+            <div className="drop-card-info">
+              <span className="drop-card-pts text-gold">+25</span>
+              <span className="drop-card-label">Gold Serum</span>
+            </div>
           </div>
         </div>
 
         {/* CTA Button */}
         <button
           id="idle-start-btn"
-          className="btn btn-primary btn-lg anim-scale-in delay-600 anim-pulse-glow"
-          onClick={onStart}
+          className="btn btn-primary btn-lg idle-cta anim-scale-in delay-600 anim-pulse-glow"
+          onClick={handleStart}
         >
+          <span className="idle-cta-icon"></span>
           TAP TO PLAY
         </button>
 
-        {/* Footer hint */}
-        <p className="idle-hint body-sm text-muted anim-fade-in delay-800">
-          Touch the screen to begin your challenge
-        </p>
+        {/* Auto-attract countdown */}
+        {attractCountdown !== null && (
+          <p className="idle-attract body-sm text-muted anim-fade-in">
+            Starting automatically in{' '}
+            <span className="text-gold" style={{ fontWeight: 700 }}>{attractCountdown}s</span>
+          </p>
+        )}
+
+      </div>
+
+      {/* Product tagline marquee — bottom strip */}
+      <div className="idle-marquee-strip anim-fade-in delay-1000">
+        <div className="marquee-outer">
+          <div className="marquee-inner">
+            {[0, 1].map(i => (
+              <span key={i} className="idle-marquee-text">
+                {MARQUEE_TEXT}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Corner water ripple decorations */}

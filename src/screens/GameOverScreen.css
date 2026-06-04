@@ -1,3 +1,5 @@
+/* ── GameOverScreen — Dark Luxury + Brand Payoff ──────────── */
+
 .gameover-screen {
   position: absolute;
   inset: 0;
@@ -8,59 +10,74 @@
   overflow: hidden;
 }
 
-/* Ambient glow orbs – soft, light */
+.confetti-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 20;
+  overflow: hidden;
+}
+
 .go-orb {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
+  filter: blur(90px);
   pointer-events: none;
   z-index: 0;
 }
-
 .go-orb--aqua {
   width: 500px; height: 500px;
-  top: -100px; right: -100px;
-  background: radial-gradient(circle, rgba(74,184,216,0.25) 0%, transparent 70%);
+  top: -120px; right: -100px;
+  background: radial-gradient(circle, rgba(0,212,255,0.18) 0%, transparent 70%);
   animation: floatSlow 8s ease-in-out infinite;
 }
-
 .go-orb--gold {
   width: 600px; height: 600px;
   bottom: -200px; left: -150px;
-  background: radial-gradient(circle, rgba(200,137,10,0.15) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(240,192,64,0.14) 0%, transparent 70%);
   animation: floatSlow 10s ease-in-out infinite reverse;
 }
 
-/* Content */
 .gameover-content {
   position: relative;
-  z-index: 1;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-lg);
-  max-width: min(560px, 90vw);
+  max-width: min(560px, 92vw);
   width: 100%;
   text-align: center;
   padding: var(--space-xl) var(--space-lg);
+  max-height: 98vh;
+  overflow-y: auto;
 }
 
-/* Header */
 .go-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
 }
-
-/* New High Score Banner */
-.go-new-high {
-  padding: var(--space-sm) var(--space-xl);
-  background: rgba(200,137,10,0.12) !important;
-  animation: new-high-score 0.7s var(--ease-out) both, pulse-gold 2s ease-in-out infinite 0.7s;
+.go-title {
+  color: var(--color-text-primary);
+  margin-top: 8px;
 }
 
-/* Score card */
+.go-new-high {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: var(--space-sm) var(--space-xl);
+  background: rgba(240,192,64,0.10) !important;
+  animation: new-high-score 0.7s var(--ease-out) both, pulse-gold 2.5s ease-in-out infinite 0.7s;
+}
+.go-new-high-stars {
+  color: var(--color-gold);
+  letter-spacing: 4px;
+  font-size: 0.9rem;
+}
+
 .go-score-card {
   width: 100%;
   padding: var(--space-xl) var(--space-lg);
@@ -68,33 +85,23 @@
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  background: rgba(255,255,255,0.55) !important;
-  border-color: rgba(255,255,255,0.8) !important;
+  background: rgba(8,25,45,0.75) !important;
+  border-color: rgba(0,212,255,0.2) !important;
 }
-
 .go-score-number {
   font-family: var(--font-serif);
   font-size: clamp(5rem, 15vw, 9rem);
   font-weight: 300;
   line-height: 1;
   letter-spacing: -0.02em;
+  animation: countUp 0.5s var(--ease-out) 0.2s both;
 }
 
-/* Performance text */
-.go-perf {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+.go-perf { display: flex; flex-direction: column; align-items: center; }
+.go-perf-emoji { font-size: 2.5rem; animation: starPop 0.5s var(--ease-out) 0.3s both; }
 
-/* High score row */
-.go-highscore-row {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
+.go-highscore-row { display: flex; align-items: center; gap: 4px; }
 
-/* Action buttons */
 .go-actions {
   display: flex;
   flex-direction: column;
@@ -102,16 +109,4 @@
   gap: var(--space-md);
   width: 100%;
 }
-
-.go-actions .btn {
-  width: min(320px, 100%);
-}
-
-/* Auto-reset countdown */
-.go-countdown {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--space-sm);
-  margin-top: var(--space-sm);
-}
+.go-actions .btn { width: min(320px, 100%); }

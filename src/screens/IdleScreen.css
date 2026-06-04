@@ -1,3 +1,5 @@
+/* ── IdleScreen — Dark Luxury Cinematic Attract Mode ────────── */
+
 .idle-screen {
   position: absolute;
   inset: 0;
@@ -6,87 +8,142 @@
   justify-content: center;
   background: var(--color-bg-gradient);
   overflow: hidden;
+  cursor: pointer;
 }
 
+/* ── Animated mesh orbs ──────────────────────────────────────── */
+.idle-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(70px);
+}
+
+.idle-orb--1 {
+  width: 600px; height: 600px;
+  top: -180px; left: -150px;
+  background: radial-gradient(circle, rgba(0,180,220,0.22) 0%, transparent 70%);
+  animation: orb-drift 14s ease-in-out infinite;
+}
+
+.idle-orb--2 {
+  width: 500px; height: 500px;
+  bottom: -150px; right: -120px;
+  background: radial-gradient(circle, rgba(240,192,64,0.18) 0%, transparent 70%);
+  animation: orb-drift 18s ease-in-out infinite reverse;
+}
+
+.idle-orb--3 {
+  width: 400px; height: 400px;
+  top: 30%; right: -80px;
+  background: radial-gradient(circle, rgba(0,212,255,0.12) 0%, transparent 70%);
+  animation: orb-drift 11s ease-in-out infinite 3s;
+}
+
+.idle-orb--4 {
+  width: 300px; height: 300px;
+  bottom: 20%; left: -60px;
+  background: radial-gradient(circle, rgba(240,192,64,0.10) 0%, transparent 70%);
+  animation: orb-drift 16s ease-in-out infinite reverse 2s;
+}
+
+/* ── Particle canvas ─────────────────────────────────────────── */
 .idle-particles {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  z-index: 1;
-}
-
-/* Soft overlay to unify the background */
-.idle-overlay {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 50% 40%,
-    rgba(200,240,250,0.3) 0%,
-    rgba(180,230,248,0.15) 100%
-  );
   z-index: 2;
 }
 
+/* ── Grid overlay ─────────────────────────────────────────────── */
+.idle-grid-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background-image:
+    linear-gradient(rgba(0,212,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,212,255,0.025) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Content ─────────────────────────────────────────────────── */
 .idle-content {
   position: relative;
-  z-index: 3;
+  z-index: 5;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--space-lg);
-  max-width: min(600px, 90vw);
+  max-width: min(640px, 92vw);
   text-align: center;
-  padding: var(--space-xl);
+  padding: var(--space-xl) var(--space-lg);
 }
 
-/* Logo */
+/* ── Badge ───────────────────────────────────────────────────── */
+.idle-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 18px;
+  border: 1px solid rgba(240,192,64,0.3);
+  border-radius: var(--radius-pill);
+  background: rgba(240,192,64,0.06);
+  backdrop-filter: blur(10px);
+}
+
+.idle-badge-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  opacity: 0.7;
+}
+
+/* ── Logo ────────────────────────────────────────────────────── */
 .idle-logo-wrap {
-  margin-bottom: var(--space-sm);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.idle-logo-halo {
+  position: absolute;
+  width: 220px; height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240,192,64,0.18) 0%, transparent 70%);
+  animation: pulse-glow 3s ease-in-out infinite;
+  filter: blur(20px);
 }
 
 .idle-logo {
-  max-width: min(180px, 40vw);
-  max-height: 80px;
+  position: relative;
+  max-width: min(200px, 45vw);
+  max-height: 100px;
   object-fit: contain;
-  filter: drop-shadow(0 4px 16px rgba(13,74,92,0.2));
+  animation: logoGlow 4s ease-in-out infinite;
+  z-index: 1;
 }
 
-/* Brand label */
-.idle-brand {
-  margin-top: calc(-1 * var(--space-sm));
-  letter-spacing: 0.35em;
-  color: var(--color-text-secondary);
-}
-
-/* Title */
+/* ── Title ───────────────────────────────────────────────────── */
 .idle-title {
-  line-height: 1.1;
-  color: var(--color-teal-deep);
+  line-height: 1.05;
+  margin-bottom: -8px;
 }
 
 .idle-title .title-normal {
-  color: var(--color-teal-deep);
+  color: var(--color-text-primary);
   font-style: normal;
 }
 
-.idle-title .title-italic {
-  font-style: italic;
-  color: var(--color-gold);
-}
-
-/* Subtitle */
+/* ── Subtitle ────────────────────────────────────────────────── */
 .idle-subtitle {
-  max-width: 380px;
+  max-width: 360px;
   line-height: 1.7;
   color: var(--color-text-secondary);
 }
 
-.idle-subtitle .text-highlight {
-  color: var(--color-teal-mid);
-  font-weight: 500;
-}
-
-/* Drop hints */
+/* ── Drop hint cards ─────────────────────────────────────────── */
 .idle-drops {
   display: flex;
   gap: var(--space-xl);
@@ -94,52 +151,118 @@
   margin: var(--space-xs) 0;
 }
 
-.drop-hint {
+.drop-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 20px;
+  border-radius: var(--radius-md);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(14px);
+}
+
+.drop-card--golden {
+  border-color: var(--glass-border-gold);
+  background: rgba(240,192,64,0.06);
+}
+
+.drop-card-divider {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(180deg, transparent, rgba(0,212,255,0.3), transparent);
+}
+
+.drop-card-drop {
+  width: 36px;
+  height: 48px;
+  border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%;
+  background: radial-gradient(ellipse at 30% 25%,
+    rgba(255,255,255,0.9),
+    rgba(0,200,240,0.7));
+  box-shadow: 0 4px 16px rgba(0,200,240,0.4), inset 0 0 8px rgba(255,255,255,0.5);
+}
+
+.drop-card-drop--gold {
+  background: radial-gradient(ellipse at 30% 25%,
+    rgba(255,255,255,0.9),
+    rgba(240,192,64,0.75));
+  box-shadow: 0 4px 16px rgba(240,192,64,0.5), inset 0 0 8px rgba(255,255,255,0.5);
+}
+
+.drop-card-info {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  align-items: flex-start;
+  gap: 2px;
 }
 
-.drop-hint::before {
-  content: '';
-  width: 48px;
-  height: 62px;
-  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
-  display: block;
-}
-
-.drop-hint--normal::before {
-  background: radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.95), rgba(100,195,225,0.7));
-  border: 1px solid rgba(74,184,216,0.5);
-  box-shadow: 0 4px 16px rgba(74,184,216,0.3), inset 0 0 8px rgba(255,255,255,0.6);
-}
-
-.drop-hint--golden::before {
-  background: radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.95), rgba(228,165,30,0.7));
-  border: 1px solid rgba(200,137,10,0.5);
-  box-shadow: 0 4px 16px rgba(200,137,10,0.35), inset 0 0 8px rgba(255,255,255,0.6);
-}
-
-.drop-hint-pts {
+.drop-card-pts {
   font-family: var(--font-sans);
-  font-weight: 600;
-  font-size: 0.875rem;
-  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
-.drop-hint--normal .drop-hint-pts  { color: var(--color-teal-mid); }
-.drop-hint--golden .drop-hint-pts  { color: var(--color-gold); }
-
-/* Footer hint */
-.idle-hint {
-  margin-top: var(--space-sm);
-  letter-spacing: 0.04em;
+.drop-card-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+/* ── CTA Button ──────────────────────────────────────────────── */
+.idle-cta {
+  gap: 10px;
+}
+
+.idle-cta-icon {
+  font-size: 1.3rem;
+}
+
+/* ── Auto-attract countdown ───────────────────────────────────── */
+.idle-attract {
+  margin-top: -8px;
+  letter-spacing: 0.04em;
+}
+
+/* ── Social footer ───────────────────────────────────────────── */
+.idle-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: -4px;
+}
+
+.idle-footer-sep {
+  color: var(--color-text-muted);
+  opacity: 0.5;
+}
+
+/* ── Marquee strip ───────────────────────────────────────────── */
+.idle-marquee-strip {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 6;
+  padding: 10px 0;
+  background: rgba(240,192,64,0.06);
+  border-top: 1px solid rgba(240,192,64,0.15);
+  backdrop-filter: blur(10px);
+}
+
+.idle-marquee-text {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  color: var(--color-gold);
+  text-transform: uppercase;
   opacity: 0.75;
 }
 
-/* Water ripple decorations */
+/* ── Water ripple decorations ────────────────────────────────── */
 .water-ripple {
   position: absolute;
   border-radius: 50%;
@@ -150,7 +273,7 @@
 .water-ripple--tl {
   width: 500px; height: 500px;
   top: -200px; left: -200px;
-  border: 1px solid rgba(74,184,216,0.15);
+  border: 1px solid rgba(0,212,255,0.12);
   animation: waterRipple 10s ease-out infinite;
 }
 
@@ -159,7 +282,7 @@
   content: '';
   position: absolute;
   border-radius: 50%;
-  border: 1px solid rgba(74,184,216,0.1);
+  border: 1px solid rgba(0,212,255,0.08);
 }
 
 .water-ripple--tl::before { inset: 70px; animation: waterRipple 10s ease-out infinite 1.5s; }
@@ -168,7 +291,7 @@
 .water-ripple--br {
   width: 600px; height: 600px;
   bottom: -250px; right: -250px;
-  border: 1px solid rgba(200,137,10,0.1);
+  border: 1px solid rgba(240,192,64,0.08);
   animation: waterRipple 12s ease-out infinite 3s;
 }
 
@@ -177,6 +300,6 @@
   position: absolute;
   border-radius: 50%;
   inset: 90px;
-  border: 1px solid rgba(200,137,10,0.07);
+  border: 1px solid rgba(240,192,64,0.05);
   animation: waterRipple 12s ease-out infinite 5s;
 }
