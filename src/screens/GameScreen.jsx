@@ -119,13 +119,13 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           preserveAspectRatio="none"
         >
           {/* Subtle glowing swoosh lines */}
-          <path d="M0,80  C160,250 520,250 680,80"  fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
-          <path d="M0,100 C160,280 520,280 680,100" fill="none" stroke="rgba(255,255,255,0.35)"  strokeWidth="1.5"/>
+          <path d="M0,10  C160,90 520,90 680,10"  fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+          <path d="M0,25 C160,105 520,105 680,25" fill="none" stroke="rgba(255,255,255,0.35)"  strokeWidth="1.5"/>
 
           {/* Main purple fill */}
-          <path d="M0,130 C180,340 500,340 680,130 L680,320 L0,320 Z" fill="#321682"/>
+          <path d="M0,50 C180,130 500,130 680,50 L680,320 L0,320 Z" fill="#321682"/>
           {/* Glowing edge for main wave */}
-          <path d="M0,130 C180,340 500,340 680,130" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" />
+          <path d="M0,50 C180,130 500,130 680,50" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" />
 
           {/* Stars / sparkles */}
           <circle cx="90"  cy="240" r="2"   fill="#fff" opacity="0.8"/>

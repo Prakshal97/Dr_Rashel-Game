@@ -154,10 +154,8 @@ export class GameplayScene extends Phaser.Scene {
     const drop = this.add.container(x, -120).setDepth(3)
     const img  = this.add.image(0, 0, texKey)
 
-    // Smaller sizes: 95-125px normal, 115-145px golden
-    const dispW = isGold
-      ? Phaser.Math.Between(115, 145)
-      : Phaser.Math.Between(95, 125)
+    // Fixed size for all droplets as requested
+    const dispW = 115
     const dispH = Math.round(dispW * 1.27)
     img.setDisplaySize(dispW, dispH)
 
@@ -167,12 +165,13 @@ export class GameplayScene extends Phaser.Scene {
     const textColor2 = isGold ? '#ffffff' : '#321682'   // "Ceramide"
     const strokeCol  = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
 
-    // Centre of the drop body (midY of the teardrop)
-    const dropCY = dispH * 0.38
+    // Image origin is at (0.5, 0.5), so Y=0 is the exact geometric center.
+    // The visual center of the bulb is slightly below 0.
+    const dropCY = dispH * 0.05
 
-    const pctText = this.add.text(0, dropCY - dispH * 0.08, '1%', {
+    const pctText = this.add.text(0, dropCY - dispH * 0.03, '1%', {
       fontFamily:      'Inter, sans-serif',
-      fontSize:        Math.round(dispW * 0.22) + 'px',
+      fontSize:        Math.round(dispW * 0.20) + 'px',
       color:           textColor1,
       fontStyle:       'bold',
       stroke:          strokeCol,
@@ -180,9 +179,9 @@ export class GameplayScene extends Phaser.Scene {
       resolution:      2,
     }).setOrigin(0.5)
 
-    const cerText = this.add.text(0, dropCY + dispH * 0.10, 'Ceramide', {
+    const cerText = this.add.text(0, dropCY + dispH * 0.12, 'Ceramide', {
       fontFamily:      'Inter, sans-serif',
-      fontSize:        Math.round(dispW * 0.13) + 'px',
+      fontSize:        Math.round(dispW * 0.12) + 'px',
       color:           textColor2,
       fontStyle:       '600',
       stroke:          strokeCol,

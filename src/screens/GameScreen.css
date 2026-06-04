@@ -144,7 +144,7 @@
   left: 0;
   width: 100%;
   height: 42vh;          /* 42% of viewport height = purple section   */
-  min-height: 240px;
+  min-height: 280px;
   z-index: 15;
   pointer-events: none;
 }
@@ -161,7 +161,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 28px;
+  padding-bottom: 24px;
   gap: 6px;
   z-index: 16;
 }
