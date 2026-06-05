@@ -18,27 +18,27 @@ export class GameplayScene extends Phaser.Scene {
   create() {
     const cfg = window.__gameSettings || {}
     this.cfg = {
-      gameDuration:   cfg.gameDuration      ?? 30,
-      speedMin:       cfg.dropletSpeed?.min  ?? 150,
-      speedMax:       cfg.dropletSpeed?.max  ?? 360,
-      spawnFrequency: cfg.spawnFrequency     ?? 600,
-      pointsNormal:   cfg.pointsNormal       ?? 10,
-      pointsGolden:   cfg.pointsGolden       ?? 25,
-      goldenFreq:     cfg.goldenFrequency    ?? 0.15,
-      hazardFreq:     cfg.hazardFreq         ?? 0.15,
-      penaltyPoints:  cfg.penaltyPoints      ?? 10,
-      soundEnabled:   cfg.soundEnabled       ?? true,
-      highScore:      cfg.highScore          ?? 0,
+      gameDuration: cfg.gameDuration ?? 30,
+      speedMin: cfg.dropletSpeed?.min ?? 150,
+      speedMax: cfg.dropletSpeed?.max ?? 360,
+      spawnFrequency: cfg.spawnFrequency ?? 600,
+      pointsNormal: cfg.pointsNormal ?? 10,
+      pointsGolden: cfg.pointsGolden ?? 25,
+      goldenFreq: cfg.goldenFrequency ?? 0.15,
+      hazardFreq: cfg.hazardFreq ?? 0.15,
+      penaltyPoints: cfg.penaltyPoints ?? 10,
+      soundEnabled: cfg.soundEnabled ?? true,
+      highScore: cfg.highScore ?? 0,
     }
 
-    this.score     = 0
+    this.score = 0
     this.highScore = this.cfg.highScore
-    this.timeLeft  = this.cfg.gameDuration
+    this.timeLeft = this.cfg.gameDuration
     this.isRunning = true
 
     // Combo tracking
-    this.combo         = 0
-    this.lastHitTime   = 0
+    this.combo = 0
+    this.lastHitTime = 0
     this.comboResetEvt = null
 
     const W = this.scale.width
@@ -65,10 +65,10 @@ export class GameplayScene extends Phaser.Scene {
 
     // ── Spawn timer ──────────────────────────────────────────
     this.spawnTimer = this.time.addEvent({
-      delay:         this.cfg.spawnFrequency,
-      callback:      this.spawnDroplet,
+      delay: this.cfg.spawnFrequency,
+      callback: this.spawnDroplet,
       callbackScope: this,
-      loop:          true,
+      loop: true,
     })
 
     // Initial burst – 6 droplets spread over 0.6 s
@@ -78,10 +78,10 @@ export class GameplayScene extends Phaser.Scene {
 
     // ── Countdown ────────────────────────────────────────────
     this.countdownTimer = this.time.addEvent({
-      delay:         1000,
-      callback:      this.onTick,
+      delay: 1000,
+      callback: this.onTick,
       callbackScope: this,
-      loop:          true,
+      loop: true,
     })
 
     // Initial HUD emit
@@ -98,10 +98,10 @@ export class GameplayScene extends Phaser.Scene {
     // Large overlapping translucent circles — exactly like the reference screenshot
     const circles = [
       { x: W * -0.08, y: H * 0.42, r: W * 0.58 },   // left-center big
-      { x: W * 1.10,  y: H * 0.35, r: W * 0.68 },   // right-center big
-      { x: W * 0.28,  y: H * 0.75, r: W * 0.50 },   // bottom-left
-      { x: W * 0.82,  y: H * 0.72, r: W * 0.38 },   // bottom-right
-      { x: W * 0.50,  y: H * 0.26, r: W * 0.28 },   // top-mid-left
+      { x: W * 1.10, y: H * 0.35, r: W * 0.68 },   // right-center big
+      { x: W * 0.28, y: H * 0.75, r: W * 0.50 },   // bottom-left
+      { x: W * 0.82, y: H * 0.72, r: W * 0.38 },   // bottom-right
+      { x: W * 0.50, y: H * 0.26, r: W * 0.28 },   // top-mid-left
     ]
     circles.forEach((c, i) => {
       const g = this.add.graphics().setDepth(1)
@@ -111,12 +111,12 @@ export class GameplayScene extends Phaser.Scene {
       g.fillCircle(c.x, c.y, c.r)
       // Very subtle slow pulse
       this.tweens.add({
-        targets:  g,
-        alpha:    { from: 0.85, to: 1 },
+        targets: g,
+        alpha: { from: 0.85, to: 1 },
         duration: 5000 + i * 800,
-        yoyo:     true,
-        repeat:   -1,
-        ease:     'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
       })
     })
   }
@@ -143,12 +143,12 @@ export class GameplayScene extends Phaser.Scene {
     // Soft cap: don't overload screen
     if (this.droplets.getLength() >= 18) return
 
-    const W       = this.scale.width
+    const W = this.scale.width
     const rand = Math.random()
     let isHazard = false
     let isGold = false
     let dropType = DROPLET_TYPES.NORMAL
-    
+
     if (rand < this.cfg.hazardFreq) {
       isHazard = true
       dropType = Math.random() < 0.5 ? DROPLET_TYPES.POLLUTION : DROPLET_TYPES.UV_RAY
@@ -163,13 +163,13 @@ export class GameplayScene extends Phaser.Scene {
     if (dropType === DROPLET_TYPES.UV_RAY) texture = 'uv-drop'
 
     // Make sure canvas texture exists (fallback to white square if BootScene missed)
-    const texKey  = this.textures.exists(texture) ? texture : '__DEFAULT'
+    const texKey = this.textures.exists(texture) ? texture : '__DEFAULT'
 
-    const margin  = 100
-    const x       = Phaser.Math.Between(margin, W - margin)
+    const margin = 100
+    const x = Phaser.Math.Between(margin, W - margin)
 
     const drop = this.add.container(x, -120).setDepth(3)
-    const img  = this.add.image(0, 0, texKey)
+    const img = this.add.image(0, 0, texKey)
 
     // Fixed size for all droplets as requested
     const dispW = 115
@@ -180,7 +180,7 @@ export class GameplayScene extends Phaser.Scene {
     let label2 = 'Ceramide'
     let textColor1 = isGold ? '#ffffff' : '#321682'
     let textColor2 = isGold ? '#ffffff' : '#321682'
-    let strokeCol  = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
+    let strokeCol = isGold ? 'rgba(50,22,130,0.6)' : 'rgba(255,255,255,0.5)'
 
     if (dropType === DROPLET_TYPES.POLLUTION) {
       label1 = 'SMOG'
@@ -196,33 +196,33 @@ export class GameplayScene extends Phaser.Scene {
       strokeCol = 'rgba(50,0,0,0.8)'
     }
 
-    // Image origin is at (0.5, 0.5), so Y=0 is the exact geometric center.
-    // The visual center of the bulb is slightly below 0.
-    const dropCY = dispH * 0.05
+    // Teardrop: pointed top, round belly at BOTTOM.
+    // Image origin (0.5,0.5) → Y=0 is centre. Belly centre ≈ +25 % below centre.
+    const dropCY = dispH * 0.25
 
-    const pctText = this.add.text(0, dropCY - dispH * 0.03, label1, {
-      fontFamily:      'Inter, sans-serif',
-      fontSize:        Math.round(dispW * (isHazard ? 0.16 : 0.20)) + 'px',
-      color:           textColor1,
-      fontStyle:       'bold',
-      stroke:          strokeCol,
+    const pctText = this.add.text(0, dropCY - dispH * 0.07, label1, {
+      fontFamily: 'Inter, sans-serif',
+      fontSize: Math.round(dispW * (isHazard ? 0.16 : 0.20)) + 'px',
+      color: textColor1,
+      fontStyle: 'bold',
+      stroke: strokeCol,
       strokeThickness: 1.5,
-      resolution:      2,
+      resolution: 2,
     }).setOrigin(0.5)
 
-    const cerText = this.add.text(0, dropCY + dispH * 0.12, label2, {
-      fontFamily:      'Inter, sans-serif',
-      fontSize:        Math.round(dispW * 0.12) + 'px',
-      color:           textColor2,
-      fontStyle:       '600',
-      stroke:          strokeCol,
+    const cerText = this.add.text(0, dropCY + dispH * 0.09, label2, {
+      fontFamily: 'Inter, sans-serif',
+      fontSize: Math.round(dispW * 0.12) + 'px',
+      color: textColor2,
+      fontStyle: '600',
+      stroke: strokeCol,
       strokeThickness: 1,
-      resolution:      2,
+      resolution: 2,
     }).setOrigin(0.5)
 
     drop.add([img, pctText, cerText])
 
-    drop.dropType  = dropType
+    drop.dropType = dropType
     if (isHazard) {
       drop.points = -this.cfg.penaltyPoints
     } else if (isGold) {
@@ -230,31 +230,31 @@ export class GameplayScene extends Phaser.Scene {
     } else {
       drop.points = this.cfg.pointsNormal
     }
-    
-    drop.speedY    = Phaser.Math.FloatBetween(this.cfg.speedMin, this.cfg.speedMax)
-    drop.driftX    = Phaser.Math.FloatBetween(-25, 25)
-    drop.startX    = x
+
+    drop.speedY = Phaser.Math.FloatBetween(this.cfg.speedMin, this.cfg.speedMax)
+    drop.driftX = Phaser.Math.FloatBetween(-25, 25)
+    drop.startX = x
     drop.startTime = this.time.now
     drop.hitRadius = dispW * 0.55
 
     // Golden pulse glow
     if (isGold) {
       this.tweens.add({
-        targets:  drop,
-        alpha:    { from: 0.75, to: 1 },
+        targets: drop,
+        alpha: { from: 0.75, to: 1 },
         duration: 700,
-        yoyo:     true,
-        repeat:   -1,
-        ease:     'Sine.easeInOut',
+        yoyo: true,
+        repeat: -1,
+        ease: 'Sine.easeInOut',
       })
     } else if (isHazard) {
       this.tweens.add({
-        targets:  drop,
-        scaleX:   { from: 0.95, to: 1.05 },
-        scaleY:   { from: 0.95, to: 1.05 },
+        targets: drop,
+        scaleX: { from: 0.95, to: 1.05 },
+        scaleY: { from: 0.95, to: 1.05 },
         duration: dropType === DROPLET_TYPES.UV_RAY ? 150 : 800,
-        yoyo:     true,
-        repeat:   -1,
+        yoyo: true,
+        repeat: -1,
       })
     }
 
@@ -266,10 +266,10 @@ export class GameplayScene extends Phaser.Scene {
     // Fall tween with gentle sinusoidal drift
     const fallDur = (this.scale.height + 250) / drop.speedY * 1000
     this.tweens.add({
-      targets:  drop,
-      y:        this.scale.height + 140,
+      targets: drop,
+      y: this.scale.height + 140,
       duration: fallDur,
-      ease:     'Linear',
+      ease: 'Linear',
       onUpdate: (_, target) => {
         const t = (this.time.now - target.startTime) / 1000
         target.x = target.startX + Math.sin(t * 1.2) * target.driftX
@@ -291,7 +291,7 @@ export class GameplayScene extends Phaser.Scene {
     if (!this.isRunning) return
     const children = [...this.droplets.getChildren()]
     for (const drop of children) {
-      const dist   = Phaser.Math.Distance.Between(pointer.x, pointer.y, drop.x, drop.y)
+      const dist = Phaser.Math.Distance.Between(pointer.x, pointer.y, drop.x, drop.y)
       const radius = drop.hitRadius
       if (dist < radius) {
         this.onDropletTapped(drop, pointer.x, pointer.y)
@@ -330,7 +330,7 @@ export class GameplayScene extends Phaser.Scene {
       this.comboResetEvt = this.time.delayedCall(1600, () => { this.combo = 0 })
 
       // Bonus points for combo
-      if (this.combo >= 5)      bonusPoints = 15
+      if (this.combo >= 5) bonusPoints = 15
       else if (this.combo >= 3) bonusPoints = 8
       else if (this.combo >= 2) bonusPoints = 4
 
@@ -344,7 +344,7 @@ export class GameplayScene extends Phaser.Scene {
     if (wasHigh) this.highScore = this.score
 
     GameEvents.emit(EVENTS.SCORE_UPDATE, {
-      score:     this.score,
+      score: this.score,
       highScore: this.highScore,
       isNewHigh: wasHigh,
     })
@@ -367,9 +367,9 @@ export class GameplayScene extends Phaser.Scene {
   // ── Splash effect ─────────────────────────────────────────────
 
   playSplash(x, y, isGold) {
-    const mainColor  = isGold ? 0x321682 : 0x168b6a
-    const glowColor  = isGold ? 0xb28bf7 : 0x7be8ce
-    const count      = isGold ? 16 : 12
+    const mainColor = isGold ? 0x321682 : 0x168b6a
+    const glowColor = isGold ? 0xb28bf7 : 0x7be8ce
+    const count = isGold ? 16 : 12
 
     // Glow burst (expand + fade)
     const burst = this.add.circle(x, y, 18, glowColor, 0.75).setDepth(10)
@@ -381,18 +381,18 @@ export class GameplayScene extends Phaser.Scene {
 
     // Water particles
     for (let i = 0; i < count; i++) {
-      const angle  = (i / count) * Math.PI * 2 + Math.random() * 0.35
-      const speed  = Phaser.Math.Between(90, 180)
-      const size   = Phaser.Math.Between(5, 12)
-      const p      = this.add.circle(x, y, size, mainColor, 0.88).setDepth(10)
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.35
+      const speed = Phaser.Math.Between(90, 180)
+      const size = Phaser.Math.Between(5, 12)
+      const p = this.add.circle(x, y, size, mainColor, 0.88).setDepth(10)
       this.tweens.add({
-        targets:  p,
-        x:        x + Math.cos(angle) * speed,
-        y:        y + Math.sin(angle) * speed,
-        alpha:    0,
-        scaleX:   0.15, scaleY: 0.15,
+        targets: p,
+        x: x + Math.cos(angle) * speed,
+        y: y + Math.sin(angle) * speed,
+        alpha: 0,
+        scaleX: 0.15, scaleY: 0.15,
         duration: Phaser.Math.Between(320, 560),
-        ease:     'Quad.easeOut',
+        ease: 'Quad.easeOut',
         onComplete: () => p.destroy(),
       })
     }
@@ -429,22 +429,22 @@ export class GameplayScene extends Phaser.Scene {
 
     // Particles
     for (let i = 0; i < count; i++) {
-      const angle  = (i / count) * Math.PI * 2 + Math.random() * 0.5
-      const speed  = Phaser.Math.Between(100, 220)
-      const size   = Phaser.Math.Between(6, 14)
-      const p      = this.add.circle(x, y, size, mainColor, 0.9).setDepth(10)
+      const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5
+      const speed = Phaser.Math.Between(100, 220)
+      const size = Phaser.Math.Between(6, 14)
+      const p = this.add.circle(x, y, size, mainColor, 0.9).setDepth(10)
       this.tweens.add({
-        targets:  p,
-        x:        x + Math.cos(angle) * speed,
-        y:        y + Math.sin(angle) * speed,
-        alpha:    0,
-        scaleX:   0.2, scaleY: 0.2,
+        targets: p,
+        x: x + Math.cos(angle) * speed,
+        y: y + Math.sin(angle) * speed,
+        alpha: 0,
+        scaleX: 0.2, scaleY: 0.2,
         duration: Phaser.Math.Between(400, 600),
-        ease:     'Cubic.easeOut',
+        ease: 'Cubic.easeOut',
         onComplete: () => p.destroy(),
       })
     }
-    
+
     this.cameras.main.shake(150, 0.005)
   }
 
@@ -454,25 +454,25 @@ export class GameplayScene extends Phaser.Scene {
     const label = (points > 0 && !isHazard ? '+' : '') + points
     let color = isGold ? '#f0c040' : '#e8f4ff'
     if (isHazard) color = '#ff3333'
-    const size  = (isGold || isHazard) ? '42px' : isCombo ? '36px' : '30px'
+    const size = (isGold || isHazard) ? '42px' : isCombo ? '36px' : '30px'
 
     const text = this.add.text(x, y - 24, label, {
-      fontFamily:      'Inter, sans-serif',
-      fontSize:        size,
+      fontFamily: 'Inter, sans-serif',
+      fontSize: size,
       color,
-      fontStyle:       'bold',
-      stroke:          '#ffffff',
+      fontStyle: 'bold',
+      stroke: '#ffffff',
       strokeThickness: isGold ? 5 : 4,
     }).setOrigin(0.5).setDepth(20)
 
     this.tweens.add({
-      targets:  text,
-      y:        y - 110,
-      alpha:    0,
-      scaleX:   isGold ? 1.4 : 1.15,
-      scaleY:   isGold ? 1.4 : 1.15,
+      targets: text,
+      y: y - 110,
+      alpha: 0,
+      scaleX: isGold ? 1.4 : 1.15,
+      scaleY: isGold ? 1.4 : 1.15,
       duration: 950,
-      ease:     'Quad.easeOut',
+      ease: 'Quad.easeOut',
       onComplete: () => text.destroy(),
     })
   }
@@ -482,8 +482,8 @@ export class GameplayScene extends Phaser.Scene {
   showComboText(combo) {
     const W = this.scale.width
     const labels = ['', '', 'COMBO ×2', 'COMBO ×3  🔥', 'COMBO ×4  ⚡', 'COMBO ×5  🌟']
-    const label  = combo < labels.length ? labels[combo] : `COMBO ×${combo}  🌟`
-    const isBig  = combo >= 4
+    const label = combo < labels.length ? labels[combo] : `COMBO ×${combo}  🌟`
+    const isBig = combo >= 4
 
     // Flash existing combo text out first
     if (this._comboText && this._comboText.active) {
@@ -493,32 +493,32 @@ export class GameplayScene extends Phaser.Scene {
 
     const tx = W / 2
     const ty = this.scale.height * 0.36
-    const t  = this.add.text(tx, ty, label, {
-      fontFamily:      'Inter, sans-serif',
-      fontSize:        isBig ? '56px' : '44px',
-      color:           isBig ? '#f0c040' : '#e8f4ff',
-      fontStyle:       'bold',
-      stroke:          '#040d18',
+    const t = this.add.text(tx, ty, label, {
+      fontFamily: 'Inter, sans-serif',
+      fontSize: isBig ? '56px' : '44px',
+      color: isBig ? '#f0c040' : '#e8f4ff',
+      fontStyle: 'bold',
+      stroke: '#040d18',
       strokeThickness: isBig ? 7 : 5,
     }).setOrigin(0.5).setDepth(50).setAlpha(0).setScale(0.7)
 
     this._comboText = t
 
     this.tweens.add({
-      targets:  t,
-      alpha:    1,
-      scaleX:   isBig ? 1.12 : 1.05,
-      scaleY:   isBig ? 1.12 : 1.05,
+      targets: t,
+      alpha: 1,
+      scaleX: isBig ? 1.12 : 1.05,
+      scaleY: isBig ? 1.12 : 1.05,
       duration: 180,
-      ease:     'Back.easeOut',
+      ease: 'Back.easeOut',
       onComplete: () => {
         this.tweens.add({
-          targets:  t,
-          alpha:    0,
-          y:        ty - 55,
+          targets: t,
+          alpha: 0,
+          y: ty - 55,
           duration: 480,
-          ease:     'Quad.easeIn',
-          delay:    320,
+          ease: 'Quad.easeIn',
+          delay: 320,
           onComplete: () => t.active && t.destroy(),
         })
       },
@@ -563,7 +563,7 @@ export class GameplayScene extends Phaser.Scene {
       const osc = this.audioCtx.createOscillator()
       const gain = this.audioCtx.createGain()
       osc.connect(gain); gain.connect(this.audioCtx.destination)
-      
+
       if (dropType === DROPLET_TYPES.POLLUTION) {
         osc.type = 'sawtooth'
         osc.frequency.setValueAtTime(120, this.audioCtx.currentTime)
@@ -573,7 +573,7 @@ export class GameplayScene extends Phaser.Scene {
         osc.frequency.setValueAtTime(200, this.audioCtx.currentTime)
         osc.frequency.exponentialRampToValueAtTime(80, this.audioCtx.currentTime + 0.2)
       }
-      
+
       gain.gain.setValueAtTime(0.2, this.audioCtx.currentTime)
       gain.gain.exponentialRampToValueAtTime(0.001, this.audioCtx.currentTime + 0.3)
       osc.start(); osc.stop(this.audioCtx.currentTime + 0.3)
@@ -584,17 +584,17 @@ export class GameplayScene extends Phaser.Scene {
     if (!this.cfg.soundEnabled || !this.audioCtx) return
     try {
       if (this.audioCtx.state === 'suspended') this.audioCtx.resume()
-      ;[523, 659, 784, 1047].forEach((freq, i) => {
-        const osc = this.audioCtx.createOscillator()
-        const gain = this.audioCtx.createGain()
-        osc.connect(gain); gain.connect(this.audioCtx.destination)
-        const t = this.audioCtx.currentTime + i * 0.12
-        osc.type = 'sine'
-        osc.frequency.setValueAtTime(freq, t)
-        gain.gain.setValueAtTime(0.12, t)
-        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4)
-        osc.start(t); osc.stop(t + 0.4)
-      })
+        ;[523, 659, 784, 1047].forEach((freq, i) => {
+          const osc = this.audioCtx.createOscillator()
+          const gain = this.audioCtx.createGain()
+          osc.connect(gain); gain.connect(this.audioCtx.destination)
+          const t = this.audioCtx.currentTime + i * 0.12
+          osc.type = 'sine'
+          osc.frequency.setValueAtTime(freq, t)
+          gain.gain.setValueAtTime(0.12, t)
+          gain.gain.exponentialRampToValueAtTime(0.001, t + 0.4)
+          osc.start(t); osc.stop(t + 0.4)
+        })
     } catch { /* silent fail */ }
   }
 
@@ -617,7 +617,7 @@ export class GameplayScene extends Phaser.Scene {
       this.cameras.main.fadeOut(550, 203, 235, 225)
       this.time.delayedCall(560, () => {
         GameEvents.emit(EVENTS.GAME_END, {
-          score:     this.score,
+          score: this.score,
           highScore: this.highScore,
           isNewHigh: this.score >= (window.__gameSettings?.highScore ?? 0) && this.score > 0,
         })
@@ -634,7 +634,7 @@ export class GameplayScene extends Phaser.Scene {
     this.comboResetEvt?.destroy()
     this.droplets?.clear(true, true)
     if (this.audioCtx) {
-      this.audioCtx.close().catch(() => {})
+      this.audioCtx.close().catch(() => { })
       this.audioCtx = null
     }
   }

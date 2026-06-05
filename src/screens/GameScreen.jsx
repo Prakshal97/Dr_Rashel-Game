@@ -5,12 +5,12 @@ import './GameScreen.css'
 
 export default function GameScreen({ settings, highScore: initialHighScore, onGameEnd }) {
   const containerRef = useRef(null)
-  const gameRef      = useRef(null)
+  const gameRef = useRef(null)
 
-  const [score,    setScore]    = useState(0)
+  const [score, setScore] = useState(0)
   const [timeLeft, setTimeLeft] = useState(settings.gameDuration)
-  const [highScore,setHighScore]= useState(initialHighScore)
-  const [lastPop,  setLastPop]  = useState(null)
+  const [highScore, setHighScore] = useState(initialHighScore)
+  const [lastPop, setLastPop] = useState(null)
 
   // ── Launch Phaser ─────────────────────────────────────────────
   useEffect(() => {
@@ -24,7 +24,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
       gameRef.current?.destroy(true)
       gameRef.current = null
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   // ── Subscribe to game events ──────────────────────────────────
@@ -34,7 +34,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
       setHighScore(e.detail.highScore)
     })
     const u2 = GameEvents.on(EVENTS.TIMER_UPDATE, e => setTimeLeft(e.detail.timeLeft))
-    const u3 = GameEvents.on(EVENTS.DROPLET_TAP,  e => {
+    const u3 = GameEvents.on(EVENTS.DROPLET_TAP, e => {
       const { x, y, points, type } = e.detail
       setLastPop({ id: Date.now(), x, y, points, type })
     })
@@ -43,7 +43,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
   }, [onGameEnd])
 
   // ── Timer ring maths ──────────────────────────────────────────
-  const R    = 32          // radius of the progress ring
+  const R = 32          // radius of the progress ring
   const CIRC = 2 * Math.PI * R
   const offset = CIRC * (1 - timeLeft / settings.gameDuration)
 
@@ -61,10 +61,9 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           <span className="gs-pill-value">{highScore}</span>
         </div>
 
-        {/* CENTER — DR.RASHEL logo text */}
+        {/* CENTER — DR.RASHEL logo image */}
         <div className="gs-logo-block">
-          <div className="gs-logo-brand">DR.RASHEL<sup>®</sup></div>
-          <div className="gs-logo-tagline">BEAUTY ELIXIRS</div>
+          <img src="./assets/Purple-DR-logo-HR (1).png" alt="DR.RASHEL" className="gs-logo-img" />
         </div>
 
         {/* RIGHT — SCORE */}
@@ -81,7 +80,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           <svg className="gs-timer-svg" viewBox="0 0 76 76">
             <defs>
               <linearGradient id="gsRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%"   stopColor="#b28bf7" />
+                <stop offset="0%" stopColor="#b28bf7" />
                 <stop offset="100%" stopColor="#7be8ce" />
               </linearGradient>
             </defs>
@@ -119,20 +118,20 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           preserveAspectRatio="none"
         >
           {/* Subtle glowing swoosh lines */}
-          <path d="M0,10  C160,90 520,90 680,10"  fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
-          <path d="M0,25 C160,105 520,105 680,25" fill="none" stroke="rgba(255,255,255,0.35)"  strokeWidth="1.5"/>
+          <path d="M0,10  C160,90 520,90 680,10" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+          <path d="M0,25 C160,105 520,105 680,25" fill="none" stroke="rgba(255,255,255,0.35)" strokeWidth="1.5" />
 
           {/* Main purple fill */}
-          <path d="M0,50 C180,130 500,130 680,50 L680,320 L0,320 Z" fill="#321682"/>
+          <path d="M0,50 C180,130 500,130 680,50 L680,320 L0,320 Z" fill="#321682" />
           {/* Glowing edge for main wave */}
           <path d="M0,50 C180,130 500,130 680,50" fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="2.5" />
 
           {/* Stars / sparkles */}
-          <circle cx="90"  cy="240" r="2"   fill="#fff" opacity="0.8"/>
-          <circle cx="200" cy="290" r="1.5" fill="#fff" opacity="0.4"/>
-          <circle cx="540" cy="250" r="2.5" fill="#fff" opacity="0.6"/>
-          <circle cx="620" cy="185" r="1.5" fill="#fff" opacity="0.9"/>
-          <circle cx="380" cy="305" r="1.5" fill="#fff" opacity="0.5"/>
+          <circle cx="90" cy="240" r="2" fill="#fff" opacity="0.8" />
+          <circle cx="200" cy="290" r="1.5" fill="#fff" opacity="0.4" />
+          <circle cx="540" cy="250" r="2.5" fill="#fff" opacity="0.6" />
+          <circle cx="620" cy="185" r="1.5" fill="#fff" opacity="0.9" />
+          <circle cx="380" cy="305" r="1.5" fill="#fff" opacity="0.5" />
         </svg>
 
         {/* Text content inside wave */}
@@ -140,7 +139,7 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
           <div className="gs-best-row">
             🏆 BEAT THE BEST: <span>{highScore} pts</span>
           </div>
-          
+
           <div className="gs-glow-line" />
 
           <div className="gs-challenge-title">
@@ -148,8 +147,8 @@ export default function GameScreen({ settings, highScore: initialHighScore, onGa
             <span className="gs-title-cha">Challenge</span>
           </div>
           <div className="gs-subtitle">
-            <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{marginRight: '6px', transform: 'translateY(2px)'}}>
-              <path d="M5 0C5 0 0 5.8 0 9C0 11.7614 2.23858 14 5 14C7.76142 14 10 11.7614 10 9C10 5.8 5 0 5 0Z" fill="#7be8ce"/>
+            <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ marginRight: '6px', transform: 'translateY(2px)' }}>
+              <path d="M5 0C5 0 0 5.8 0 9C0 11.7614 2.23858 14 5 14C7.76142 14 10 11.7614 10 9C10 5.8 5 0 5 0Z" fill="#7be8ce" />
             </svg>
             Collect as many <span>hydration droplets</span> as possible!
           </div>

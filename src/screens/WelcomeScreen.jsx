@@ -4,136 +4,301 @@ import './WelcomeScreen.css'
 export default function WelcomeScreen({ onBegin }) {
   const canvasRef = useRef(null)
 
-  // Canvas particle system for realistic water drops
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
     let raf
 
-    const resize = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight }
     resize()
     window.addEventListener('resize', resize)
 
-    const drops = Array.from({ length: 20 }, () => createDrop(canvas))
-
-    function createDrop(c) {
-      return {
-        x: Math.random() * c.width,
-        y: Math.random() * c.height,
-        r: 8 + Math.random() * 12,
-        vy: 0.2 + Math.random() * 0.4,
-        wobble: Math.random() * Math.PI * 2,
-        wobbleSpeed: 0.005 + Math.random() * 0.01,
-      }
-    }
-
-    function drawDrop(ctx, x, y, r) {
-      ctx.save()
+    // Scattered bubbles matching the image
+    const bubbles = Array.from({ length: 15 }, (_, i) => {
+      const zone = i < 5 ? 'left' : i < 10 ? 'center' : 'right'
+      let x = Math.random() * window.innerWidth
+      if (zone === 'left') x = Math.random() * window.innerWidth * 0.3
+      if (zone === 'center') x = window.innerWidth * 0.35 + Math.random() * window.innerWidth * 0.3
+      if (zone === 'right') x = window.innerWidth * 0.7 + Math.random() * window.innerWidth * 0.3
       
-      // Subtle shadow
-      ctx.beginPath()
-      ctx.arc(x + r*0.3, y + r*0.3, r, 0, Math.PI * 2)
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
-      ctx.fill()
+      return {
+        x,
+        y: Math.random() * window.innerHeight,
+        r: 8 + Math.random() * 20,
+        vy: 0.15 + Math.random() * 0.3,
+        wobble: Math.random() * Math.PI * 2,
+        ws: 0.003 + Math.random() * 0.007,
+      }
+    })
 
-      // Glass body
+    function drawBubble(x, y, r) {
+      ctx.save()
       ctx.beginPath()
       ctx.arc(x, y, r, 0, Math.PI * 2)
-      const grad = ctx.createRadialGradient(x - r*0.2, y - r*0.2, 0, x, y, r)
-      grad.addColorStop(0, 'rgba(255,255,255,0.85)')
-      grad.addColorStop(0.3, 'rgba(255,255,255,0.15)')
-      grad.addColorStop(0.8, 'rgba(150,220,200,0.25)')
-      grad.addColorStop(1, 'rgba(255,255,255,0.55)')
-      ctx.fillStyle = grad
+      ctx.strokeStyle = 'rgba(255,255,255,0.7)'
+      ctx.lineWidth = 1.2
+      ctx.stroke()
+      
+      const g = ctx.createRadialGradient(x - r*.3, y - r*.3, r*.05, x, y, r)
+      g.addColorStop(0,    'rgba(255,255,255,0.6)')
+      g.addColorStop(0.3,  'rgba(255,255,255,0.1)')
+      g.addColorStop(0.8,  'rgba(180,240,220,0.15)')
+      g.addColorStop(1,    'rgba(255,255,255,0.35)')
+      ctx.fillStyle = g
       ctx.fill()
       
-      // Sharp highlight
       ctx.beginPath()
-      ctx.arc(x - r*0.4, y - r*0.4, r*0.15, 0, Math.PI * 2)
+      ctx.arc(x - r*.35, y - r*.35, r*.15, 0, Math.PI*2)
       ctx.fillStyle = 'rgba(255,255,255,0.9)'
       ctx.fill()
-
       ctx.restore()
     }
 
     function tick() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-      drops.forEach(d => {
-        d.wobble += d.wobbleSpeed
-        d.y += d.vy
-        const x = d.x + Math.sin(d.wobble) * 1.5
-        
-        if (d.y - d.r > canvas.height) {
-          d.y = -d.r
-          d.x = Math.random() * canvas.width
-        }
-        drawDrop(ctx, x, d.y, d.r)
+      bubbles.forEach(b => {
+        b.wobble += b.ws
+        b.y -= b.vy
+        if (b.y + b.r < 0) b.y = canvas.height + b.r
+        drawBubble(b.x + Math.sin(b.wobble) * 2, b.y, b.r)
       })
       raf = requestAnimationFrame(tick)
     }
     tick()
-
-    return () => {
-      cancelAnimationFrame(raf)
-      window.removeEventListener('resize', resize)
-    }
+    return () => { cancelAnimationFrame(raf); window.removeEventListener('resize', resize) }
   }, [])
 
   return (
-    <div className="welcome-screen">
-      <div className="idle-grid-overlay" />
-      <canvas ref={canvasRef} className="idle-particles" />
+    <div className="ws-screen">
+      <canvas ref={canvasRef} className="ws-canvas" />
 
-      {/* Purple Wave matching the reference image */}
-      <div className="idle-wave-bottom">
-        <svg viewBox="0 0 1440 450" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-          {/* Subtle glowing swooshes on the sides */}
-          <path d="M0,150 C300,500 1140,500 1440,150" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
-          <path d="M0,120 C350,550 1090,550 1440,120" fill="none" stroke="rgba(220,180,255,0.5)" strokeWidth="2" />
-          <path d="M0,90 C400,600 1040,600 1440,90" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-          
-          {/* Main Wave Body */}
-          <path d="M0,200 C400,600 1040,600 1440,200 L1440,450 L0,450 Z" fill="#321682" />
-          <path d="M0,230 C400,620 1040,620 1440,230 L1440,450 L0,450 Z" fill="#280f6e" />
-          
-          {/* Glowing Star Dots inside the wave */}
-          <circle cx="200" cy="350" r="2.5" fill="#fff" opacity="0.8" />
-          <circle cx="350" cy="400" r="1.5" fill="#fff" opacity="0.4" />
-          <circle cx="1100" cy="360" r="3" fill="#fff" opacity="0.6" />
-          <circle cx="1250" cy="280" r="2" fill="#fff" opacity="0.9" />
-          <circle cx="800" cy="420" r="1.5" fill="#fff" opacity="0.5" />
-        </svg>
+      {/* Background Glowing Arch */}
+      <div className="ws-arch-glow" />
+
+      {/* Top Left Badge */}
+      <div className="ws-top-badge">
+        <span className="ws-badge-dot" />
+        PREMIUM SKINCARE EXHIBITION
+        <span className="ws-badge-dot" />
       </div>
 
-      <div className="welcome-content">
-        <div className="idle-badge" style={{ marginBottom: '20px', zIndex: 1 }}>
-          <span className="idle-badge-dot"></span>
-          <span className="idle-badge-text">PREMIUM SKINCARE - EXHIBITION</span>
-          <span className="idle-badge-dot"></span>
-        </div>
-
-        <div className="welcome-speech-bubble">
-          <p>
-            Welcome to the <strong>Dr. Rashel Hydration Challenge!</strong>
+      <div className="ws-main">
+        
+        {/* ════ LEFT COLUMN ════ */}
+        <div className="ws-left">
+          <div className="ws-brand">DR. RASHEL</div>
+          <h1 className="ws-title">HYDRATION<br/>CHALLENGE</h1>
+          <p className="ws-desc">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ws-desc-star">
+              <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#321682"/>
+            </svg>
+            Catch the drops, build your glow,<br/>and discover the power of hydration.
           </p>
-          <p style={{ marginTop: '8px' }}>
-            Test your reflexes, build your glow, and discover the power of hydration.
-          </p>
-        </div>
 
-        <div className="welcome-character-wrap">
-          <div className="checkerboard-bg">
-            <div className="glow-effect"></div>
+          {/* Card 1: Complete Challenges To */}
+          <div className="ws-card">
+            <div className="ws-card-title ws-text-teal">COMPLETE CHALLENGES TO</div>
+            <div className="ws-card-items">
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#0a6e52" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 3C12 3 5 10 5 15A7 7 0 0 0 19 15C19 10 12 3 12 3Z"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">BOOST<br/>HYDRATION</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#0a6e52" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 2L20 6V12C20 17 12 22 12 22C12 22 4 17 4 12V6L12 2Z"/>
+                    <path d="M9 12L11 14L15 10"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">STRENGTHEN<br/>SKIN BARRIER</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#0a6e52" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 6V3M12 21V18M6 12H3M21 12H18M8 8L6 6M18 18L16 16M8 16L6 18M18 6L16 8"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">REVEAL<br/>GLASS SKIN</span>
+              </div>
+            </div>
           </div>
-          <img src="./assets/character.png" alt="Character" className="character-img" onError={(e) => { e.target.style.display = 'none'; }} />
+
+          {/* Card 2: Challenge Highlights */}
+          <div className="ws-card">
+            <div className="ws-card-title ws-text-purple">CHALLENGE HIGHLIGHTS</div>
+            <div className="ws-card-items">
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <circle cx="12" cy="12" r="9"/>
+                    <circle cx="12" cy="12" r="5"/>
+                    <circle cx="12" cy="12" r="1" fill="#321682"/>
+                    <path d="M18 6L21 3" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">FUN &amp; EASY<br/>MISSIONS</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 3C12 3 5 10 5 15A7 7 0 0 0 19 15C19 10 12 3 12 3Z"/>
+                    <path d="M12 11V16M10 14L12 16L14 14" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">LEARN &amp;<br/>HYDRATE</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <rect x="4" y="10" width="16" height="11" rx="1"/>
+                    <path d="M8 10V8C8 6 9.5 5 12 5C14.5 5 16 6 16 8V10"/>
+                    <path d="M12 10V21M9 13H15" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <span className="ws-text-teal">EXCITING<br/>REWARDS</span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <button className="idle-cta-btn welcome-cta-btn" onClick={onBegin}>TAP TO BEGIN</button>
+        {/* ════ CENTER COLUMN ════ */}
+        <div className="ws-center">
+          
+          {/* Molecule Decor Left */}
+          <div className="ws-molecule-left">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="20" cy="80" r="8" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
+              <circle cx="50" cy="50" r="12" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
+              <circle cx="90" cy="60" r="10" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
+              <circle cx="70" cy="100" r="6" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
+              <line x1="26" y1="74" x2="42" y2="58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
+              <line x1="61" y1="54" x2="80" y2="58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
+              <line x1="56" y1="60" x2="66" y2="94" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
+            </svg>
+          </div>
+
+          <div className="ws-product-group">
+            <img 
+              src="./assets/Daily_Moisturizer_Front_Finished.png" 
+              alt="K-DERMA" 
+              className="ws-hero-product"
+              onError={(e) => e.target.style.display='none'}
+            />
+            {/* 3-Tier Podium */}
+            <div className="ws-podium">
+              <div className="ws-podium-tier ws-tier-1"></div>
+              <div className="ws-podium-tier ws-tier-2"></div>
+              <div className="ws-podium-tier ws-tier-3"></div>
+            </div>
+          </div>
+
+          {/* Start Button Area */}
+          <div className="ws-cta-container">
+            <button className="ws-start-btn" onClick={onBegin}>
+              START CHALLENGE &rarr;
+            </button>
+            <div className="ws-dermatologist">
+              <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
+                <path d="M8 1L10 4H14V8L16 11L13 14H9L7 16L4 14H1V10L3 7L1 4H5L8 1Z" stroke="white" strokeWidth="1" fill="transparent"/>
+                <path d="M5 8L7 10L11 5" stroke="white" strokeWidth="1.2" strokeLinecap="round"/>
+              </svg>
+              <span>Dermatologically Tested</span>
+            </div>
+          </div>
+        </div>
+
+        {/* ════ RIGHT COLUMN ════ */}
+        <div className="ws-right">
+          
+          {/* Ceramide Badge */}
+          <div className="ws-ceramide-badge">
+            <span className="ws-ceramide-val">1%</span>
+            <span className="ws-ceramide-lbl">CERAMIDE<br/>COMPLEX</span>
+          </div>
+
+          {/* Deep Hydration Tag */}
+          <div className="ws-deep-tag">
+            <div className="ws-water-drop-large"></div>
+            <span className="ws-text-teal">DEEP<br/>HYDRATION</span>
+          </div>
+
+          <div className="ws-girl-container">
+            <img 
+              src="./assets/girl.png" 
+              alt="Girl" 
+              className="ws-girl" 
+              onError={(e) => e.target.style.display='none'}
+            />
+          </div>
+
+          {/* Card 3: How to Play */}
+          <div className="ws-card ws-how-to-play">
+            <div className="ws-card-title ws-text-purple">HOW TO PLAY</div>
+            <div className="ws-card-items">
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 3C12 3 5 10 5 15A7 7 0 0 0 19 15C19 10 12 3 12 3Z"/>
+                    <path d="M9 15H15" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <span className="ws-text-purple">CATCH<br/>THE DROPS</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <path d="M12 20V4M8 8L12 4L16 8" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M6 14L8 12M18 14L16 12" strokeLinecap="round"/>
+                  </svg>
+                </div>
+                <span className="ws-text-purple">COMPLETE<br/>CHALLENGES</span>
+              </div>
+              <div className="ws-item">
+                <div className="ws-icon-wrap">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
+                    <rect x="4" y="10" width="16" height="11" rx="1"/>
+                    <path d="M8 10V8C8 6 9.5 5 12 5C14.5 5 16 6 16 8V10"/>
+                  </svg>
+                </div>
+                <span className="ws-text-purple">WIN<br/>REWARDS</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>{/* End Main */}
+
+      {/* ════ BOTTOM BAR ════ */}
+      <div className="ws-footer">
+        <div className="ws-footer-title">
+          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+            <path d="M12 2L2 8L12 22L22 8L12 2Z" stroke="white" strokeWidth="1.5"/>
+            <path d="M2 8H22M12 2V22M7 5L12 8L17 5" stroke="white" strokeWidth="1.5"/>
+          </svg>
+          WHY PARTICIPATE?
+        </div>
+        <div className="ws-footer-items">
+          <div className="ws-footer-item">
+            <div className="ws-check">✓</div> IMPROVE SKIN<br/>HYDRATION
+          </div>
+          <div className="ws-footer-item">
+            <div className="ws-check">✓</div> BUILD STRONGER<br/>SKIN BARRIER
+          </div>
+          <div className="ws-footer-item">
+            <div className="ws-check">✓</div> ACHIEVE GLASS<br/>SKIN GLOW
+          </div>
+          <div className="ws-footer-item">
+            <div className="ws-check">✓</div> WIN EXCLUSIVE<br/>REWARDS
+          </div>
+        </div>
       </div>
+
     </div>
   )
 }

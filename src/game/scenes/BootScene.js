@@ -26,15 +26,15 @@ export class BootScene extends Phaser.Scene {
 
     this.add.text(W / 2, H * 0.40, 'DR.RASHEL', {
       fontFamily: 'Cormorant Garamond, Georgia, serif',
-      fontSize:   Math.min(W * 0.09, 80) + 'px',
-      color:      '#351c6a',
-      fontStyle:  'italic',
+      fontSize: Math.min(W * 0.09, 80) + 'px',
+      color: '#351c6a',
+      fontStyle: 'italic',
     }).setOrigin(0.5)
 
     this.add.text(W / 2, H * 0.50, 'HYDRATION CHALLENGE', {
       fontFamily: 'Inter, sans-serif',
-      fontSize:   Math.min(W * 0.022, 18) + 'px',
-      color:      '#168065',
+      fontSize: Math.min(W * 0.022, 18) + 'px',
+      color: '#168065',
     }).setOrigin(0.5).setLetterSpacing(7)
 
     const barW = W * 0.45
@@ -47,7 +47,7 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     this._genDropTexture('water-drop', false)
-    this._genDropTexture('gold-drop',  true)
+    this._genDropTexture('gold-drop', true)
     this._genPollutionTexture('pollution-drop')
     this._genUVTexture('uv-drop')
     this.scene.start('GameplayScene')
@@ -60,29 +60,31 @@ export class BootScene extends Phaser.Scene {
 
     const W = 240, H = 300
     const canvas = document.createElement('canvas')
-    canvas.width  = W
+    canvas.width = W
     canvas.height = H
     const ctx = canvas.getContext('2d')
 
-    // Geometry
-    const cx   = W / 2        // 120
-    const tipY = 24            // pointed top
-    const midY = H * 0.54     // ~162  widest
-    const botY = H * 0.88     // ~264  round bottom
-    const rx   = W * 0.40     // ~96   half-width
+    // Geometry — pointed tip at TOP, smooth round belly at BOTTOM
+    const cx     = W / 2          // 120  horizontal centre
+    const tipY   = 14             // sharp top
+    const botY   = H * 0.92       // 276  bottom of round belly
+    const bulgeY = tipY + (botY - tipY) * 0.62  // widest point ~62% down
+    const rx     = W * 0.43       // half-width 103
 
     const path = () => {
       ctx.beginPath()
-      // Always draw the teardrop shape (no spheres)
-      ctx.moveTo(cx, tipY)
+      ctx.moveTo(cx, tipY)   // sharp tip at top
+
+      // RIGHT side: tip → bulge → round bottom (CP2 at botY → horizontal tangent)
       ctx.bezierCurveTo(
-        cx + rx * 1.10, tipY + (midY - tipY) * 0.42,
-        cx + rx,        midY,
+        cx + rx * 1.12, bulgeY,
+        cx + rx * 0.70, botY,
         cx,             botY
       )
+      // LEFT side: round bottom → bulge → back to tip (CP1 at botY → C1 smooth)
       ctx.bezierCurveTo(
-        cx - rx,        midY,
-        cx - rx * 1.10, tipY + (midY - tipY) * 0.42,
+        cx - rx * 0.70, botY,
+        cx - rx * 1.12, bulgeY,
         cx,             tipY
       )
       ctx.closePath()
@@ -91,7 +93,7 @@ export class BootScene extends Phaser.Scene {
     // ① Outer glow (shadow trick)
     ctx.save()
     ctx.shadowColor = isGolden ? 'rgba(101,59,192,0.55)' : 'rgba(22,128,101,0.55)'
-    ctx.shadowBlur  = 26
+    ctx.shadowBlur = 26
     path()
     ctx.fillStyle = isGolden ? 'rgba(101,59,192,0.01)' : 'rgba(22,128,101,0.01)'
     ctx.fill()
@@ -101,17 +103,17 @@ export class BootScene extends Phaser.Scene {
     path()
     const grad = ctx.createLinearGradient(cx - rx * 0.5, tipY, cx + rx * 0.35, botY)
     if (isGolden) { // Purple Sphere
-      grad.addColorStop(0,    'rgba(180,150,240,0.97)')
+      grad.addColorStop(0, 'rgba(180,150,240,0.97)')
       grad.addColorStop(0.20, 'rgba(130,88,220,0.96)')
       grad.addColorStop(0.55, 'rgba(101,59,192,0.94)')
       grad.addColorStop(0.85, 'rgba(75,42,142,0.92)')
-      grad.addColorStop(1,    'rgba(43,21,90,0.88)')
+      grad.addColorStop(1, 'rgba(43,21,90,0.88)')
     } else { // Mint/Emerald Water Drop
-      grad.addColorStop(0,    'rgba(160,240,210,0.96)')
+      grad.addColorStop(0, 'rgba(160,240,210,0.96)')
       grad.addColorStop(0.18, 'rgba(90,210,165,0.93)')
       grad.addColorStop(0.45, 'rgba(26,152,120,0.90)')
       grad.addColorStop(0.75, 'rgba(16,105,80,0.88)')
-      grad.addColorStop(1,    'rgba(8,60,45,0.84)')
+      grad.addColorStop(1, 'rgba(8,60,45,0.84)')
     }
     ctx.fillStyle = grad
     ctx.fill()
@@ -125,9 +127,9 @@ export class BootScene extends Phaser.Scene {
     const glx = cx - rx * 0.32
     const gly = tipY + (botY - tipY) * 0.16
     const glGrad = ctx.createRadialGradient(glx, gly, 0, glx, gly, rx * 0.82)
-    glGrad.addColorStop(0,   'rgba(255,255,255,0.32)')
-    glGrad.addColorStop(0.55,'rgba(255,255,255,0.10)')
-    glGrad.addColorStop(1,   'rgba(255,255,255,0)')
+    glGrad.addColorStop(0, 'rgba(255,255,255,0.32)')
+    glGrad.addColorStop(0.55, 'rgba(255,255,255,0.10)')
+    glGrad.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = glGrad
     ctx.fillRect(0, 0, W, H)
 
@@ -135,9 +137,9 @@ export class BootScene extends Phaser.Scene {
     const sx = cx - rx * 0.21
     const sy = tipY + (botY - tipY) * 0.19
     const specGrad = ctx.createRadialGradient(sx, sy, 0, sx, sy, rx * 0.27)
-    specGrad.addColorStop(0,   'rgba(255,255,255,0.96)')
+    specGrad.addColorStop(0, 'rgba(255,255,255,0.96)')
     specGrad.addColorStop(0.6, 'rgba(255,255,255,0.45)')
-    specGrad.addColorStop(1,   'rgba(255,255,255,0)')
+    specGrad.addColorStop(1, 'rgba(255,255,255,0)')
     ctx.fillStyle = specGrad
     ctx.fillRect(0, 0, W, H)
 
@@ -149,7 +151,7 @@ export class BootScene extends Phaser.Scene {
 
     // Bottom inner reflection
     const bx = cx
-    const by = botY - (botY - midY) * 0.24
+    const by = botY - (botY - bulgeY) * 0.24
     const botGrad = ctx.createRadialGradient(bx, by, 0, bx, by, rx * 0.40)
     botGrad.addColorStop(0, isGolden ? 'rgba(180,150,240,0.24)' : 'rgba(160,240,210,0.24)')
     botGrad.addColorStop(1, 'rgba(255,255,255,0)')
@@ -207,7 +209,7 @@ export class BootScene extends Phaser.Scene {
     grad.addColorStop(1, '#3a7d25')
     ctx.fillStyle = grad
     ctx.fill()
-    
+
     // Acid green outline
     path()
     ctx.strokeStyle = '#5fba45'
@@ -217,7 +219,7 @@ export class BootScene extends Phaser.Scene {
     // toxic spots
     for (let i = 0; i < 6; i++) {
       ctx.beginPath()
-      ctx.arc(cx - 35 + i*10, cy - 40 + (i%2)*30, 4 + (i%3)*4, 0, Math.PI*2)
+      ctx.arc(cx - 35 + i * 10, cy - 40 + (i % 2) * 30, 4 + (i % 3) * 4, 0, Math.PI * 2)
       ctx.fillStyle = 'rgba(110, 255, 80, 0.25)'
       ctx.fill()
     }
@@ -265,10 +267,10 @@ export class BootScene extends Phaser.Scene {
     grad.addColorStop(1, '#c2185b')
     ctx.fillStyle = grad
     ctx.fill()
-    
+
     // Core brightness
     ctx.beginPath()
-    ctx.arc(cx, cy, 45, 0, Math.PI*2)
+    ctx.arc(cx, cy, 45, 0, Math.PI * 2)
     const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 45)
     coreGrad.addColorStop(0, 'rgba(255,255,255,0.9)')
     coreGrad.addColorStop(1, 'rgba(255,255,255,0)')

@@ -3,7 +3,7 @@ import './IdleScreen.css'
 
 export default function IdleScreen({ onStart, settings }) {
   const canvasRef = useRef(null)
-  const logoSrc = settings?.customLogo || './assets/logo.png'
+  const logoSrc = settings?.customLogo || './assets/Purple-DR-logo-HR (1).png'
 
   // Canvas particle system for realistic water drops
   useEffect(() => {
@@ -34,27 +34,27 @@ export default function IdleScreen({ onStart, settings }) {
 
     function drawDrop(ctx, x, y, r) {
       ctx.save()
-      
+
       // Subtle shadow
       ctx.beginPath()
-      ctx.arc(x + r*0.3, y + r*0.3, r, 0, Math.PI * 2)
+      ctx.arc(x + r * 0.3, y + r * 0.3, r, 0, Math.PI * 2)
       ctx.fillStyle = 'rgba(0, 0, 0, 0.05)'
       ctx.fill()
 
       // Glass body
       ctx.beginPath()
       ctx.arc(x, y, r, 0, Math.PI * 2)
-      const grad = ctx.createRadialGradient(x - r*0.2, y - r*0.2, 0, x, y, r)
+      const grad = ctx.createRadialGradient(x - r * 0.2, y - r * 0.2, 0, x, y, r)
       grad.addColorStop(0, 'rgba(255,255,255,0.85)')
       grad.addColorStop(0.3, 'rgba(255,255,255,0.15)')
       grad.addColorStop(0.8, 'rgba(150,220,200,0.25)')
       grad.addColorStop(1, 'rgba(255,255,255,0.55)')
       ctx.fillStyle = grad
       ctx.fill()
-      
+
       // Sharp highlight
       ctx.beginPath()
-      ctx.arc(x - r*0.4, y - r*0.4, r*0.15, 0, Math.PI * 2)
+      ctx.arc(x - r * 0.4, y - r * 0.4, r * 0.15, 0, Math.PI * 2)
       ctx.fillStyle = 'rgba(255,255,255,0.9)'
       ctx.fill()
 
@@ -67,7 +67,7 @@ export default function IdleScreen({ onStart, settings }) {
         d.wobble += d.wobbleSpeed
         d.y += d.vy
         const x = d.x + Math.sin(d.wobble) * 1.5
-        
+
         if (d.y - d.r > canvas.height) {
           d.y = -d.r
           d.x = Math.random() * canvas.width
@@ -96,11 +96,11 @@ export default function IdleScreen({ onStart, settings }) {
           <path d="M0,150 C300,500 1140,500 1440,150" fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1" />
           <path d="M0,120 C350,550 1090,550 1440,120" fill="none" stroke="rgba(220,180,255,0.5)" strokeWidth="2" />
           <path d="M0,90 C400,600 1040,600 1440,90" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1" />
-          
+
           {/* Main Wave Body */}
           <path d="M0,200 C400,600 1040,600 1440,200 L1440,450 L0,450 Z" fill="#321682" />
           <path d="M0,230 C400,620 1040,620 1440,230 L1440,450 L0,450 Z" fill="#280f6e" />
-          
+
           {/* Glowing Star Dots inside the wave */}
           <circle cx="200" cy="350" r="2.5" fill="#fff" opacity="0.8" />
           <circle cx="350" cy="400" r="1.5" fill="#fff" opacity="0.4" />

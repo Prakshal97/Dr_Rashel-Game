@@ -1,105 +1,246 @@
-.welcome-screen {
+/* ═══════════════════════════════════════════════════════════
+   WelcomeScreen Exact 1:1 Image Replication CSS
+   ═══════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+.ws-screen {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(180deg, #cbebe1 0%, #b3dfce 100%);
+  background: radial-gradient(circle at 50% 50%, #d4f2ea 0%, #b2e6d9 40%, #83ccbb 100%);
   overflow: hidden;
   font-family: 'Inter', sans-serif;
   user-select: none;
-}
-
-.welcome-content {
-  position: relative;
-  z-index: 10;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 600px;
-  margin-top: 40px;
 }
 
-.welcome-speech-bubble {
-  position: relative;
-  background: white;
-  border-radius: 16px;
-  padding: 16px 24px;
-  color: #168b6a;
-  font-size: 0.9rem;
-  line-height: 1.4;
-  text-align: center;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-  margin-bottom: 24px;
-  z-index: 5;
-  width: 320px;
+.ws-canvas {
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
 }
-.welcome-speech-bubble strong {
-  color: #321682;
-  font-weight: 700;
-}
-.welcome-speech-bubble::after {
-  content: '';
+
+.ws-arch-glow {
   position: absolute;
-  bottom: -10px;
-  left: 50%;
+  top: -10%; left: 50%;
   transform: translateX(-50%);
-  border-width: 10px 10px 0;
-  border-style: solid;
-  border-color: white transparent transparent transparent;
-  display: block;
-  width: 0;
-}
-
-.welcome-character-wrap {
-  position: relative;
-  width: 280px;
-  height: 320px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  margin-bottom: -20px; /* Pull button up to overlap */
-  z-index: 2;
-}
-
-.checkerboard-bg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 250px;
-  height: 250px;
-  background-image: 
-    linear-gradient(45deg, #eee 25%, transparent 25%), 
-    linear-gradient(-45deg, #eee 25%, transparent 25%), 
-    linear-gradient(45deg, transparent 75%, #eee 75%), 
-    linear-gradient(-45deg, transparent 75%, #eee 75%);
-  background-size: 20px 20px;
-  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-  background-color: white;
+  width: 90vh; height: 90vh;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.4);
+  box-shadow: 0 0 60px rgba(255,255,255,0.5), inset 0 0 60px rgba(255,255,255,0.5);
+  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
   z-index: 1;
-  border-radius: 4px;
-}
-
-.glow-effect {
-  position: absolute;
-  top: -40px; left: -40px; right: -40px; bottom: -40px;
-  background: radial-gradient(circle, rgba(178,139,247,0.4) 0%, transparent 70%);
-  z-index: -1;
   pointer-events: none;
 }
 
-.character-img {
-  position: relative;
-  z-index: 2;
-  height: 120%; /* ~384px height, significantly taller than 250px checkerboard */
-  width: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));
+.ws-top-badge {
+  position: relative; z-index: 10;
+  align-self: flex-start;
+  margin: 15px 0 0 30px;
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.4); backdrop-filter: blur(10px);
+  border: 1px solid rgba(30,30,100,0.2); border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.55rem; font-weight: 700; letter-spacing: 0.1em;
+  color: #321682; text-transform: uppercase;
+}
+.ws-badge-dot {
+  width: 4px; height: 4px; border-radius: 50%; background: #321682;
 }
 
-.welcome-cta-btn {
-  z-index: 10;
-  margin-top: 10px;
+/* ════ MAIN LAYOUT ════ */
+.ws-main {
+  flex: 1; min-height: 0;
+  display: flex;
+  padding: 10px 30px;
+  position: relative; z-index: 5;
+  justify-content: space-between;
+}
+
+/* ════ LEFT COLUMN ════ */
+.ws-left {
+  flex: 1;
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 10px;
+  max-width: 300px;
+}
+.ws-brand {
+  font-size: 0.9rem; font-weight: 700;
+  color: #0a6e52; letter-spacing: 0.1em;
+}
+.ws-title {
+  font-size: 3.2rem; font-weight: 900;
+  color: #321682; line-height: 0.9;
+  margin: 0; letter-spacing: -0.02em;
+}
+.ws-desc {
+  font-size: 0.8rem; color: #0a6e52;
+  line-height: 1.4; margin: 5px 0 10px;
+  display: flex; align-items: flex-start; gap: 6px;
+}
+.ws-desc-star { flex-shrink: 0; margin-top: 2px; }
+
+.ws-card {
+  background: rgba(255,255,255,0.4); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 12px; padding: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  margin-bottom: 8px;
+}
+.ws-card-title {
+  font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em;
+  text-align: center; margin-bottom: 12px;
+  border-bottom: 1px solid rgba(255,255,255,0.5);
+  padding-bottom: 6px;
+}
+.ws-text-teal { color: #0a6e52; }
+.ws-text-purple { color: #321682; }
+
+.ws-card-items {
+  display: flex; justify-content: space-between; gap: 5px;
+}
+.ws-item {
+  display: flex; flex-direction: column; align-items: center;
+  text-align: center; flex: 1; gap: 6px;
+}
+.ws-icon-wrap {
+  width: 32px; height: 32px;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+}
+.ws-icon { width: 24px; height: 24px; }
+.ws-item span {
+  font-size: 0.45rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.3;
+}
+
+/* ════ CENTER COLUMN ════ */
+.ws-center {
+  flex: 1.2;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: flex-end;
+  position: relative; padding-bottom: 20px;
+}
+.ws-molecule-left {
+  position: absolute; left: -20px; top: 40%;
+  width: 100px; height: 100px;
+}
+.ws-product-group {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+}
+.ws-hero-product {
+  height: 48vh; width: auto; object-fit: contain;
+  position: relative; z-index: 3;
+  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+}
+.ws-podium {
+  position: relative; width: 260px; height: 50px;
+  margin-top: -15px; z-index: 2;
+  display: flex; flex-direction: column; align-items: center;
+}
+.ws-podium-tier {
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  position: absolute;
+}
+.ws-tier-1 {
+  width: 100%; height: 50px; bottom: 0;
+  background: radial-gradient(ellipse at center, #cff0e9 0%, #8ddcd0 100%);
+  z-index: 1;
+}
+.ws-tier-2 {
+  width: 85%; height: 40px; bottom: 10px;
+  background: radial-gradient(ellipse at center, #ffffff 0%, #c5efe7 100%);
+  z-index: 2;
+}
+.ws-tier-3 {
+  width: 70%; height: 30px; bottom: 20px;
+  background: #ffffff;
+  z-index: 3;
+}
+
+.ws-cta-container {
+  display: flex; flex-direction: column; align-items: center;
+  margin-top: 15px; z-index: 10;
+}
+.ws-start-btn {
+  background: linear-gradient(90deg, #7b32f2 0%, #5116bd 100%);
+  color: white; font-weight: 800; font-size: 0.9rem;
+  letter-spacing: 0.1em; border: none; border-radius: 999px;
+  padding: 12px 35px; cursor: pointer;
+  box-shadow: 0 0 15px rgba(123,50,242,0.6), inset 0 0 10px rgba(255,255,255,0.4);
+}
+.ws-dermatologist {
+  display: flex; align-items: center; gap: 5px; margin-top: 8px;
+  color: white; font-size: 0.55rem; font-weight: 600;
+  background: transparent;
+}
+
+/* ════ RIGHT COLUMN ════ */
+.ws-right {
+  flex: 1;
+  position: relative;
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end;
+}
+.ws-ceramide-badge {
+  position: absolute; top: -10px; right: 80px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(255,255,255,0.6); backdrop-filter: blur(5px);
+  border: 1px solid white; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; z-index: 10;
+}
+.ws-ceramide-val { font-size: 1.5rem; font-weight: 900; color: #0a6e52; line-height: 1; }
+.ws-ceramide-lbl { font-size: 0.45rem; font-weight: 700; color: #0a6e52; margin-top: 2px; }
+
+.ws-deep-tag {
+  position: absolute; top: 40%; left: 0;
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  text-align: center; font-size: 0.55rem; font-weight: 800;
+}
+.ws-water-drop-large {
+  width: 35px; height: 45px;
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.2));
+  border: 1px solid rgba(255,255,255,0.8);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.ws-girl-container {
+  position: absolute; bottom: 0; right: 0;
+  width: 120%; height: 95%; display: flex; justify-content: flex-end;
+  pointer-events: none; z-index: 2;
+}
+.ws-girl {
+  height: 100%; width: auto; object-fit: contain; object-position: right bottom;
+  mix-blend-mode: multiply;
+}
+
+.ws-how-to-play {
+  width: 280px; position: relative; z-index: 10;
+  margin-bottom: 20px; margin-right: 10px;
+}
+
+/* ════ BOTTOM BAR ════ */
+.ws-footer {
+  background: linear-gradient(90deg, #1c7866 0%, #156253 100%);
+  padding: 12px 30px; display: flex; align-items: center;
+  position: relative; z-index: 10; border-top-left-radius: 20px; border-top-right-radius: 20px;
+  margin: 0 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+.ws-footer-title {
+  display: flex; align-items: center; gap: 8px;
+  color: white; font-size: 0.7rem; font-weight: 800;
+  letter-spacing: 0.05em; border-right: 1px solid rgba(255,255,255,0.3);
+  padding-right: 20px; margin-right: 20px;
+}
+.ws-footer-items {
+  display: flex; justify-content: space-between; flex: 1;
+}
+.ws-footer-item {
+  display: flex; align-items: center; gap: 8px;
+  color: white; font-size: 0.5rem; font-weight: 500; letter-spacing: 0.05em;
+}
+.ws-check {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 1px solid white; display: flex; align-items: center; justify-content: center;
+  font-size: 0.5rem;
 }
