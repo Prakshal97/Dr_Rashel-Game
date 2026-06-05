@@ -254,3 +254,68 @@
   border: 1px solid white; display: flex; align-items: center; justify-content: center;
   font-size: 0.5rem;
 }
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 768px) {
+  .ws-screen {
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+  }
+  .ws-main {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    gap: 40px;
+  }
+  .ws-left {
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+  .ws-desc {
+    justify-content: center;
+  }
+  .ws-center {
+    padding-bottom: 0;
+  }
+  .ws-molecule-left {
+    display: none;
+  }
+  .ws-hero-product {
+    height: 40vh;
+  }
+  .ws-right {
+    align-items: center;
+    gap: 20px;
+  }
+  .ws-ceramide-badge {
+    position: relative;
+    top: 0; right: 0;
+  }
+  .ws-deep-tag {
+    position: relative;
+    top: 0; left: 0;
+  }
+  .ws-girl-container {
+    display: none;
+  }
+  .ws-footer {
+    flex-direction: column;
+    gap: 15px;
+    border-radius: 0;
+    margin: 0;
+  }
+  .ws-footer-title {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.3);
+    padding-right: 0;
+    margin-right: 0;
+    padding-bottom: 10px;
+  }
+  .ws-footer-items {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+}

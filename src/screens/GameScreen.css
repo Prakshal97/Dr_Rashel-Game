@@ -307,3 +307,26 @@
     transform: translateX(-50%) translateY(-90px) scale(0.9);
   }
 }
+
+/* ════ RESPONSIVE ════ */
+@media (max-width: 768px) {
+  .gs-hud-top {
+    padding: 10px 10px 0;
+    gap: 8px;
+  }
+  .gs-pill-value {
+    font-size: 1.5rem;
+  }
+  .gs-logo-img {
+    height: 40px;
+  }
+  .gs-title-hyd, .gs-title-cha {
+    font-size: 2rem;
+  }
+  .gs-best-row {
+    font-size: 0.75rem;
+  }
+  .gs-subtitle {
+    font-size: 0.75rem;
+  }
+}
