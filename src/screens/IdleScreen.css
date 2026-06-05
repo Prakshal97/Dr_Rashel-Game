@@ -306,17 +306,47 @@
   }
   .idle-content {
     padding-top: 40px;
-    padding-bottom: 40px;
+    padding-bottom: 120px;
+    margin: 0 auto;
+  }
+  .idle-logo {
+    height: 50px;
+    margin-bottom: 16px;
+  }
+  .idle-title-container {
+    margin-bottom: 16px;
   }
   .idle-title-hydration, .idle-title-challenge {
-    font-size: 3.5rem;
+    font-size: 3.2rem;
+  }
+  .idle-subtitle {
+    font-size: 1rem;
+    margin-bottom: 24px;
   }
   .idle-cards {
-    flex-direction: column;
-    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+  .idle-card {
+    width: 140px;
+    padding: 8px 12px;
+  }
+  .card-pts {
+    font-size: 1.1rem;
+  }
+  .card-drop-wrapper {
+    width: 24px;
+    height: 30px;
+  }
+  .card-drop {
+    width: 20px;
+    height: 20px;
+  }
+  .idle-cta-btn {
+    padding: 16px 48px;
   }
   .idle-wave-bottom {
-    position: relative;
-    margin-top: -100px;
+    position: fixed;
   }
 }

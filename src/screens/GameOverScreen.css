@@ -224,7 +224,8 @@
   }
   .go-content {
     padding-top: 40px;
-    padding-bottom: 40px;
+    padding-bottom: 120px;
+    margin: 0 auto;
   }
   .go-title {
     font-size: 3.5rem;
@@ -239,7 +240,6 @@
     font-size: 5rem;
   }
   .go-wave-bottom {
-    position: relative;
-    margin-top: -50px;
+    position: fixed;
   }
 }
