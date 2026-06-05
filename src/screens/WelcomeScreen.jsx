@@ -22,10 +22,18 @@ export default function WelcomeScreen({ onBegin }) {
       if (zone === 'center') x = window.innerWidth * 0.35 + Math.random() * window.innerWidth * 0.3
       if (zone === 'right') x = window.innerWidth * 0.7 + Math.random() * window.innerWidth * 0.3
       
+      // Tiny, Medium, Large, Huge hierarchy
+      let r;
+      const type = Math.random();
+      if (type < 0.4) r = 4 + Math.random() * 6; // Tiny
+      else if (type < 0.7) r = 15 + Math.random() * 10; // Medium
+      else if (type < 0.9) r = 30 + Math.random() * 15; // Large
+      else r = 55 + Math.random() * 30; // Huge
+      
       return {
         x,
         y: Math.random() * window.innerHeight,
-        r: 8 + Math.random() * 20,
+        r: r,
         vy: 0.15 + Math.random() * 0.3,
         wobble: Math.random() * Math.PI * 2,
         ws: 0.003 + Math.random() * 0.007,
@@ -73,22 +81,26 @@ export default function WelcomeScreen({ onBegin }) {
     <div className="ws-screen">
       <canvas ref={canvasRef} className="ws-canvas" />
 
-      {/* Background Glowing Arch */}
-      <div className="ws-arch-glow" />
-
-      {/* Top Left Badge */}
-      <div className="ws-top-badge">
-        <span className="ws-badge-dot" />
-        PREMIUM SKINCARE EXHIBITION
-        <span className="ws-badge-dot" />
+      {/* Top Right Ceramide Badge */}
+      <div className="ws-ceramide-badge">
+        <span className="ws-ceramide-val">1%</span>
+        <span className="ws-ceramide-lbl">CERAMIDE<br/>COMPLEX</span>
       </div>
 
       <div className="ws-main">
         
         {/* ════ LEFT COLUMN ════ */}
         <div className="ws-left">
+          
+          {/* Top Left Badge */}
+          <div className="ws-top-badge">
+            <span className="ws-badge-dot" />
+            PREMIUM SKINCARE EXHIBITION
+            <span className="ws-badge-dot" />
+          </div>
+
           <div className="ws-brand">DR. RASHEL</div>
-          <h1 className="ws-title">HYDRATION<br/>CHALLENGE</h1>
+          <h1 className="ws-title">HYDRATION CHALLENGE</h1>
           <p className="ws-desc">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ws-desc-star">
               <path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z" fill="#321682"/>
@@ -166,23 +178,41 @@ export default function WelcomeScreen({ onBegin }) {
           </div>
         </div>
 
-        {/* ════ CENTER COLUMN ════ */}
-        <div className="ws-center">
+        {/* ════ RIGHT COLUMN ════ */}
+        <div className="ws-right">
           
+          {/* Background Glowing Arch */}
+          <div className="ws-arch-glow" />
+
           {/* Molecule Decor Left */}
           <div className="ws-molecule-left">
             <svg viewBox="0 0 120 120" fill="none">
-              <circle cx="20" cy="80" r="8" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
-              <circle cx="50" cy="50" r="12" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
-              <circle cx="90" cy="60" r="10" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
-              <circle cx="70" cy="100" r="6" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.8)" strokeWidth="1.5"/>
-              <line x1="26" y1="74" x2="42" y2="58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
-              <line x1="61" y1="54" x2="80" y2="58" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
-              <line x1="56" y1="60" x2="66" y2="94" stroke="rgba(255,255,255,0.6)" strokeWidth="1.5"/>
+              <circle cx="20" cy="80" r="8" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="50" cy="50" r="12" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="90" cy="60" r="10" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="70" cy="100" r="6" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="26" y1="74" x2="42" y2="58" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="61" y1="54" x2="80" y2="58" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="56" y1="60" x2="66" y2="94" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+            </svg>
+          </div>
+
+          {/* Molecule Decor Right */}
+          <div className="ws-molecule-right">
+            <svg viewBox="0 0 120 120" fill="none">
+              <circle cx="100" cy="80" r="8" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="70" cy="50" r="12" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="30" cy="60" r="10" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <circle cx="50" cy="100" r="6" fill="rgba(255,255,255,0.8)" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="94" y1="74" x2="78" y2="58" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="59" y1="54" x2="40" y2="58" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
+              <line x1="64" y1="60" x2="54" y2="94" stroke="rgba(255,255,255,1)" strokeWidth="2"/>
             </svg>
           </div>
 
           <div className="ws-product-group">
+            <div className="ws-water-ripples" />
+            <div className="ws-product-glow" />
             <img 
               src="./assets/Daily_Moisturizer_Front_Finished.png" 
               alt="K-DERMA" 
@@ -212,89 +242,31 @@ export default function WelcomeScreen({ onBegin }) {
           </div>
         </div>
 
-        {/* ════ RIGHT COLUMN ════ */}
-        <div className="ws-right">
-          
-          {/* Ceramide Badge */}
-          <div className="ws-ceramide-badge">
-            <span className="ws-ceramide-val">1%</span>
-            <span className="ws-ceramide-lbl">CERAMIDE<br/>COMPLEX</span>
-          </div>
-
-          {/* Deep Hydration Tag */}
-          <div className="ws-deep-tag">
-            <div className="ws-water-drop-large"></div>
-            <span className="ws-text-teal">DEEP<br/>HYDRATION</span>
-          </div>
-
-          <div className="ws-girl-container">
-            <img 
-              src="./assets/girl.png" 
-              alt="Girl" 
-              className="ws-girl" 
-              onError={(e) => e.target.style.display='none'}
-            />
-          </div>
-
-          {/* Card 3: How to Play */}
-          <div className="ws-card ws-how-to-play">
-            <div className="ws-card-title ws-text-purple">HOW TO PLAY</div>
-            <div className="ws-card-items">
-              <div className="ws-item">
-                <div className="ws-icon-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
-                    <path d="M12 3C12 3 5 10 5 15A7 7 0 0 0 19 15C19 10 12 3 12 3Z"/>
-                    <path d="M9 15H15" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <span className="ws-text-purple">CATCH<br/>THE DROPS</span>
-              </div>
-              <div className="ws-item">
-                <div className="ws-icon-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
-                    <path d="M12 20V4M8 8L12 4L16 8" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M6 14L8 12M18 14L16 12" strokeLinecap="round"/>
-                  </svg>
-                </div>
-                <span className="ws-text-purple">COMPLETE<br/>CHALLENGES</span>
-              </div>
-              <div className="ws-item">
-                <div className="ws-icon-wrap">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#321682" strokeWidth="1.5" className="ws-icon">
-                    <rect x="4" y="10" width="16" height="11" rx="1"/>
-                    <path d="M8 10V8C8 6 9.5 5 12 5C14.5 5 16 6 16 8V10"/>
-                  </svg>
-                </div>
-                <span className="ws-text-purple">WIN<br/>REWARDS</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
       </div>{/* End Main */}
 
       {/* ════ BOTTOM BAR ════ */}
-      <div className="ws-footer">
-        <div className="ws-footer-title">
-          <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
-            <path d="M12 2L2 8L12 22L22 8L12 2Z" stroke="white" strokeWidth="1.5"/>
-            <path d="M2 8H22M12 2V22M7 5L12 8L17 5" stroke="white" strokeWidth="1.5"/>
-          </svg>
-          WHY PARTICIPATE?
-        </div>
-        <div className="ws-footer-items">
-          <div className="ws-footer-item">
-            <div className="ws-check">✓</div> IMPROVE SKIN<br/>HYDRATION
+      <div className="ws-footer-container">
+        <div className="ws-footer">
+          <div className="ws-footer-title">
+            <svg viewBox="0 0 24 24" fill="none" width="18" height="18">
+              <path d="M12 2L2 8L12 22L22 8L12 2Z" stroke="white" strokeWidth="1.5"/>
+              <path d="M2 8H22M12 2V22M7 5L12 8L17 5" stroke="white" strokeWidth="1.5"/>
+            </svg>
+            WHY PARTICIPATE?
           </div>
-          <div className="ws-footer-item">
-            <div className="ws-check">✓</div> BUILD STRONGER<br/>SKIN BARRIER
-          </div>
-          <div className="ws-footer-item">
-            <div className="ws-check">✓</div> ACHIEVE GLASS<br/>SKIN GLOW
-          </div>
-          <div className="ws-footer-item">
-            <div className="ws-check">✓</div> WIN EXCLUSIVE<br/>REWARDS
+          <div className="ws-footer-items">
+            <div className="ws-footer-item">
+              <div className="ws-check">✓</div> IMPROVE SKIN<br/>HYDRATION
+            </div>
+            <div className="ws-footer-item">
+              <div className="ws-check">✓</div> BUILD STRONGER<br/>SKIN BARRIER
+            </div>
+            <div className="ws-footer-item">
+              <div className="ws-check">✓</div> ACHIEVE GLASS<br/>SKIN GLOW
+            </div>
+            <div className="ws-footer-item">
+              <div className="ws-check">✓</div> WIN EXCLUSIVE<br/>REWARDS
+            </div>
           </div>
         </div>
       </div>
@@ -302,3 +274,4 @@ export default function WelcomeScreen({ onBegin }) {
     </div>
   )
 }
+

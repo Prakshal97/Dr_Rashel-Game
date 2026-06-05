@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   WelcomeScreen Exact 1:1 Image Replication CSS
+   WelcomeScreen Exact 1:1 Image Replication CSS (Landscape)
    ═══════════════════════════════════════════════════════════ */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
 
@@ -18,23 +18,42 @@
   position: absolute; inset: 0; z-index: 0; pointer-events: none;
 }
 
-.ws-arch-glow {
-  position: absolute;
-  top: -10%; left: 50%;
-  transform: translateX(-50%);
-  width: 90vh; height: 90vh;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.4);
-  box-shadow: 0 0 60px rgba(255,255,255,0.5), inset 0 0 60px rgba(255,255,255,0.5);
-  background: radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 60%);
-  z-index: 1;
-  pointer-events: none;
+/* ════ CERAMIDE BADGE (TOP RIGHT) ════ */
+.ws-ceramide-badge {
+  position: absolute; top: 40px; right: 5%;
+  width: 90px; height: 90px; border-radius: 50%;
+  background: rgba(255,255,255,0.7); backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,255,255,0.8); display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; z-index: 10;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+.ws-ceramide-val { font-size: 1.8rem; font-weight: 900; color: #0a6e52; line-height: 1; }
+.ws-ceramide-lbl { font-size: 0.5rem; font-weight: 800; color: #0a6e52; margin-top: 2px; }
+
+/* ════ MAIN LAYOUT ════ */
+.ws-main {
+  flex: 1; min-height: 0;
+  display: flex;
+  padding: 40px 4%; /* Closer to left edge */
+  position: relative; z-index: 5;
+  align-items: center;
+  /* Removed justify-content: center so columns can be positioned independently */
+}
+
+/* ════ LEFT COLUMN ════ */
+.ws-left {
+  flex: 0 1 480px;
+  width: 100%;
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 25px;
+  margin-right: auto; /* Pushes the right column away */
+  z-index: 10;
 }
 
 .ws-top-badge {
-  position: relative; z-index: 10;
   align-self: flex-start;
-  margin: 15px 0 0 30px;
+  margin-bottom: 5px;
   display: flex; align-items: center; gap: 8px;
   background: rgba(255,255,255,0.4); backdrop-filter: blur(10px);
   border: 1px solid rgba(30,30,100,0.2); border-radius: 999px;
@@ -46,50 +65,36 @@
   width: 4px; height: 4px; border-radius: 50%; background: #321682;
 }
 
-/* ════ MAIN LAYOUT ════ */
-.ws-main {
-  flex: 1; min-height: 0;
-  display: flex;
-  padding: 10px 30px;
-  position: relative; z-index: 5;
-  justify-content: space-between;
-}
-
-/* ════ LEFT COLUMN ════ */
-.ws-left {
-  flex: 1;
-  display: flex; flex-direction: column;
-  justify-content: center; gap: 10px;
-  max-width: 300px;
-}
 .ws-brand {
-  font-size: 0.9rem; font-weight: 700;
+  font-size: 1rem; font-weight: 800;
   color: #0a6e52; letter-spacing: 0.1em;
 }
 .ws-title {
-  font-size: 3.2rem; font-weight: 900;
-  color: #321682; line-height: 0.9;
+  font-size: 3.5rem; font-weight: 900;
+  color: #321682; line-height: 0.95;
   margin: 0; letter-spacing: -0.02em;
 }
 .ws-desc {
-  font-size: 0.8rem; color: #0a6e52;
-  line-height: 1.4; margin: 5px 0 10px;
-  display: flex; align-items: flex-start; gap: 6px;
+  font-size: 0.9rem; color: #0a6e52; font-weight: 500;
+  line-height: 1.5; margin: 10px 0 20px;
+  display: flex; align-items: flex-start; gap: 8px;
 }
-.ws-desc-star { flex-shrink: 0; margin-top: 2px; }
+.ws-desc-star { flex-shrink: 0; margin-top: 4px; }
 
 .ws-card {
-  background: rgba(255,255,255,0.4); backdrop-filter: blur(12px);
+  background: rgba(255,255,255,0.4); backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.6);
-  border-radius: 12px; padding: 12px;
+  border-radius: 12px; padding: 16px;
   box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 500px;
 }
 .ws-card-title {
-  font-size: 0.55rem; font-weight: 800; letter-spacing: 0.1em;
-  text-align: center; margin-bottom: 12px;
-  border-bottom: 1px solid rgba(255,255,255,0.5);
-  padding-bottom: 6px;
+  font-size: 0.65rem; font-weight: 800; letter-spacing: 0.1em;
+  text-align: center; margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(10, 110, 82, 0.15);
 }
 .ws-text-teal { color: #0a6e52; }
 .ws-text-purple { color: #321682; }
@@ -99,160 +104,195 @@
 }
 .ws-item {
   display: flex; flex-direction: column; align-items: center;
-  text-align: center; flex: 1; gap: 6px;
+  text-align: center; flex: 1; gap: 8px;
+  border-right: 1px solid rgba(10, 110, 82, 0.15);
+}
+.ws-item:last-child {
+  border-right: none;
 }
 .ws-icon-wrap {
-  width: 32px; height: 32px;
+  width: 36px; height: 36px;
   background: transparent;
   display: flex; align-items: center; justify-content: center;
 }
-.ws-icon { width: 24px; height: 24px; }
+.ws-icon { width: 28px; height: 28px; }
 .ws-item span {
-  font-size: 0.45rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.3;
+  font-size: 0.5rem; font-weight: 800; letter-spacing: 0.05em; line-height: 1.3;
 }
 
-/* ════ CENTER COLUMN ════ */
-.ws-center {
-  flex: 1.2;
+/* ════ RIGHT COLUMN ════ */
+.ws-right {
+  flex: 0 1 500px;
+  width: 100%;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: flex-end;
-  position: relative; padding-bottom: 20px;
+  align-items: center; justify-content: center;
+  position: relative;
+  margin-top: 60px; /* Push product lower */
+  margin-right: 12vw; /* Anchors it visually exactly where it was before */
 }
+
+.ws-arch-glow {
+  position: absolute;
+  top: 45%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70vh; height: 70vh;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.8);
+  box-shadow: 0 0 30px rgba(255,255,255,0.6), inset 0 0 30px rgba(255,255,255,0.6);
+  z-index: 1;
+  pointer-events: none;
+}
+
 .ws-molecule-left {
-  position: absolute; left: -20px; top: 40%;
-  width: 100px; height: 100px;
+  position: absolute; left: -20px; top: 45%;
+  transform: translateY(-50%);
+  width: 140px; height: 140px; z-index: 2;
+  animation: drift-mol-left 8s ease-in-out infinite alternate;
 }
+.ws-molecule-right {
+  position: absolute; right: -20px; top: 45%;
+  transform: translateY(-50%);
+  width: 140px; height: 140px; z-index: 2;
+  animation: drift-mol-right 10s ease-in-out infinite alternate;
+}
+@keyframes drift-mol-left {
+  0% { transform: translateY(-50%) rotate(0deg) translateX(0); }
+  100% { transform: translateY(-55%) rotate(5deg) translateX(-15px); }
+}
+@keyframes drift-mol-right {
+  0% { transform: translateY(-50%) rotate(0deg) translateX(0); }
+  100% { transform: translateY(-45%) rotate(-5deg) translateX(15px); }
+}
+
 .ws-product-group {
   position: relative; display: flex; flex-direction: column; align-items: center;
+  z-index: 5;
+  margin-bottom: -15px; /* Pull button closer */
+}
+.ws-product-glow {
+  position: absolute;
+  top: 40%; left: 50%;
+  width: 55vh; height: 55vh;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.4) 30%, transparent 70%);
+  z-index: 2;
+  pointer-events: none;
 }
 .ws-hero-product {
-  height: 65vh; width: auto; object-fit: contain;
+  height: 70vh; width: auto; object-fit: contain; /* Increased product size */
   position: relative; z-index: 3;
-  filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+  margin-bottom: -50px; /* Visually anchor down onto the pedestal */
+  filter: drop-shadow(0 25px 35px rgba(0,0,0,0.25));
   animation: float-product 4s ease-in-out infinite;
 }
 @keyframes float-product {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-12px); }
 }
+
+.ws-water-ripples {
+  position: absolute;
+  bottom: -60px; left: 50%;
+  transform: translateX(-50%);
+  width: 600px; height: 180px;
+  background-image: 
+    radial-gradient(ellipse at center, transparent 30%, rgba(255,255,255,0.3) 32%, transparent 34%),
+    radial-gradient(ellipse at center, transparent 40%, rgba(255,255,255,0.2) 42%, transparent 44%),
+    radial-gradient(ellipse at center, rgba(255,255,255,0.5) 0%, transparent 60%);
+  border-radius: 50%;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .ws-podium {
-  position: relative; width: 260px; height: 50px;
-  margin-top: -15px; z-index: 2;
+  position: relative; width: 340px; height: 70px;
+  margin-top: -30px; z-index: 2;
   display: flex; flex-direction: column; align-items: center;
 }
 .ws-podium-tier {
   border-radius: 50%;
-  border: 1px solid rgba(255,255,255,0.8);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
   position: absolute;
 }
 .ws-tier-1 {
-  width: 100%; height: 50px; bottom: 0;
-  background: radial-gradient(ellipse at center, #cff0e9 0%, #8ddcd0 100%);
+  width: 340px; height: 70px; bottom: -20px;
+  background: #9bdcd0;
+  box-shadow: 0 8px 0 #7ec7ba, 0 15px 20px rgba(0,0,0,0.1);
   z-index: 1;
 }
 .ws-tier-2 {
-  width: 85%; height: 40px; bottom: 10px;
-  background: radial-gradient(ellipse at center, #ffffff 0%, #c5efe7 100%);
+  width: 300px; height: 60px; bottom: -5px;
+  background: #bbf0e5;
+  box-shadow: 0 6px 0 #9bdcd0;
   z-index: 2;
 }
 .ws-tier-3 {
-  width: 70%; height: 30px; bottom: 20px;
+  width: 260px; height: 50px; bottom: 8px;
   background: #ffffff;
+  box-shadow: 0 5px 0 #e6f9f5;
   z-index: 3;
 }
 
 .ws-cta-container {
   display: flex; flex-direction: column; align-items: center;
-  margin-top: 15px; z-index: 10;
+  margin-top: 0px; z-index: 10; /* Brought up closer to product */
 }
 .ws-start-btn {
   background: linear-gradient(90deg, #7b32f2 0%, #5116bd 100%);
-  color: white; font-weight: 800; font-size: 0.9rem;
-  letter-spacing: 0.1em; border: none; border-radius: 999px;
-  padding: 12px 35px; cursor: pointer;
-  box-shadow: 0 0 15px rgba(123,50,242,0.6), inset 0 0 10px rgba(255,255,255,0.4);
+  color: white; font-weight: 800; font-size: 1.2rem;
+  letter-spacing: 0.1em; border: 2px solid rgba(255,255,255,0.6); border-radius: 999px;
+  padding: 18px 60px; cursor: pointer;
+  box-shadow: 0 10px 25px rgba(123,50,242,0.6), inset 0 0 10px rgba(255,255,255,0.5);
+  animation: breathe-glow 3s infinite alternate;
+  transition: transform 0.2s;
 }
+.ws-start-btn:active {
+  transform: scale(0.95);
+}
+@keyframes breathe-glow {
+  0% { box-shadow: 0 8px 20px rgba(123,50,242,0.5), inset 0 0 10px rgba(255,255,255,0.3); transform: scale(1); }
+  100% { box-shadow: 0 12px 30px rgba(123,50,242,0.8), inset 0 0 15px rgba(255,255,255,0.6); transform: scale(1.02); }
+}
+
 .ws-dermatologist {
-  display: flex; align-items: center; gap: 5px; margin-top: 8px;
-  color: white; font-size: 0.55rem; font-weight: 600;
+  display: flex; align-items: center; gap: 8px; margin-top: 12px;
+  color: white; font-size: 0.65rem; font-weight: 600;
   background: transparent;
 }
 
-/* ════ RIGHT COLUMN ════ */
-.ws-right {
-  flex: 1;
-  position: relative;
-  display: flex; flex-direction: column; align-items: flex-end; justify-content: flex-end;
+/* ════ BOTTOM BAR (FLOATING PILL) ════ */
+.ws-footer-container {
+  padding: 0 40px 30px 40px;
+  display: flex; justify-content: center;
 }
-.ws-ceramide-badge {
-  position: absolute; top: -10px; right: 80px;
-  width: 80px; height: 80px; border-radius: 50%;
-  background: rgba(255,255,255,0.6); backdrop-filter: blur(5px);
-  border: 1px solid white; display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  text-align: center; z-index: 10;
-}
-.ws-ceramide-val { font-size: 1.5rem; font-weight: 900; color: #0a6e52; line-height: 1; }
-.ws-ceramide-lbl { font-size: 0.45rem; font-weight: 700; color: #0a6e52; margin-top: 2px; }
-
-.ws-deep-tag {
-  position: absolute; top: 40%; left: 0;
-  display: flex; flex-direction: column; align-items: center; gap: 5px;
-  text-align: center; font-size: 0.55rem; font-weight: 800;
-}
-.ws-water-drop-large {
-  width: 35px; height: 45px;
-  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-  background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.9), rgba(255,255,255,0.2));
-  border: 1px solid rgba(255,255,255,0.8);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-}
-
-.ws-girl-container {
-  position: absolute; bottom: 0; right: 0;
-  width: 120%; height: 95%; display: flex; justify-content: flex-end;
-  pointer-events: none; z-index: 2;
-}
-.ws-girl {
-  height: 100%; width: auto; object-fit: contain; object-position: right bottom;
-  mix-blend-mode: multiply;
-  /* Push off-white background to pure white so multiply ignores it */
-  filter: contrast(1.15) brightness(1.1);
-  /* Aggressively fade the left edge so it perfectly dissolves into the background */
-  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
-  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
-}
-
-.ws-how-to-play {
-  width: 280px; position: relative; z-index: 10;
-  margin-bottom: 20px; align-self: center;
-}
-
-/* ════ BOTTOM BAR ════ */
 .ws-footer {
+  width: 100%; max-width: 1400px;
   background: linear-gradient(90deg, #1c7866 0%, #156253 100%);
-  padding: 12px 30px; display: flex; align-items: center;
-  position: relative; z-index: 10; border-top-left-radius: 20px; border-top-right-radius: 20px;
-  margin: 0 15px; box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+  padding: 18px 40px; display: flex; align-items: center;
+  position: relative; z-index: 10; border-radius: 999px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 .ws-footer-title {
-  display: flex; align-items: center; gap: 8px;
-  color: white; font-size: 0.7rem; font-weight: 800;
+  display: flex; align-items: center; gap: 10px;
+  color: white; font-size: 0.75rem; font-weight: 800;
   letter-spacing: 0.05em; border-right: 1px solid rgba(255,255,255,0.3);
-  padding-right: 20px; margin-right: 20px;
+  padding-right: 25px; margin-right: 25px; flex-shrink: 0;
 }
 .ws-footer-items {
   display: flex; justify-content: space-between; flex: 1;
 }
 .ws-footer-item {
-  display: flex; align-items: center; gap: 8px;
-  color: white; font-size: 0.5rem; font-weight: 500; letter-spacing: 0.05em;
+  display: flex; align-items: center; gap: 10px;
+  color: white; font-size: 0.55rem; font-weight: 600; letter-spacing: 0.05em;
+  padding-right: 20px;
+  border-right: 1px solid rgba(255,255,255,0.15);
+}
+.ws-footer-item:last-child {
+  border-right: none; padding-right: 0;
 }
 .ws-check {
-  width: 16px; height: 16px; border-radius: 50%;
+  width: 18px; height: 18px; border-radius: 50%;
   border: 1px solid white; display: flex; align-items: center; justify-content: center;
-  font-size: 0.5rem;
+  font-size: 0.55rem;
 }
 
 /* ════ RESPONSIVE ════ */
@@ -262,6 +302,13 @@
     overflow-x: hidden;
     display: block;
   }
+  .ws-ceramide-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 60px; height: 60px;
+  }
+  .ws-ceramide-val { font-size: 1.1rem; }
+  .ws-ceramide-lbl { font-size: 0.35rem; }
   .ws-main {
     flex-direction: column;
     align-items: center;
@@ -276,46 +323,51 @@
   .ws-desc {
     justify-content: center;
   }
-  .ws-center {
-    padding-bottom: 0;
+  .ws-right {
+    width: 100%;
+    align-items: center;
+    gap: 20px;
   }
-  .ws-molecule-left {
+  .ws-arch-glow {
+    top: 5%; width: 90vw; height: 90vw;
+  }
+  .ws-molecule-left, .ws-molecule-right {
     display: none;
   }
   .ws-hero-product {
     height: 40vh;
   }
-  .ws-right {
-    align-items: center;
-    gap: 20px;
+  .ws-podium {
+    width: 240px; height: 45px; margin-top: -10px;
   }
-  .ws-ceramide-badge {
-    position: relative;
-    top: 0; right: 0;
-  }
-  .ws-deep-tag {
-    position: relative;
-    top: 0; left: 0;
-  }
-  .ws-girl-container {
-    display: none;
+  .ws-tier-1 { height: 45px; }
+  .ws-tier-2 { height: 36px; bottom: 9px; }
+  .ws-tier-3 { height: 27px; bottom: 18px; }
+
+  .ws-footer-container {
+    padding: 0 15px 20px 15px;
   }
   .ws-footer {
     flex-direction: column;
     gap: 15px;
-    border-radius: 0;
-    margin: 0;
+    border-radius: 20px;
+    padding: 20px;
   }
   .ws-footer-title {
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.3);
     padding-right: 0;
     margin-right: 0;
-    padding-bottom: 10px;
+    padding-bottom: 15px;
   }
   .ws-footer-items {
     flex-wrap: wrap;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
+  }
+  .ws-footer-item {
+    border-right: none;
+    padding-right: 0;
+    width: 45%;
   }
 }

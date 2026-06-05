@@ -23,7 +23,7 @@ const SCREEN = {
 // ── Admin secret gesture: 5 taps in top-left corner within 3 seconds ──
 const ADMIN_TAPS_REQUIRED = 5
 const ADMIN_TAP_WINDOW_MS = 3000
-const ADMIN_TAP_ZONE_PX = 80  // corner zone size
+const ADMIN_TAP_ZONE_PX = 120  // corner zone size (increased for large TV displays)
 
 function AppInner() {
   const {
