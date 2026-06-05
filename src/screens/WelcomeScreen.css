@@ -126,9 +126,14 @@
   position: relative; display: flex; flex-direction: column; align-items: center;
 }
 .ws-hero-product {
-  height: 48vh; width: auto; object-fit: contain;
+  height: 65vh; width: auto; object-fit: contain;
   position: relative; z-index: 3;
   filter: drop-shadow(0 20px 30px rgba(0,0,0,0.15));
+  animation: float-product 4s ease-in-out infinite;
+}
+@keyframes float-product {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
 }
 .ws-podium {
   position: relative; width: 260px; height: 50px;
@@ -212,11 +217,16 @@
 .ws-girl {
   height: 100%; width: auto; object-fit: contain; object-position: right bottom;
   mix-blend-mode: multiply;
+  /* Push off-white background to pure white so multiply ignores it */
+  filter: contrast(1.15) brightness(1.1);
+  /* Aggressively fade the left edge so it perfectly dissolves into the background */
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
+  mask-image: linear-gradient(to right, transparent 0%, black 20%, black 100%);
 }
 
 .ws-how-to-play {
   width: 280px; position: relative; z-index: 10;
-  margin-bottom: 20px; margin-right: 10px;
+  margin-bottom: 20px; align-self: center;
 }
 
 /* ════ BOTTOM BAR ════ */
