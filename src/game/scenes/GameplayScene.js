@@ -196,9 +196,9 @@ export class GameplayScene extends Phaser.Scene {
       strokeCol = 'rgba(50,0,0,0.8)'
     }
 
-    // Teardrop: pointed top, round belly at BOTTOM.
-    // Image origin (0.5,0.5) → Y=0 is centre. Belly centre ≈ +25 % below centre.
-    const dropCY = dispH * 0.25
+    // Sphere: perfectly centered in the image.
+    // Image origin (0.5,0.5) → Y=0 is centre.
+    const dropCY = 0
 
     const pctText = this.add.text(0, dropCY - dispH * 0.07, label1, {
       fontFamily: 'Inter, sans-serif',

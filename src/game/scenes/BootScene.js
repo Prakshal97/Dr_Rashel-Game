@@ -64,29 +64,17 @@ export class BootScene extends Phaser.Scene {
     canvas.height = H
     const ctx = canvas.getContext('2d')
 
-    // Geometry — pointed tip at TOP, smooth round belly at BOTTOM
-    const cx     = W / 2          // 120  horizontal centre
-    const tipY   = 14             // sharp top
-    const botY   = H * 0.92       // 276  bottom of round belly
-    const bulgeY = tipY + (botY - tipY) * 0.62  // widest point ~62% down
-    const rx     = W * 0.43       // half-width 103
+    // Geometry — Perfect Sphere
+    const cx     = W / 2          // horizontal centre
+    const cy     = H / 2          // vertical centre
+    const rx     = W * 0.43       // radius
+    const tipY   = cy - rx        // top of sphere
+    const botY   = cy + rx        // bottom of sphere
+    const bulgeY = cy             // widest point (middle)
 
     const path = () => {
       ctx.beginPath()
-      ctx.moveTo(cx, tipY)   // sharp tip at top
-
-      // RIGHT side: tip → bulge → round bottom (CP2 at botY → horizontal tangent)
-      ctx.bezierCurveTo(
-        cx + rx * 1.12, bulgeY,
-        cx + rx * 0.70, botY,
-        cx,             botY
-      )
-      // LEFT side: round bottom → bulge → back to tip (CP1 at botY → C1 smooth)
-      ctx.bezierCurveTo(
-        cx - rx * 0.70, botY,
-        cx - rx * 1.12, bulgeY,
-        cx,             tipY
-      )
+      ctx.arc(cx, cy, rx, 0, Math.PI * 2)
       ctx.closePath()
     }
 

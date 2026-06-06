@@ -99,7 +99,9 @@ export default function WelcomeScreen({ onBegin }) {
             <span className="ws-badge-dot" />
           </div>
 
-          <div className="ws-brand">DR. RASHEL</div>
+          <div className="ws-brand">
+            <img src="./assets/Purple-DR-logo-HR (1).png" alt="DR. RASHEL" className="ws-brand-logo" />
+          </div>
           <h1 className="ws-title">HYDRATION CHALLENGE</h1>
           <p className="ws-desc">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="ws-desc-star">

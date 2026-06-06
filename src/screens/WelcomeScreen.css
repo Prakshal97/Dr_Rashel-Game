@@ -46,7 +46,7 @@
   flex: 0 1 480px;
   width: 100%;
   display: flex; flex-direction: column;
-  justify-content: center; gap: 25px;
+  justify-content: center; gap: 15px; /* Reduced gap to prevent overflow due to larger logo */
   margin-right: auto; /* Pushes the right column away */
   z-index: 10;
 }
@@ -68,6 +68,11 @@
 .ws-brand {
   font-size: 1rem; font-weight: 800;
   color: #0a6e52; letter-spacing: 0.1em;
+}
+.ws-brand-logo {
+  max-height: 80px; /* Prominent size for laptop/desktop */
+  width: auto;
+  object-fit: contain;
 }
 .ws-title {
   font-size: 3.5rem; font-weight: 900;
@@ -320,6 +325,9 @@
     align-items: center;
     text-align: center;
   }
+  .ws-brand-logo {
+    max-height: 40px; /* Keep it smaller for phone */
+  }
   .ws-desc {
     justify-content: center;
   }
@@ -327,6 +335,8 @@
     width: 100%;
     align-items: center;
     gap: 20px;
+    margin-right: 0;
+    margin-top: 0;
   }
   .ws-arch-glow {
     top: 5%; width: 90vw; height: 90vw;
