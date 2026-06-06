@@ -73,7 +73,7 @@
 
 /* Logo */
 .idle-logo {
-  height: 70px;
+  height: 110px;
   margin-bottom: 24px;
   object-fit: contain;
 }
@@ -310,7 +310,7 @@
     margin: 0 auto;
   }
   .idle-logo {
-    height: 50px;
+    height: 75px;
     margin-bottom: 16px;
   }
   .idle-title-container {

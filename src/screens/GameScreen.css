@@ -110,7 +110,7 @@
 }
 
 .gs-logo-img {
-  height: 52px;
+  height: 85px;
   width: auto;
   object-fit: contain;
   filter: drop-shadow(0 2px 6px rgba(50,22,130,0.15));
@@ -318,7 +318,7 @@
     font-size: 1.5rem;
   }
   .gs-logo-img {
-    height: 40px;
+    height: 60px;
   }
   .gs-title-hyd, .gs-title-cha {
     font-size: 2rem;

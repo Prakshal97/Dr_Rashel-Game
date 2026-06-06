@@ -35,10 +35,9 @@
 .ws-main {
   flex: 1; min-height: 0;
   display: flex;
-  padding: 40px 4%; /* Closer to left edge */
+  padding: 10px 4%; /* Reduced vertical padding */
   position: relative; z-index: 5;
-  align-items: center;
-  /* Removed justify-content: center so columns can be positioned independently */
+  align-items: flex-start; /* Allow flex items to be pushed by margins */
 }
 
 /* ════ LEFT COLUMN ════ */
@@ -46,8 +45,10 @@
   flex: 0 1 480px;
   width: 100%;
   display: flex; flex-direction: column;
-  justify-content: center; gap: 15px; /* Reduced gap to prevent overflow due to larger logo */
-  margin-right: auto; /* Pushes the right column away */
+  justify-content: flex-start; gap: 15px; /* Use flex-start internally */
+  margin-right: auto;
+  margin-top: auto; /* Safe vertical centering */
+  margin-bottom: auto; /* Safe vertical centering */
   z-index: 10;
 }
 
@@ -70,7 +71,7 @@
   color: #0a6e52; letter-spacing: 0.1em;
 }
 .ws-brand-logo {
-  max-height: 80px; /* Prominent size for laptop/desktop */
+  max-height: 115px; /* Prominent size for laptop/desktop */
   width: auto;
   object-fit: contain;
 }
@@ -130,10 +131,12 @@
   flex: 0 1 500px;
   width: 100%;
   display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
+  align-items: center; justify-content: flex-start;
   position: relative;
-  margin-top: 60px; /* Push product lower */
+  margin-top: auto; /* Safe vertical centering */
+  margin-bottom: auto; /* Safe vertical centering */
   margin-right: 12vw; /* Anchors it visually exactly where it was before */
+  padding-top: 60px; /* Replaces the old margin-top to push product lower */
 }
 
 .ws-arch-glow {
@@ -326,7 +329,7 @@
     text-align: center;
   }
   .ws-brand-logo {
-    max-height: 40px; /* Keep it smaller for phone */
+    max-height: 65px; /* Keep it smaller for phone */
   }
   .ws-desc {
     justify-content: center;
